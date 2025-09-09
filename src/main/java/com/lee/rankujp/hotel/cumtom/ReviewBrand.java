@@ -6,4 +6,5 @@ import lombok.Getter;
 public enum ReviewBrand {
     AGODA,
     TRIPDOTCOM,
+    BOOKINGDOTCOM,
 }

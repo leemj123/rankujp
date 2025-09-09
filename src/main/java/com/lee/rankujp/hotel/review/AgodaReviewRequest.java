@@ -26,7 +26,7 @@ public class AgodaReviewRequest {
         this.pageNo = 1;
         this.pageSize = 1;
         this.sorting = 7;
-        this.reviewProviderIds.addAll(1, Arrays.asList(332, 3038));
+        this.reviewProviderIds.addAll(0, Arrays.asList(332, 3038));
         this.isReviewPage = false;
         this.isCrawlablePage = true;
         this.paginationSize = 5;

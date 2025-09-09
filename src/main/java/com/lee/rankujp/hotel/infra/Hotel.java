@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,13 +42,22 @@ public class Hotel {
 
     //review
     @OneToMany(mappedBy = "hotel")
-    private List<HotelReview> hotelReviewList;
+    private List<HotelReview> hotelReviewList = new ArrayList<>();
 
-    private float averageAllScore;
-    private float averageBusinessScore;
-    private float averageCoupleScore;
-    private float averageSoloScore;
-    private float averageFamilyScore;
-    private float groupScore;
+    private double averageAllScore;
+    private double averageBusinessScore;
+    private double averageCoupleScore;
+    private double averageSoloScore;
+    private double averageFamilyScore;
+    private double averageGroupScore;
 
+
+    public void averageScoreUpdate(double v, double v1, double v2, double v3, double v4, double v5) {
+        this.averageAllScore = v;
+        this.averageBusinessScore = v1;
+        this.averageCoupleScore = v2;
+        this.averageSoloScore = v3;
+        this.averageFamilyScore = v4;
+        this.averageGroupScore = v5;
+    }
 }
