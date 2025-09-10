@@ -40,7 +40,7 @@ public class HotelReviewService {
 
     private static final int CONCURRENCY = 8;
     private static final int BATCH = 1000;
-    private static final Duration BASE = Duration.ofMillis(500);
+    private static final Duration BASE = Duration.ofMillis(100);
     private static final long JITTER_MS = 200;
 
     private final JPAQueryFactory jpaQueryFactory;

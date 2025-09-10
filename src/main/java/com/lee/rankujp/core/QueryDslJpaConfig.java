@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class QueryDslConfig {
+public class QueryDslJpaConfig {
 
     private final EntityManager entityManager;
 

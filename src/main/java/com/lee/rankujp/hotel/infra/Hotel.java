@@ -40,6 +40,14 @@ public class Hotel {
     private String photo4;
     private String photo5;
 
+    //price
+    @OneToMany(mappedBy = "hotel")
+    private List<HotelPrice> priceList;
+
+    private double bestCrossedOutRate;
+    private double bestDailyRate;
+    private double bestSailPrecent;
+
     //review
     @OneToMany(mappedBy = "hotel")
     private List<HotelReview> hotelReviewList = new ArrayList<>();

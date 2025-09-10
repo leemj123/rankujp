@@ -1,4 +1,4 @@
-package com.lee.rankujp.service;
+package com.lee.rankujp.hotel.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
