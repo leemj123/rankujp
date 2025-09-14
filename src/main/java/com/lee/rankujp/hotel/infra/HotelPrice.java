@@ -32,10 +32,6 @@ public class HotelPrice {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "price_label_id")
-    private PriceLabel priceLabel;
-
     @Column(nullable = false)
     private LocalDate stayDate;
 
@@ -45,10 +41,13 @@ public class HotelPrice {
     @Column(nullable = false)
     private double dailyRate;
 
-    @Column(name = "sail_percent", nullable = false, precision = 5, scale = 2)
+    @Column(nullable = false)
     private double sailPercent;
 
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private boolean isWeekend;
 
     @PrePersist
     @PreUpdate

@@ -1,4 +1,4 @@
-package com.lee.rankujp.hotel.price;
+package com.lee.rankujp.hotel.price.dto;
 
 import lombok.Data;
 import lombok.Getter;
@@ -15,9 +15,9 @@ public class AgodaPriceResponse {
     @Data
     public static class HotelApiInfo {
         private long hotelId;
-        private String hotelName;
         private double dailyRate;
         private double crossedOutRate;
+        private double discountPercentage;
         private String imageURL;
     }
 }

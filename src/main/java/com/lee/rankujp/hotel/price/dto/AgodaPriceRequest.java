@@ -1,4 +1,4 @@
-package com.lee.rankujp.hotel.price;
+package com.lee.rankujp.hotel.price.dto;
 
 import lombok.Builder;
 import lombok.Data;

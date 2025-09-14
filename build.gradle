@@ -24,8 +24,9 @@ repositories {
     mavenCentral()
 }
 ext {
-    querydslVersion = '5.1.0' // 한 군데서 통일
+    querydslVersion = '5.1.0'
 }
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -39,22 +40,27 @@ dependencies {
 
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    // QueryDSL JPA (jakarta)
+    // JPA (jakarta)
+    implementation "jakarta.persistence:jakarta.persistence-api:3.1.0"
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
     annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
-    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api:3.1.0"
 
-    // QueryDSL SQL (UPSERT용)
-    implementation "com.querydsl:querydsl-sql:${querydslVersion}"
-    implementation "com.querydsl:querydsl-sql-spring:${querydslVersion}"
-    implementation "com.querydsl:querydsl-sql-mysql:${querydslVersion}"
+    // (필요시) core 명시
+    implementation "com.querydsl:querydsl-core:${querydslVersion}"
 
-    implementation 'jakarta.inject:jakarta.inject-api:2.0.1'
-
+    implementation "com.github.gavlyukovskiy:datasource-proxy-spring-boot-starter:1.12.0"
 
 }
-tasks.withType(JavaCompile) {
+configurations.configureEach {
+    resolutionStrategy {
+        force "com.querydsl:querydsl-core:${querydslVersion}"
+        force "com.querydsl:querydsl-sql:${querydslVersion}"
+        force "com.querydsl:querydsl-sql-spring:${querydslVersion}"
+        force "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+    }
+}
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << "-Xlint:unchecked"
 }
 tasks.named('test') {
