@@ -18,6 +18,8 @@ public class Hotel {
     //seo
     private String title;
     private String description;
+    private String keyword;
+
     //content
     @ManyToOne
     @JoinColumn(name = "hotel_city_id")
@@ -70,8 +72,14 @@ public class Hotel {
         this.averageFamilyScore = v4;
         this.averageGroupScore = v5;
     }
-    public void titleUpdater () {
-        this.title = "랑쿠 JP";
+    public void titleUpdater (String t) {
+        this.title = t;
+    }
+    public void descriptionUpdater (String d) {
+        this.description = d;
+    }
+    public void keywordUpdater (String k) {
+        this.keyword = k;
     }
     public void pointUpdater (PointLocation pointLocation) {
         this.pointLocation = pointLocation;
