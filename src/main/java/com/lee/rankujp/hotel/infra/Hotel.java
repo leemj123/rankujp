@@ -1,5 +1,6 @@
 package com.lee.rankujp.hotel.infra;
 
+import com.lee.rankujp.hotel.cumtom.PointLocation;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -27,7 +28,7 @@ public class Hotel {
 
     private String address;
     private String zipcode;
-    private String starRating;
+    private double starRating;
 
     private double longitude;
     private double latitude;
@@ -59,6 +60,7 @@ public class Hotel {
     private double averageFamilyScore;
     private double averageGroupScore;
 
+    private PointLocation pointLocation;
 
     public void averageScoreUpdate(double v, double v1, double v2, double v3, double v4, double v5) {
         this.averageAllScore = v;
@@ -67,5 +69,11 @@ public class Hotel {
         this.averageSoloScore = v3;
         this.averageFamilyScore = v4;
         this.averageGroupScore = v5;
+    }
+    public void titleUpdater () {
+        this.title = "랑쿠 JP";
+    }
+    public void pointUpdater (PointLocation pointLocation) {
+        this.pointLocation = pointLocation;
     }
 }

@@ -164,7 +164,7 @@ input:focus {
 .calendar-svg {
     width: 2.2rem;
     height: 2.2rem;
-    content: url('/static/public/calendar.svg');
+    content: url('/public/calendar.svg');
 }
 
 .btn-st {
@@ -186,62 +186,62 @@ input:focus {
 }
 
 .location-pin {
-    content: url('/static/public/detail/location-pin.svg');
+    content: url('/public/detail/location-pin.svg');
     width: 1.4rem;
     height: 1.6rem;
 }
 
 .location-right {
-    content: url('/static/public/location-right.svg');
+    content: url('/public/location-right.svg');
     width: .57rem;
     height: 1.1rem;
 }
 
 .location-right-big {
-    content: url('/static/public/location-right2.svg');
+    content: url('/public/location-right2.svg');
     width: .7rem;
     height: 1.2rem;
     margin-right: 1rem;
 }
 
 .couple-svg {
-    content: url("/static/public/couple.svg");
+    content: url("/public/couple.svg");
     width: 2rem;
     height: 2rem;
 }
 
 .hotel-star-svg {
-    content: url("/static/public/hotel-star.svg");
+    content: url("/public/hotel-star.svg");
     width: 2rem;
     height: 2rem;
 }
 
 .family-svg {
-    content: url("/static/public/family.svg");
+    content: url("/public/family.svg");
     width: 2rem;
     height: 2rem;
 }
 
 .business-svg {
-    content: url("/static/public/business.svg");
+    content: url("/public/business.svg");
     width: 2rem;
     height: 2rem;
 }
 
 .solo-svg {
-    content: url("/static/public/solo.svg");
+    content: url("/public/solo.svg");
     width: 2rem;
     height: 2rem;
 }
 
 .hover-info-svg {
-    content: url("/static/public/hover-info.svg");
+    content: url("/public/hover-info.svg");
     width: 1.6rem;
     height: 1.6rem;
 }
 
 .update-date-svg {
-    content: url("/static/public/update-date.svg");
+    content: url("/public/update-date.svg");
     width: 1.6rem;
     height: 1.6rem;
 }
@@ -285,19 +285,19 @@ input:focus {
 }
 
 .score.best {
-    content: url('/static/public/score-best.svg');
+    content: url('/public/score-best.svg');
 }
 
 .score.verygood {
-    content: url('/static/public/score-verygood.svg');
+    content: url('/public/score-verygood.svg');
 }
 
 .score.good {
-    content: url('/static/public/score-good.svg');
+    content: url('/public/score-good.svg');
 }
 
 .score.normal {
-    content: url('/static/public/score-normal.svg');
+    content: url('/public/score-normal.svg');
 }
 
 .score-value {
@@ -381,51 +381,51 @@ input:focus {
 
 
 .ranku.list.gold {
-    background: url('/static/public/ranku/list-gold.svg') no-repeat center / contain;
+    background: url('/public/ranku/list-gold.svg') no-repeat center / contain;
 }
 
 .ranku.list.sliver {
-    background: url('/static/public/ranku/list-sliver.svg') no-repeat center / contain;
+    background: url('/public/ranku/list-sliver.svg') no-repeat center / contain;
 }
 
 .ranku.list.bronze {
-    background: url('/static/public/ranku/list-bronze.svg') no-repeat center / contain;
+    background: url('/public/ranku/list-bronze.svg') no-repeat center / contain;
 }
 
 .ranku.list.normal {
-    background: url('/static/public/ranku/list-normal.svg') no-repeat center / contain;
+    background: url('/public/ranku/list-normal.svg') no-repeat center / contain;
 }
 
 .ranku.detail.gold {
-    background: url('/static/public/ranku/detail-gold.svg') no-repeat center / contain;
+    background: url('/public/ranku/detail-gold.svg') no-repeat center / contain;
 }
 
 .ranku.detail.sliver {
-    background: url('/static/public/ranku/detail-sliver.svg') no-repeat center / contain;
+    background: url('/public/ranku/detail-sliver.svg') no-repeat center / contain;
 }
 
 .ranku.detail.bronze {
-    background: url('/static/public/ranku/detail-bronze.svg') no-repeat center / contain;
+    background: url('/public/ranku/detail-bronze.svg') no-repeat center / contain;
 }
 
 .ranku.detail.normal {
-    background: url('/static/public/ranku/detail-normal.svg') no-repeat center / contain;
+    background: url('/public/ranku/detail-normal.svg') no-repeat center / contain;
 }
 
 .ranku.daily.gold {
-    background: url('/static/public/ranku/daily-gold.svg') no-repeat center / contain;
+    background: url('/public/ranku/daily-gold.svg') no-repeat center / contain;
 }
 
 .ranku.daily.sliver {
-    background: url('/static/public/ranku/daily-sliver.svg') no-repeat center / contain;
+    background: url('/public/ranku/daily-sliver.svg') no-repeat center / contain;
 }
 
 .ranku.daily.bronze {
-    background: url('/static/public/ranku/daily-bronze.svg') no-repeat center / contain;
+    background: url('/public/ranku/daily-bronze.svg') no-repeat center / contain;
 }
 
 .ranku.daily.normal {
-    background: url('/static/public/ranku/daily-normal.svg') no-repeat center / contain;
+    background: url('/public/ranku/daily-normal.svg') no-repeat center / contain;
 }
 
 /* =========================== */
@@ -523,7 +523,7 @@ header {
 }
 
 .share-this {
-    content: url('/static/public/detail/share-svg.svg');
+    content: url('/public/detail/share-svg.svg');
     cursor: pointer;
 }
 
