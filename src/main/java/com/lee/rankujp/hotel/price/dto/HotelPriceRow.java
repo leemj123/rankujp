@@ -12,15 +12,13 @@ public class HotelPriceRow {
     private double dailyRate;
     private double crossedOutRate;
     private double sailPercent;
-    private String imageURL;
     private boolean isWeekend;
 
-    public HotelPriceRow(LocalDate stayDate, double dailyRate, double crossedOutRate, double sailPercent, String imageURL) {
+    public HotelPriceRow(LocalDate stayDate, double dailyRate, double crossedOutRate, double sailPercent) {
         this.stayDate = stayDate;
         this.dailyRate = dailyRate;
         this.crossedOutRate = crossedOutRate;
         this.sailPercent = sailPercent;
-        this.imageURL = imageURL;
         this.isWeekend = judgeWeekend(stayDate);
     }
     private static boolean judgeWeekend(LocalDate day) {

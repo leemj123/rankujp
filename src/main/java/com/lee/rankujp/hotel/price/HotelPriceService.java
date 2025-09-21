@@ -1,7 +1,6 @@
 package com.lee.rankujp.hotel.price;
 
 import com.lee.rankujp.hotel.infra.QHotel;
-import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceRequest;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
 import com.lee.rankujp.hotel.price.dto.TopBucket;
@@ -35,37 +34,21 @@ public class HotelPriceService {
 
     private final QHotel qHotel = QHotel.hotel;
     private final WebClient agodaApiClient;
+    private final HotelPersistService persistService;
 
     private static final int BATCH_CONCURRENCY = 8;
     private static final int BATCH = 100;
     private static final Duration BASE = Duration.ofMillis(10);
     private static final long JITTER_MS = 10;
 
-    private final HotelPricePersistService hotelPersist;
 
     private static Duration jittered() {
         long j = ThreadLocalRandom.current().nextLong(-JITTER_MS, JITTER_MS + 1);
         return BASE.plusMillis(j);
     }
 
-    private static final Scheduler DB_ELASTIC =
+    static final Scheduler DB_ELASTIC =
             Schedulers.newBoundedElastic(10, Integer.MAX_VALUE, "db-elastic");
-
-//    public Mono<Void> syncAllPriceTest() {
-//        LocalDate stayDate = LocalDate.now();
-//        List<Long> ids = List.of(817L);
-//        return buildTop10(stayDate, ids)
-//                .flatMap(topMap ->
-//                                hotelPersist.upsertTopBucketMap(topMap)
-//                                        .subscribeOn(DB_ELASTIC)
-//                                        .retryWhen(
-//                                                reactor.util.retry.Retry.backoff(3, Duration.ofMillis(200))
-//                                                        .filter(hotelPersist::isDeadlockLike) // 데드락 재시도
-//                                        )
-//                )
-//                .then(
-//                        hotelPersist.deletePastBefore(stayDate, new HashSet<>(ids)).subscribeOn(DB_ELASTIC)).then();
-//    }
 
     public Flux<List<Long>> idBatches() {
         return Flux.<List<Long>, Integer>generate(
@@ -99,27 +82,26 @@ public class HotelPriceService {
 
     public Mono<Void> syncAllPriceWindowBatched() {
         LocalDate baseDate = LocalDate.now();
-        return idBatches() // Flux<List<Long>> (각 100개라고 가정)
-                .flatMap(ids ->
-                                buildTop10(baseDate, ids)
-                                        .flatMap(topMap ->
-                                                hotelPersist.upsertTopBucketMap(topMap)
-                                                        .subscribeOn(DB_ELASTIC)
-                                                        .retryWhen(
-                                                                reactor.util.retry.Retry.backoff(3, Duration.ofMillis(200))
-                                                                        .filter(hotelPersist::isDeadlockLike) // 데드락 재시도
+        return persistService.truncateHotelPrice()
+                .thenMany(
+                        // Flux<List<Long>> (각 100개라고 가정)
+                        idBatches()
+                                .flatMap(ids ->
+                                                buildTop10(baseDate, ids)
+                                                        .flatMap(topMap ->
+                                                                persistService.reloadHotelPrices(topMap)
+                                                                        .subscribeOn(DB_ELASTIC)
+                                                                        .retryWhen(
+                                                                                reactor.util.retry.Retry.backoff(3, Duration.ofMillis(200))
+                                                                        )
                                                         )
-                                        )
-                                        .then(hotelPersist.deletePastBefore(baseDate, new HashSet<>(ids))
-                                                .subscribeOn(DB_ELASTIC))
-                        , BATCH_CONCURRENCY, 1)
+                                        , BATCH_CONCURRENCY, 1)
+                )
                 .then();
     }
 
     public Mono<Map<Long, TopBucket>> buildTop10(LocalDate baseDate, List<Long> ids) {
         final Set<Long> idSet = new HashSet<>(ids);
-        final Comparator<HotelPriceRow> byAsc  = Comparator.comparingDouble(HotelPriceRow::getSailPercent);
-        final Comparator<HotelPriceRow> byDesc = byAsc.reversed();
 
         return priceProcessFluxWithDate(baseDate, ids) // Flux<Tuple2<LocalDate, AgodaPriceResponse>>
                 .flatMap(t -> {

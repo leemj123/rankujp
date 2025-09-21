@@ -4,6 +4,7 @@ import com.lee.rankujp.hotel.cumtom.PointLocation;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ public class Hotel {
     private String zipcode;
     private double starRating;
 
+    private int rankuScore;
+
     private double longitude;
     private double latitude;
 
@@ -47,6 +50,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel")
     private List<HotelPrice> priceList;
 
+    private LocalDate bestStayDate;
     private double bestCrossedOutRate;
     private double bestDailyRate;
     private double bestSailPrecent;
@@ -81,7 +85,14 @@ public class Hotel {
     public void keywordUpdater (String k) {
         this.keyword = k;
     }
-    public void pointUpdater (PointLocation pointLocation) {
-        this.pointLocation = pointLocation;
+    public void rankuScoreUpdater (int r) {
+        this.rankuScore = r;
+    }
+
+    public void beatScoreUpdate(LocalDate bsd, double bco, double bdr, double bsp) {
+        this.bestStayDate = bsd;
+        this.bestCrossedOutRate = bco;
+        this.bestDailyRate = bdr;
+        this.bestSailPrecent = bsp;
     }
 }

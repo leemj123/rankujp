@@ -32,7 +32,7 @@ public final class PriceNormalize {
 
         cor = round2(cor);
         dp  = round2(dp);
-        return new HotelPriceRow(day, daily, cor, dp, info.getImageURL()); // imageURL은 메모리 절약 위해 null
+        return new HotelPriceRow(day, daily, cor, dp);
     }
 
     private static Double toNullable(double v) { return Double.isNaN(v) ? null : v; }

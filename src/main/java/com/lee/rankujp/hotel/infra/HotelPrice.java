@@ -14,17 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_hotel_price",
-                        columnNames = {"hotel_id", "stay_date"}
-                )
-        },
-        indexes = {
-                @Index(name = "idx_price_hotel_date", columnList = "hotel_id, stay_date")
-        }
-)
 public class HotelPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,9 +40,4 @@ public class HotelPrice {
     @Column(nullable = false)
     private boolean isWeekend;
 
-    @PrePersist
-    @PreUpdate
-    void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

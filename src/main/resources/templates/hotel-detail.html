@@ -4,8 +4,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>오늘의 할인 랭킹</title>
-  <meta name="description" content="">
+  <title th:text="${content.getTitle()}"></title>
+    <meta name="description" th:attr="content=${content.description}" />
+    <meta name="keywords" th:attr="content=${content.keyword}" />
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/hotel-detail.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,8 +56,9 @@
         <section class="item-head">
           <div id="nav-prev-warpper">
             <ol>
-              <li><a class="f-14 nav-prev" href="/">할인랭킹</a></li>
-              <li><a class="f-14" th:text ="${content.koName}"></a></li>
+                <li><a class="f-14 nav-prev" href="/">호텔 랭킹</a></li>
+                <li><a class="f-14 nav-prev" href="/" th:text="${content.stateName}"></a></li>
+                <li><a class="f-14" th:text ="${content.koName}"></a></li>
             </ol>
             <div class="share-this"></div>
           </div>
@@ -64,7 +66,7 @@
             <div style="display: flex; flex-direction: column; gap: 1.4rem; justify-content: space-between;">
               <div style="display: flex; gap: 1rem;">
                 <div class="ranku detail gold">
-                  <span class="ranku-value">1</span>
+                  <span class="ranku-value">-</span>
                 </div>
                 <h1 th:text="${content.koName}"></h1>
               </div>
@@ -83,7 +85,7 @@
                         <div th:case="1" class="business-svg"></div>
                         <div th:case="2" class="couple-svg"></div>
                         <div th:case="3" class="solo-svg"></div>
-                        <div th:case="* " class="family-svg"></div>
+                        <div th:case="4" class="family-svg"></div>
                     </div>
                     <p class="f-15">
                         <b class="f-b"
@@ -103,9 +105,18 @@
             <div class="score-warpper">
               <div class="f-15 f-b">Ranku평점</div>
               <div class="ranku-total-score">
-                <div class="score normal"></div>
-                <p class="score-value xl">95</p>
-                <p class="f-15">매우 훌륭함</p>
+                  <div class="score" th:classappend="${
+                      content.rankuScore >= 86 ? 'best' :
+                      (content.rankuScore >= 71 ? 'verygood' :
+                      (content.rankuScore >= 41 ? 'good' : 'normal'))
+                      }">
+                  </div>
+                <p class="score-value xl" th:text="${content.rankuScore}"></p>
+                  <p class="f-15" th:text="${
+                      content.rankuScore >= 86 ? '매우 훌륭함' :
+                      (content.rankuScore >= 71 ? '훌륭함' :
+                      (content.rankuScore >= 41 ? '좋음' : '보통'))
+                      }">
               </div>
             </div>
 
@@ -116,7 +127,7 @@
               <div class="f-15 f-b"><span class="calendar-svg"></span>&nbsp;날짜</div>
               <div style="gap: 1rem;">
                 <input style="cursor: inherit; width: 11.6rem;  padding: 1rem 2rem;" class="btn-st" type="text"
-                  placeholder="0000-00-00" autocomplete="off">
+                  placeholder="0000-00-00" autocomplete="off" th:value="${#temporals.format(content.bestStayDate, 'yyyy-MM-dd')}">
                 <button class="btn-st">검색</button>
               </div>
             </div>
@@ -128,8 +139,8 @@
                 <p class="f-15" style="color: #959595;">1박당 요금</p>
               </div>
               <div style="display: flex; gap: .8rem;">
-                <p class="discount-percent xl">35</p>
-                <p class="daily-price xl">42,575</p>
+                <p class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
+                <p class="daily-price xl" th:text="${content.bestDailyRate}"></p>
               </div>
             </div>
           </div>
@@ -160,7 +171,7 @@
               <ol>
                   <li th:each="price, iterStat : ${content.priceList}"
                       th:if="${!price.weekend}">
-                      <a th:href="${price.link}">
+                      <a th:href="${price.link}" target="_blank">
                           <div class="price-day padding-30">
                               <div class="price-left">
                                   <div class="ranku daily"
@@ -206,7 +217,7 @@
               <ol>
                   <li th:each="price, iterStat : ${content.priceList}"
                       th:if="${!price.weekend}">
-                      <a th:href="${price.link}">
+                      <a th:href="${price.link}" target="_blank">
                           <div class="price-day padding-30">
                               <div class="price-left">
                                   <div class="ranku daily"
@@ -250,13 +261,17 @@
         <section class="review-section">
           <h3>사이트 평점 한눈에 확인해보세요!</h3>
           <div class="review-flex">
-            <a>
+            <a th:href="${content.bestLink}" target="_blank">
               <div class="review-item">
                 <div class="site-logo agoda"></div>
                 <h4 class="f-14">전세계 숙박 최저가</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
-                  <div class="score review best"></div>
+                    <div class="score review" th:classappend="${
+                      content.rankuScore >= 86 ? 'best' :
+                      (content.rankuScore >= 71 ? 'verygood' :
+                      (content.rankuScore >= 41 ? 'good' : 'normal'))
+                      }"></div>
                   <p class="score-value f-17 f-b" th:text="${content.brandReviewList.get(0).getAllScore()}"></p>
                   <div style="height: 1.6rem;"></div>
                 </div>
@@ -269,8 +284,8 @@
                 <h4 class="f-14">글로벌 여행 플랫폼</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
-                  <div class="score review verygood"></div>
-                  <p class="score-value f-17 f-b" th:text="${content.brandReviewList.get(1).getAllScore()}"></p>
+                  <div class="score review normal"></div>
+                  <p class="score-value f-17 f-b">?</p>
                   <div style="height: 1.6rem;"></div>
                 </div>
                 <button class="btn-st">리뷰 확인해보기</button>
@@ -282,7 +297,7 @@
                 <h4 class="f-14">일본여행·숙박 1위</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
-                  <div class="score review good"></div>
+                  <div class="score review normal"></div>
                   <p class="score-value f-17 f-b">?</p>
                   <div style="height: 1.6rem;"></div>
                 </div>
@@ -308,7 +323,7 @@
                 <h4 class="f-14">여행자 리뷰 1위</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
-                  <div class="score review good"></div>
+                  <div class="score review normal"></div>
                   <p class="score-value f-17 f-b">?</p>
                   <div style="height: 1.6rem;"></div>
                 </div>
@@ -384,7 +399,7 @@
     <div class="go-agoda-warpper">
       <div class="go-agoda">
         <p class="f-15 f-b"><span class="f-15 f-b" style="color: #f06265">마지막일 수 있는 방</span>, 지금 확인해보세요!</p>
-        <a><button class="btn-st f-15 f-b shine-btn">오늘 특가 확인</button></a>
+        <a th:href="${content.bestLink}" target="_blank"><button class="btn-st f-15 f-b shine-btn">오늘 특가 확인</button></a>
       </div>
     </div>
   </section>

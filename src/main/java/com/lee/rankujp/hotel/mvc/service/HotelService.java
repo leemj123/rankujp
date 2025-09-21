@@ -1,19 +1,20 @@
 package com.lee.rankujp.hotel.mvc.service;
 
 import com.lee.rankujp.hotel.infra.Hotel;
+import com.lee.rankujp.hotel.infra.HotelCity;
+import com.lee.rankujp.hotel.infra.HotelPrice;
 import com.lee.rankujp.hotel.infra.QHotel;
 import com.lee.rankujp.hotel.mvc.dto.HotelDetailResponse;
 import com.lee.rankujp.hotel.mvc.dto.HotelPriceResponse;
 import com.lee.rankujp.hotel.mvc.dto.HotelReviewResponse;
 import com.lee.rankujp.hotel.repo.HotelRepo;
+import com.lee.rankujp.hotel.review.RankuScoreCalculator;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class HotelService {
 
     public HotelDetailResponse HotelDetail(Long id) {
         Hotel hotel = hotelRepo.findById(id).orElseThrow();
+        HotelCity hotelCity = hotel.getHotelCity();
 
         double max = hotel.getAverageBusinessScore();
         int maxLabel = 1;
@@ -49,6 +51,10 @@ public class HotelService {
                 .updateDate(hotel.getUpdateDateTime().toLocalDate())
                 .title(hotel.getTitle())
                 .description(hotel.getDescription())
+                .keyword(hotel.getKeyword())
+                .rankuScore(hotel.getRankuScore())
+                .stateName(hotel.getHotelCity().getKoName())
+                .stateId(hotel.getHotelCity().getId())
                 .koName(hotel.getKoName())
                 .address(hotel.getAddress())
                 .zipcode(hotel.getZipcode())
@@ -61,16 +67,21 @@ public class HotelService {
                 .photo4(hotel.getPhoto4())
                 .photo5(hotel.getPhoto5())
                 .bestCrossedOutRate((int)hotel.getBestCrossedOutRate())
+                .bestStayDate(hotel.getBestStayDate())
                 .bestDailyRate((int)hotel.getBestDailyRate())
                 .bestSailPrecent((int)hotel.getBestSailPrecent())
+                .bestLink("https://www.agoda.com/ko-kr/search?selectedproperty="+ hotel.getId() +"&checkIn="+ hotel.getBestStayDate() +"&currency=JPY"+
+                        "&asq="+hotel.getHotelCity().getAsq())
                 .priceList(
                         hotel.getPriceList()
                                 .stream()
-                                .map(HotelPriceResponse::new)
+                                .map( item ->
+                                        new HotelPriceResponse(item, hotel.getId(), hotelCity.getAsq())
+                                )
                                 .sorted(
                                         Comparator
-                                                .comparing(HotelPriceResponse::getSailPercent)
-                                                .reversed()
+                                                .comparing(HotelPriceResponse::isWeekend)
+                                                .thenComparing(HotelPriceResponse::getSailPercent)
                                                 .thenComparing(HotelPriceResponse::getDailyRate)
                                 )
                                 .toList()
@@ -86,6 +97,62 @@ public class HotelService {
     }
 
     //other=================================
+
+
+    @Transactional
+    public void scoreCalculator(){
+        List<Hotel> hotels = jpaQueryFactory
+                .selectFrom(qHotel)
+                .fetch();
+
+        hotels.stream().forEach(hotel -> hotel.rankuScoreUpdater(RankuScoreCalculator.hotelScore(hotel)) );
+    }
+
+    @Transactional
+    public void choiceBeatScore() {
+        // N+1 방지를 위해 가능하면 fetch join 쿼리를 미리 준비하세요.
+        // 예: hotelRepo.findAllWithPrices()
+        List<Hotel> hotels = hotelRepo.findAll();
+
+        for (Hotel h : hotels) {
+            List<HotelPrice> prices = h.getPriceList();
+            if (prices == null || prices.isEmpty()) {
+                // 데이터가 없으면 초기화(원하는 기본값으로 조정 가능)
+                h.beatScoreUpdate(null,0d, 0d, 0d);
+                continue;
+            }
+
+            // 동률일 때 "더 싼 일일가" 우선이 명확하도록 커스텀 비교자 예시:
+
+            HotelPrice best = prices.stream()
+                    .filter(Objects::nonNull)
+                    .filter(p -> !Double.isNaN(p.getSailPercent())) // primitive double NaN 체크
+                    .filter(p -> p.getSailPercent() >= 0)
+                    .max((a, b) -> {
+                        int byPercent = Double.compare(a.getSailPercent(), b.getSailPercent());
+                        if (byPercent != 0) return byPercent;
+                        Double ad = a.getDailyRate(), bd = b.getDailyRate();
+                        return Double.compare(bd, ad);
+                    })
+                    .orElse(null);
+
+
+            if (best != null) {
+                h.beatScoreUpdate(best.getStayDate(), nz(best.getCrossedOutRate()), nz(best.getDailyRate()), nz(best.getSailPercent()));
+
+            } else {
+                h.beatScoreUpdate(null,0d, 0d, 0d);
+            }
+        }
+
+        hotelRepo.saveAll(hotels);
+    }
+
+    // null-safe double
+    private static double nz(Double v) {
+        return (v == null || v.isNaN() || v.isInfinite()) ? 0d : v;
+    }
+
 
 //    @Transactional
 //    public void updater() {

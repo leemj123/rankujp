@@ -18,6 +18,5 @@ public class AgodaPriceResponse {
         private double dailyRate;
         private double crossedOutRate;
         private double discountPercentage;
-        private String imageURL;
     }
 }

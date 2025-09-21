@@ -14,8 +14,14 @@ public class HotelDetailResponse {
     private LocalDate updateDate;
     private String title;
     private String description;
+    private String keyword;
 
     private String koName;
+
+    private String stateName;
+    private long stateId;
+
+    private int rankuScore;
 
     private String address;
     private String zipcode;
@@ -30,9 +36,12 @@ public class HotelDetailResponse {
     private String photo4;
     private String photo5;
 
+    private LocalDate bestStayDate;
     private int bestCrossedOutRate;
     private int bestDailyRate;
     private int bestSailPrecent;
+
+    private String bestLink;
 
     List<HotelPriceResponse> priceList;
 

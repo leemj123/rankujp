@@ -16,13 +16,14 @@ public class HotelPriceResponse {
     private final boolean isWeekend;
     private final String link;
 
-    public HotelPriceResponse(HotelPrice hp) {
+    public HotelPriceResponse(HotelPrice hp, long id, String asq) {
         this.stayDate = hp.getStayDate();
         this.crossedOutRate = (int) hp.getCrossedOutRate();
         this.dailyRate = (int) hp.getDailyRate();
         this.sailPercent = (int) hp.getSailPercent();
         this.updatedAt = hp.getUpdatedAt();
         this.isWeekend = hp.isWeekend();
-        this.link = "test";
+        this.link = "https://www.agoda.com/ko-kr/search?selectedproperty="+ id +"&checkIn="+ hp.getStayDate() +"&currency=JPY"+
+            "&asq="+asq;
     }
 }
