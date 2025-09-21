@@ -16,7 +16,8 @@ public class PremiumController {
     private final HotelService hotelService;
 
     @GetMapping
-    public String premium(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type){
+    public String premium(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
+        model.addAttribute("premiumPage", hotelService.premiumPage(location, type, page));
         return "ranku-premium";
     }
 }

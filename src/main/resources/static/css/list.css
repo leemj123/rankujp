@@ -295,6 +295,7 @@ main {
     justify-content: center;
     gap: 1.4rem;
 }
+
 .price-left section {
     display: flex;
     flex-direction: column;

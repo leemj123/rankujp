@@ -15,7 +15,8 @@ public class SaleRankuController {
 
     private final HotelService hotelService;
     @GetMapping
-    public String saleRanku(Model model, @RequestParam(defaultValue = "1") int type1, @RequestParam(defaultValue = "1") int type2){
+    public String premium(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
+        model.addAttribute("salePage", hotelService.salePage(location, type, page));
         return "ranku-sale";
     }
 }

@@ -43,7 +43,8 @@ public class HotelDetailResponse {
 
     private String bestLink;
 
-    List<HotelPriceResponse> priceList;
+    List<HotelPriceResponse> weekdayPriceList;
+    List<HotelPriceResponse> weekendPriceList;
 
     private int preferenceValue;
 

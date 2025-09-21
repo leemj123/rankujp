@@ -354,7 +354,20 @@ input:focus {
 .ranku.daily .ranku-value {
     font-size: 1.4rem;
 }
-
+.skip-1 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.skip-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 @media (min-width: 768px) {
 
     .ranku.list {

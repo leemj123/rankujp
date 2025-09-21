@@ -4,14 +4,18 @@ import com.lee.rankujp.hotel.infra.Hotel;
 import com.lee.rankujp.hotel.infra.HotelCity;
 import com.lee.rankujp.hotel.infra.HotelPrice;
 import com.lee.rankujp.hotel.infra.QHotel;
-import com.lee.rankujp.hotel.mvc.dto.HotelDetailResponse;
-import com.lee.rankujp.hotel.mvc.dto.HotelPriceResponse;
-import com.lee.rankujp.hotel.mvc.dto.HotelReviewResponse;
+import com.lee.rankujp.hotel.mvc.dto.*;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.hotel.review.RankuScoreCalculator;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,7 +26,106 @@ public class HotelService {
     private final JPAQueryFactory jpaQueryFactory;
     private final HotelRepo hotelRepo;
     private final QHotel qHotel = QHotel.hotel;
+
     //list==================================
+
+    public Page<PremiumResponse> salePage(int location, int type, int page) {
+        BooleanExpression predicate = this.filterQueryExpression(location, type);
+
+        Pageable pageable = PageRequest.of(page, 20);
+
+        List<Hotel> results = jpaQueryFactory
+                .selectFrom(qHotel)
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(
+                        qHotel.bestSailPrecent.desc(),
+                        qHotel.rankuScore.desc()
+                        )
+                .fetch();
+
+        long total = Optional.ofNullable(
+                jpaQueryFactory
+                        .select(qHotel.id.count())
+                        .from(qHotel)
+                        .where(predicate)
+                        .fetchOne()
+        ).orElse(0L);
+
+        return new PageImpl<>(results.stream().map(PremiumResponse::new).toList(), pageable, total);
+    }
+    public Page<ScoreResponse> scorePage(int location, int type, int page) {
+        BooleanExpression predicate = this.filterQueryExpression(location, type);
+
+
+        Pageable pageable = PageRequest.of(page, 20);
+
+        List<Hotel> results = jpaQueryFactory
+                .selectFrom(qHotel)
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(
+                        qHotel.rankuScore.desc(),
+                        qHotel.starRating.desc()
+                )
+                .fetch();
+
+        long total = Optional.ofNullable(
+                jpaQueryFactory
+                        .select(qHotel.id.count())
+                        .from(qHotel)
+                        .where(predicate)
+                        .fetchOne()
+        ).orElse(0L);
+
+        return new PageImpl<>(results.stream().map(ScoreResponse::new).toList(), pageable, total);
+    }
+    public Page<PremiumResponse> premiumPage(int location, int type, int page) {
+        //리뷰수가 천개 이상이면서
+        //성급은 4성이상
+        //랭쿠평점은 71점 이상
+        //베스트크로스아웃레이트가 5만 이상
+        //베스트크로스아웃레이트 높은 순 정렬
+
+        BooleanExpression predicate = this.filterQueryExpression(location, type);
+
+
+        Pageable pageable = PageRequest.of(page, 20);
+
+        List<Hotel> results = jpaQueryFactory
+                .selectFrom(qHotel)
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(
+                        qHotel.starRating.desc(),
+                        qHotel.bestCrossedOutRate.desc(),
+                        qHotel.rankuScore.desc()
+                        )
+                .fetch();
+
+        long total = Optional.ofNullable(
+                jpaQueryFactory
+                        .select(qHotel.id.count())
+                        .from(qHotel)
+                        .where(predicate)
+                        .fetchOne()
+        ).orElse(0L);
+
+        return new PageImpl<>(results.stream().map(PremiumResponse::new).toList(), pageable, total);
+
+    }
+
+
+    private BooleanExpression filterQueryExpression(int location, int type) {
+        if (location == 1 && type == 1) {return null;}
+
+
+        return null;
+    }
+
 
 
     //detail================================
@@ -72,16 +175,26 @@ public class HotelService {
                 .bestSailPrecent((int)hotel.getBestSailPrecent())
                 .bestLink("https://www.agoda.com/ko-kr/search?selectedproperty="+ hotel.getId() +"&checkIn="+ hotel.getBestStayDate() +"&currency=JPY"+
                         "&asq="+hotel.getHotelCity().getAsq())
-                .priceList(
+                .weekdayPriceList(
                         hotel.getPriceList()
                                 .stream()
-                                .map( item ->
-                                        new HotelPriceResponse(item, hotel.getId(), hotelCity.getAsq())
-                                )
+                                .filter(item -> !item.isWeekend())
+                                .map(item -> new HotelPriceResponse(item, hotel.getId(), hotelCity.getAsq()))
                                 .sorted(
                                         Comparator
-                                                .comparing(HotelPriceResponse::isWeekend)
-                                                .thenComparing(HotelPriceResponse::getSailPercent)
+                                                .comparing(HotelPriceResponse::getSailPercent)
+                                                .thenComparing(HotelPriceResponse::getDailyRate)
+                                )
+                                .toList()
+                )
+                .weekendPriceList(
+                        hotel.getPriceList()
+                                .stream()
+                                .filter(item -> item.isWeekend())
+                                .map(item -> new HotelPriceResponse(item, hotel.getId(), hotelCity.getAsq()))
+                                .sorted(
+                                        Comparator
+                                                .comparing(HotelPriceResponse::getSailPercent)
                                                 .thenComparing(HotelPriceResponse::getDailyRate)
                                 )
                                 .toList()
@@ -152,6 +265,8 @@ public class HotelService {
     private static double nz(Double v) {
         return (v == null || v.isNaN() || v.isInfinite()) ? 0d : v;
     }
+
+
 
 
 //    @Transactional
