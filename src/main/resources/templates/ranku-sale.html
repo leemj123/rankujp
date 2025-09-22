@@ -106,7 +106,7 @@
                   </a>
               </th:block>
             </section>
-            <section class="ranking-noraml-warpper" th:if="${list != null and #lists.size(list) > 3}">
+            <section class="ranking-noraml-warpper" id="ranking-normal-warpper" th:if="${list != null and #lists.size(list) > 3}">
                 <ol id="normal-item-section">
                   <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
                     <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
@@ -157,6 +157,7 @@
                     </a>
                   </li>
                 </ol>
+                <div id="infinite-sentinel" aria-hidden="true"></div>
               </section>
         </th:block>
     </section>
