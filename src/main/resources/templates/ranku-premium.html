@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>오늘의 할인 랭킹</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/premium.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="header-warpper">
+            <div class="logo-box"><a href="/"><img class="logo" src="/public/logo.png" alt="랭쿠jp 로고"></a></div>
+            <nav class="header-nav">
+                <ul>
+                    <a href="/">
+                        <li>할인랭킹</li>
+                    </a>
+                    <a href="/score">
+                        <li>종합랭킹</li>
+                    </a>
+                    <a href="/premium">
+                        <li class="active">프리미엄</li>
+                    </a>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="main-l">
+            <h1>프리미엄 호텔 랭킹</h1>
+            <section class="filter-warpper">
+                <!-- 지역 필터 칩 -->
+                <div class="full-container chip-row" role="list" aria-label="지역">
+                    <button class="chip on">전체</button>
+                    <button class="chip">난바</button>
+                    <button class="chip">우메다</button>
+                    <button class="chip">교토</button>
+                    <button class="chip">고베</button>
+                    <button class="chip">나라</button>
+                    <button class="chip">USJ</button>
+                </div>
+                <!-- 타입 필터 칩 -->
+                <div class="full-container chip-row" role="list" aria-label="타입">
+                    <button class="chip on">전체</button>
+                    <button class="chip">가족</button>
+                    <button class="chip">비지니스</button>
+                    <button class="chip">커플</button>
+                    <button class="chip">혼자</button>
+                </div>
+            </section>
+            <th:block th:if="${premiumPage != null}"
+                      th:with="list=${premiumPage.content}">
+
+                <!-- Top 3 -->
+                <section class="ranking-top-warpper"
+                         th:if="${list != null and !#lists.isEmpty(list)}">
+                    <th:block th:each="p, stat : ${list}" th:if="${stat.index < 3}">
+                        <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
+                            <div class="top-item-img-box">
+                                <div class="head-line"></div>
+                                <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표 이미지'}" />
+                                <div class="ranku list"
+                                     th:classappend="${stat.index == 0 ? ' gold' :
+                                             (stat.index == 1 ? ' sliver' :
+                                             (stat.index == 2 ? ' bronze' : '') )}">
+                                    <span class="ranku-value" th:text="${stat.index + 1}"></span>
+                                </div>
+                            </div>
+
+                            <div class="top-item-description up">
+                                <div>
+                                    <h2 class="ml top-item-title" th:text="${p.koName}"></h2>
+
+                                    <section>
+                                        <div class="price-left-content">
+                                            <div th:switch="${p.preferenceValue}">
+                                                <div th:case="1" class="business-svg"></div>
+                                                <div th:case="2" class="couple-svg"></div>
+                                                <div th:case="3" class="solo-svg"></div>
+                                                <div th:case="4" class="family-svg"></div>
+                                            </div>
+                                            <p class="f-17">
+                                                <b class="f-b"
+                                                   th:text="${p.preferenceValue == 1 ? '비지니스' :
+                              (p.preferenceValue == 2 ? '커플' :
+                              (p.preferenceValue == 3 ? '혼자' : '가족'))}">
+                                                </b>
+                                                <span>에게 가장인기!</span>
+                                            </p>
+                                        </div>
+
+                                        <div class="price-left-content">
+                                            <div class="hotel-star-svg"></div>
+                                            <p class="f-17" th:text="${p.starRating + '성'}"></p>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <div class="price-right">
+                                    <div class="price-value">
+                                        <div style="display:flex; gap:.2rem;">
+                                            <p class="discount-percent f-15" th:text="${p.bestSailPrecent}"></p>
+                                            <p class="crossed-out-rate f-15" th:text="${p.bestCrossedOutRate}"></p>
+                                        </div>
+                                        <p class="daily-price ml" th:text="${p.bestDailyRate}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </th:block>
+                </section>
+
+                <section class="ranking-noraml-warpper"
+                         th:if="${list != null and #lists.size(list) > 3}">
+                    <ol>
+                        <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
+                            <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
+                                <div class="premium-seperator"></div>
+                                <article class="ranku-item">
+                                    <div class="ranku-img-box">
+                                        <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}">
+                                        <div class="ranku list normal">
+                                            <span class="ranku-value" th:text="${stat.index + 1}">4</span>
+                                        </div>
+                                    </div>
+                                    <div class="description-warpper">
+                                        <div class="price-left">
+                                            <h2 class="skip-2" th:text="${p.koName}"></h2>
+                                            <section>
+                                                <div class="price-left-content">
+                                                    <div th:switch="${p.preferenceValue}">
+                                                        <div th:case="1" class="business-svg"></div>
+                                                        <div th:case="2" class="couple-svg"></div>
+                                                        <div th:case="3" class="solo-svg"></div>
+                                                        <div th:case="4" class="family-svg"></div>
+                                                    </div>
+                                                    <p class="f-17">
+                                                        <b class="f-b"
+                                                           th:text="${p.preferenceValue == 1 ? '비지니스' :
+                                                              (p.preferenceValue == 2 ? '커플!' :
+                                                              (p.preferenceValue == 3 ? '혼자' : '가족'))}">
+                                                        </b>
+                                                        에게 가장인기!
+                                                    </p>
+                                                </div>
+                                                <div class="price-left-content">
+                                                    <div class="hotel-star-svg"></div>
+                                                    <p class="f-17" th:text="${p.starRating + '성'}"></p>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="price-right">
+                                            <div class="price-value">
+                                                <div style="display:flex; gap:.2rem;">
+                                                    <p class="discount-percent f-20" th:text="${p.bestSailPrecent}"></p>
+                                                    <p class="crossed-out-rate f-20" th:text="${p.bestCrossedOutRate}"></p>
+                                                </div>
+                                                <p class="daily-price xl" th:text="${p.bestDailyRate}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </a>
+                        </li>
+                    </ol>
+                </section>
+            </th:block>
+            </section>
+
+        <section class="main-r">
+            <div class="banner-colum">
+                <a><img src="/public/banner/trip-row-banner.png" style="width: 18rem;"></a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="foot-container">
+            <div class="f-meta">
+                <p class="f-14 f-b" style="color: #7d7d7d;">ADERS</p>
+                <p class="f-14" style="color: #7d7d7d">대표이사: 이지형</p>
+                <p class="f-14" style="color: #7d7d7d;">Email: property@aders-international.com</p>
+            </div>
+            <div class="f-12" style="color: #7d7d7d">ⓒ 2025 rankujp INC.</div>
+        </div>
+    </footer>
+</body>
+<script src="/js/main.js" defer></script>
+
+</html>

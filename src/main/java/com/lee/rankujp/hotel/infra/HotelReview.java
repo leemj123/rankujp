@@ -2,10 +2,11 @@ package com.lee.rankujp.hotel.infra;
 
 import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 public class HotelReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,15 +16,16 @@ public class HotelReview {
     @JoinColumn(name = "hotel_review_list")
     private Hotel hotel;
 
+    @Enumerated(EnumType.STRING)
     private ReviewBrand reviewBrand;
 
     private long reviewCount;
-    private float allScore;
+    private double allScore;
 
-    private float businessScore;
-    private float coupleScore;
-    private float soloScore;
-    private float familyScore;
-    private float groupScore;
+    private double businessScore;
+    private double coupleScore;
+    private double soloScore;
+    private double familyScore;
+    private double groupScore;
 
 }

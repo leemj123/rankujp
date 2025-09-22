@@ -1,0 +1,575 @@
+main {
+    padding: 2rem;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    max-width: 1080px;
+    margin: 8rem auto;
+}
+
+.main-l {
+    display: flex;
+    gap: 3rem;
+    flex-direction: column;
+    width: 85rem;
+    height: auto;
+}
+
+.main-r {
+    width: 18rem;
+    height: auto;
+    position: relative;
+}
+
+.main-r .banner-colum {
+    position: fixed;
+    display: block;
+    top: 10rem;
+}
+
+.photo-section {
+    position: relative;
+    visibility: visible;
+    width: 85rem;
+    height: 42rem;
+    display: flex;
+    gap: 1rem;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.photo-mini-section {
+    display: flex;
+    flex-direction: column;
+    width: 19rem;
+    gap: 1rem;
+}
+
+.photo-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.photo-card.thumbnail {
+    width: 65rem;
+    height: 100%;
+
+}
+
+.photo-card.sub {
+    flex: 1;
+    height: 20.5rem;
+}
+
+.photo-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.photo-more-back {
+    display: block;
+    position: absolute;
+    width: 19rem;
+    height: 20.5rem;
+    bottom: 0;
+    right: 0;
+    background-color: #00000060;
+}
+
+.photo-more {
+    position: absolute;
+    display: block;
+    color: #ffffff;
+    bottom: 12px;
+    right: 12px;
+    z-index: 10;
+    cursor: pointer;
+    padding: .6rem 1rem;
+    background-color: #2f2f2f60;
+    visibility: 60%;
+    border-radius: 30px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+
+/* ===================== */
+#nav-prev-warpper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 3rem;
+}
+
+#nav-prev-warpper ol {
+    display: flex;
+}
+
+#nav-prev-warpper ol li {
+    padding: 0 .2rem
+}
+
+#nav-prev-warpper ol .nav-prev {
+    color: #919191;
+    cursor: pointer;
+}
+
+#nav-prev-warpper ol .nav-prev::after {
+    content: '>';
+    margin-left: .3rem;
+}
+
+.content-warpper {
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+}
+
+.item-head-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 3rem;
+}
+
+.head-info-row {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.head-info-row>div {
+    color: #919191;
+}
+
+/* ===================== */
+
+.calendar-warpper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.calendar-head {
+    width: 33.5rem;
+    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calendar-head div {
+    display: flex;
+    align-items: center;
+}
+
+.detail-price-warpper {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+
+@media (max-width: 786px) {
+    .calendar-warpper {
+        flex-direction: column-reverse;
+        gap: 1.4rem;
+    }
+
+    .calendar-head {
+        width: 100%;
+    }
+
+    .detail-price-warpper {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+/* ============================ */
+
+.item-price-warpper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.item-price-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.price-list-warpper {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    min-height: 35.2rem;
+}
+
+.price-list-warpper .price-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #ffffff;
+    border: 1px solid #e7e7e7;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+    padding: 2.4rem 0;
+    height: 35.2rem;
+    overflow-y: hidden;
+    transition: height .2s ease;
+}
+
+.price-list-header {
+    height: 4.4rem;
+}
+
+.price-list ol {
+    width: 100%;
+    height: 21.9rem;
+    overflow-y: hidden;
+}
+
+.padding-30 {
+    padding: 0 3rem;
+}
+
+.price-day {
+    display: flex;
+    cursor: pointer;
+    justify-content: space-between;
+    height: 7.2rem;
+}
+
+.price-day:hover {
+    background-color: #f6f7fb;
+}
+
+.price-day .price-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+}
+
+.price-right {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.price-right .price-value {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.price-line-seperator {
+    width: calc(100% - 6rem);
+    height: 1px;
+    border-top: 1px solid #d9d9d9;
+    margin: 0 auto;
+}
+
+.more-price {
+    position: absolute;
+    width: 36rem;
+    bottom: 2.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+}
+
+.price-list.active {
+    height: 49.6rem;
+
+    ol {
+        height: 36.4rem;
+    }
+}
+
+/* ============================ */
+.review-section,
+.description-section,
+.group-review {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.review-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+}
+
+.review-item {
+    width: 16.2rem;
+    height: 26.4rem;
+    background-color: #f6f7fb;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.4rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.review-item .site-logo {
+    width: 6rem;
+    height: 5rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.score.review {
+    width: 8rem;
+    height: 5rem;
+}
+
+.agoda {
+    background: url('/public/detail/agoda.png') no-repeat center / contain;
+}
+
+.tripcom {
+    background: url('/public/detail/tripcom.png') no-repeat center / contain;
+}
+
+.jyaran {
+    background: url('/public/detail/jyaran.png') no-repeat center / contain;
+}
+
+.rakuten {
+    background: url('/public/detail/rakuten.png') no-repeat center / contain;
+}
+
+.tripadvisor {
+    background: url('/public/detail/tripadvisor.png') no-repeat center / contain;
+}
+
+/* ============================ */
+.hotel-description {
+    display: -webkit-box;
+    /* 플렉스 비슷한 박스로 만들어줌 */
+    -webkit-box-orient: vertical;
+    /* 세로 방향으로 박스 정렬 */
+    -webkit-line-clamp: 2;
+    /* 최대 줄 수 */
+    overflow: hidden;
+    /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis;
+    /* ... 표시 */
+    line-height: 1.4;
+    /* 줄 높이 (선택사항) */
+    max-height: calc(1.4em * 2);
+    /* 브라우저 호환성 보강 (선택사항) */
+}
+
+/* ============================ */
+.group-flex-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.group-flex {
+    display: flex;
+    gap: 1rem;
+}
+
+@media (max-width: 786px) {
+    .group-flex {
+        flex-direction: column;
+    }
+}
+
+.group-flex .group {
+    flex: 1;
+    display: flex;
+    min-height: 4.6rem;
+    max-height: 4.6rem;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    outline: 1px solid #e7e7e7;
+    border-radius: 10px;
+    padding: 1.2rem 2rem;
+}
+
+.group.best {
+    outline: 2px solid #784aff;
+    outline-offset: -1px;
+}
+
+.group.full {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.group-name {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    text-align: center;
+}
+
+.ranku-noback-svg {
+    content: url("/public/favi-noback.svg");
+    width: 2.8rem;
+    height: 2.8rem;
+}
+
+.banner-row {
+    display: none;
+    width: 100%;
+    height: 12rem;
+    border-radius: 10px;
+    overflow: hidden;
+
+}
+
+.banner-row div {
+    width: 100%;
+    height: 100%;
+    background: url('/public/banner/1080row.png') no-repeat center / contain;
+}
+
+@media (max-width: 1080px) {
+    main {
+        justify-content: center;
+    }
+
+    .main-r {
+        display: none;
+    }
+
+    .banner-row {
+        display: block;
+    }
+
+    .photo-section {
+        width: 100%;
+    }
+}
+
+@media (max-width: 850px) {
+    main {
+        width: 100%;
+        margin: 8rem auto;
+    }
+
+    .main-l {
+        display: flex;
+        gap: 3rem;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 0 2rem 2rem 2rem;
+    }
+
+    .photo-section {
+        position: inherit;
+        width: 100vw;
+        min-width: 375px;
+        height: calc((100vw / 4) * 3);
+        min-height: 280px;
+        left: -2rem;
+        border-radius: 0;
+    }
+
+    .photo-card.thumbnail {
+        width: 100vw;
+    }
+
+    .photo-mini-section {
+        display: none;
+    }
+
+    #nav-prev-warpper {
+        margin-bottom: 1.4rem;
+    }
+
+    .item-head-title {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .score-warpper {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .score {
+        width: 7.2rem;
+        height: 4.6rem;
+    }
+
+    .price-list-warpper {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .price-list-warpper .price-list {
+        flex: unset;
+        max-width: 42rem;
+        min-width: 33.5rem;
+    }
+
+    .more-price {
+        width: calc(100% - 4rem);
+    }
+
+    .content-warpper {
+        gap: 4rem;
+    }
+
+    .banner-row {
+        position: inherit;
+        border-radius: 0;
+        left: -2rem;
+        width: 100vw;
+        height: 12rem;
+        background: url('/public/banner/768row.png') no-repeat center / contain;
+        ;
+    }
+
+    .price-list.active {
+        height: 49.6rem;
+
+        ol {
+            height: 36.4rem;
+        }
+    }
+}
+
+@media (max-width: 660px) {}
+
+@media (max-width: 500px) {
+    .banner-row {
+        position: inherit;
+        border-radius: 0;
+        left: -2rem;
+        width: 100vw;
+        height: 5.9rem;
+        min-width: 375px;
+        background: url('/public/banner/375row.png') no-repeat center / cover;
+        ;
+    }
+}

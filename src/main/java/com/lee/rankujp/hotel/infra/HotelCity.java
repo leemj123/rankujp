@@ -1,8 +1,6 @@
 package com.lee.rankujp.hotel.infra;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.List;
@@ -18,5 +16,7 @@ public class HotelCity {
 
     private String state;
     private String koName;
+    @Lob
+    private String asq;
 
 }

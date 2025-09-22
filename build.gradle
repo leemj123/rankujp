@@ -23,6 +23,9 @@ configurations {
 repositories {
     mavenCentral()
 }
+ext {
+    querydslVersion = '5.1.0'
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -34,18 +37,28 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-
-    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
-    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
-
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    // JPA (jakarta)
+    implementation "jakarta.persistence:jakarta.persistence-api:3.1.0"
+    implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api:3.1.0"
 
+    implementation "com.querydsl:querydsl-core:${querydslVersion}"
 
 }
-tasks.withType(JavaCompile) {
+configurations.configureEach {
+    resolutionStrategy {
+        force "com.querydsl:querydsl-core:${querydslVersion}"
+        force "com.querydsl:querydsl-sql:${querydslVersion}"
+        force "com.querydsl:querydsl-sql-spring:${querydslVersion}"
+        force "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+    }
+}
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << "-Xlint:unchecked"
 }
 tasks.named('test') {
