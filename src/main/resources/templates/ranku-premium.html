@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>오늘의 할인 랭킹</title>
     <meta name="description" content="">
+    <link rel="icon" href="/public/favicon.png" type="image/png"/>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/premium.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -34,31 +35,34 @@
     <main id="main">
         <section class="main-l">
             <h1>프리미엄 호텔 랭킹</h1>
-            <section class="filter-warpper">
-                <!-- 지역 필터 칩 -->
-                <div class="full-container chip-row" role="list" aria-label="지역">
-                    <button class="chip on">전체</button>
-                    <button class="chip">난바</button>
-                    <button class="chip">우메다</button>
-                    <button class="chip">교토</button>
-                    <button class="chip">고베</button>
-                    <button class="chip">나라</button>
-                    <button class="chip">USJ</button>
+            <section class="filter-warpper" id="filters">
+                <div class="full-container chip-row" role="list" aria-label="지역" data-group="area">
+                    <button class="chip on" data-value="1">전체</button>
+                    <button class="chip" data-value="2">난바</button>
+                    <button class="chip" data-value="3">우메다</button>
+                    <button class="chip" data-value="4">신사이바시</button>
+                    <button class="chip" data-value="5">텐노지</button>
+                    <button class="chip" data-value="6">유니버셜</button>
+                    <button class="chip" data-value="7">오사카</button>
+                    <button class="chip" data-value="8">교토</button>
+                    <button class="chip" data-value="9">고베</button>
+                    <button class="chip" data-value="10">나라</button>
                 </div>
-                <!-- 타입 필터 칩 -->
-                <div class="full-container chip-row" role="list" aria-label="타입">
-                    <button class="chip on">전체</button>
-                    <button class="chip">가족</button>
-                    <button class="chip">비지니스</button>
-                    <button class="chip">커플</button>
-                    <button class="chip">혼자</button>
+
+                <div class="full-container chip-row" role="list" aria-label="타입" data-group="type">
+                    <button class="chip on" data-value="1">전체</button>
+                    <button class="chip" data-value="2">가족</button>
+                    <button class="chip" data-value="3">비지니스</button>
+                    <button class="chip" data-value="4">커플</button>
+                    <button class="chip" data-value="5">혼자</button>
                 </div>
             </section>
+
             <th:block th:if="${premiumPage != null}"
                       th:with="list=${premiumPage.content}">
 
                 <!-- Top 3 -->
-                <section class="ranking-top-warpper"
+                <section class="ranking-top-warpper" id="top-item-section"
                          th:if="${list != null and !#lists.isEmpty(list)}">
                     <th:block th:each="p, stat : ${list}" th:if="${stat.index < 3}">
                         <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
@@ -118,7 +122,7 @@
 
                 <section class="ranking-noraml-warpper"
                          th:if="${list != null and #lists.size(list) > 3}">
-                    <ol>
+                    <ol id="normal-item-section">
                         <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
                             <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
                                 <div class="premium-seperator"></div>
@@ -143,7 +147,7 @@
                                                     <p class="f-17">
                                                         <b class="f-b"
                                                            th:text="${p.preferenceValue == 1 ? '비지니스' :
-                                                              (p.preferenceValue == 2 ? '커플!' :
+                                                              (p.preferenceValue == 2 ? '커플' :
                                                               (p.preferenceValue == 3 ? '혼자' : '가족'))}">
                                                         </b>
                                                         에게 가장인기!
@@ -191,6 +195,6 @@
         </div>
     </footer>
 </body>
-<script src="/js/main.js" defer></script>
-
+<script src="/js/main.js"></script>
+<script src="/js/premium.js"></script>
 </html>

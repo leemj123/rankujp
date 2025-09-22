@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SaleRankuController {
 
     private final HotelService hotelService;
+
     @GetMapping
     public String premium(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
         model.addAttribute("salePage", hotelService.salePage(location, type, page));

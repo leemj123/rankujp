@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>오늘의 할인 랭킹</title>
   <meta name="description" content="">
+    <link rel="icon" href="/public/favicon.png" type="image/png"/>
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/list.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -34,34 +35,33 @@
   <main id="main">
     <section class="main-l">
       <h1>오늘의 할인 랭킹</h1>
-      <section class="filter-warpper">
-        <div class="full-container chip-row" role="list" aria-label="지역">
-            <button class="chip on" data-value="1">전체</button>
-            <button class="chip" data-value="2">난바</button>
-            <button class="chip" data-value="3">우메다</button>
-            <button class="chip" data-value="4">신사이바시</button>
-            <button class="chip" data-value="5">텐노지</button>
-            <button class="chip" data-value="6">유니버셜</button>
+        <section class="filter-warpper" id="filters">
+            <div class="full-container chip-row" role="list" aria-label="지역" data-group="area">
+                <button class="chip on" data-value="1">전체</button>
+                <button class="chip" data-value="2">난바</button>
+                <button class="chip" data-value="3">우메다</button>
+                <button class="chip" data-value="4">신사이바시</button>
+                <button class="chip" data-value="5">텐노지</button>
+                <button class="chip" data-value="6">유니버셜</button>
+                <button class="chip" data-value="7">오사카</button>
+                <button class="chip" data-value="8">교토</button>
+                <button class="chip" data-value="9">고베</button>
+                <button class="chip" data-value="10">나라</button>
+            </div>
 
-            <button class="chip" data-value="7">오사카</button>
-            <button class="chip" data-value="8">교토</button>
-            <button class="chip" data-value="9">고베</button>
-            <button class="chip" data-value="10">나라</button>
-
-        </div>
-        <div class="full-container chip-row" role="list" aria-label="타입">
-          <button class="chip on" data-value="1">전체</button>
-          <button class="chip" data-value="2">가족</button>
-          <button class="chip" data-value="3">비지니스</button>
-          <button class="chip" data-value="4">커플</button>
-          <button class="chip" data-value="5">혼자</button>
-        </div>
-      </section>
+            <div class="full-container chip-row" role="list" aria-label="타입" data-group="type">
+                <button class="chip on" data-value="1">전체</button>
+                <button class="chip" data-value="2">가족</button>
+                <button class="chip" data-value="3">비지니스</button>
+                <button class="chip" data-value="4">커플</button>
+                <button class="chip" data-value="5">혼자</button>
+            </div>
+        </section>
 
         <th:block th:if="${salePage != null}"
                   th:with="list=${salePage.content}">
             <!-- Top 3 -->
-            <section class="ranking-top-warpper" th:if="${list != null and !#lists.isEmpty(list)}">
+            <section class="ranking-top-warpper" id="top-item-section" th:if="${list != null and !#lists.isEmpty(list)}">
               <th:block th:each="p, stat : ${list}" th:if="${stat.index < 3}">
                   <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
                     <div class="head-line"></div>
@@ -83,7 +83,12 @@
                   </div>
                   <div class="top-item-description down">
                     <div style="display: flex; gap: .6rem;">
-                      <div class="couple-svg"></div>
+                        <div th:switch="${p.preferenceValue}">
+                            <div th:case="1" class="business-svg"></div>
+                            <div th:case="2" class="couple-svg"></div>
+                            <div th:case="3" class="solo-svg"></div>
+                            <div th:case="4" class="family-svg"></div>
+                        </div>
                       <p class="f-17 f-b" style="color: #fff;">
                           <b class="f-17 f-b" style="color: #fff;"
                              th:text="${p.preferenceValue == 1 ? '비지니스' :
@@ -102,7 +107,7 @@
               </th:block>
             </section>
             <section class="ranking-noraml-warpper" th:if="${list != null and #lists.size(list) > 3}">
-                <ol>
+                <ol id="normal-item-section">
                   <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
                     <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
                       <article class="ranku-item">
@@ -173,5 +178,6 @@
     </div>
   </footer>
 </body>
-<script src="/js/main.js" defer></script>
+<script src="/js/main.js"></script>
+<script src="/js/sale.js"></script>
 </html>
