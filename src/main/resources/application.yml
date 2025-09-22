@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ENC(FqlJT/cvrjrqdCBmXz1yUd/OHrO0bGmwg4a0KtU++uJogH6aIU9z2iFP2Tm8vgmhVr1MEAtCoAK3gGas2eO0eQBMQ6pmtUsEEM4CYRRcZJLSVNxVqwDN5d6a1hNQuIEC0BMee97NHxPTaFRpfP1zfJUj23Q7xfEn)
+    url: ENC(jwl+isoveIDH7Lkq65odEDnQ3bhZiqhhvsAOKEqwLL0r3+9L8Xc2//2Wv7DvGIGEd/ZNAmnYerw6wlarB3GusYYAqwBfcBqkSCXMDJTraGV4JAf/+7UQci3hsk5wZJI7x6wn8WSDR1UXwTXAOJEzjSriVifjhzHh)
     username: ENC(hy2RQj/en0H+sZebqYHfrg==)
     password: ENC(GfPTCPid6UXGjG4G1pH4xusGFGHiB7sK)
 
@@ -22,3 +22,7 @@ spring:
       ddl-auto: update
 agoda:
   key: ENC(IaqGs3hpll/ldG01Z/m/WLCX4uCUh9qgPijf4aEMlgbp5GuujOx3pJjqVZduiT1qDGzSv5PGkT4=)
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor

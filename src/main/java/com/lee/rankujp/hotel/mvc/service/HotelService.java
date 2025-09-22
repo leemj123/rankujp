@@ -44,7 +44,6 @@ public class HotelService {
 
         List<Hotel> results = jpaQueryFactory
                 .selectFrom(qHotel)
-                .join(qHotelCity, qHotel.hotelCity)
                 .where(predicate)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -217,6 +216,12 @@ public class HotelService {
 
 
     //detail================================
+    private static final Comparator<HotelPriceResponse> DEAL_DESC =
+            Comparator.comparingDouble(HotelPriceResponse::getSailPercent)           // 할인율 큰 순
+                    .thenComparingDouble(r -> r.getCrossedOutRate() - r.getDailyRate()) // 절대 할인액 큰 순
+                    .thenComparing(HotelPriceResponse::getStayDate)                 // 날짜 늦은 순
+                    .reversed(); // 위 세 기준을 전부 반대로(=내림차순) 정렬
+
 
     public HotelDetailResponse HotelDetail(Long id) {
         Hotel hotel = hotelRepo.findById(id).orElseThrow();
@@ -236,6 +241,10 @@ public class HotelService {
         if (hotel.getAverageFamilyScore() > max) {
             maxLabel = 4;
         }
+
+
+
+
 
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
@@ -263,30 +272,8 @@ public class HotelService {
                 .bestSailPrecent((int)hotel.getBestSailPrecent())
                 .bestLink("https://www.agoda.com/ko-kr/search?selectedproperty="+ hotel.getId() +"&checkIn="+ hotel.getBestStayDate() +"&currency=JPY"+
                         "&asq="+hotel.getHotelCity().getAsq())
-                .weekdayPriceList(
-                        hotel.getPriceList()
-                                .stream()
-                                .filter(item -> !item.isWeekend())
-                                .map(item -> new HotelPriceResponse(item, hotel.getId(), hotelCity.getAsq()))
-                                .sorted(
-                                        Comparator
-                                                .comparing(HotelPriceResponse::getSailPercent)
-                                                .thenComparing(HotelPriceResponse::getDailyRate)
-                                )
-                                .toList()
-                )
-                .weekendPriceList(
-                        hotel.getPriceList()
-                                .stream()
-                                .filter(item -> item.isWeekend())
-                                .map(item -> new HotelPriceResponse(item, hotel.getId(), hotelCity.getAsq()))
-                                .sorted(
-                                        Comparator
-                                                .comparing(HotelPriceResponse::getSailPercent)
-                                                .thenComparing(HotelPriceResponse::getDailyRate)
-                                )
-                                .toList()
-                )
+                .weekdayPriceList(buildTop5(false, hotel, hotelCity))
+                .weekendPriceList(buildTop5(true,  hotel, hotelCity))
                 .preferenceValue(maxLabel)
                 .averageAllScore((int)(hotel.getAverageAllScore() *10))
                 .averageBusinessScore((int)(hotel.getAverageBusinessScore()*10))
@@ -296,7 +283,28 @@ public class HotelService {
                 .brandReviewList(hotel.getHotelReviewList().stream().map(HotelReviewResponse::new).toList())
                 .build();
     }
+    private List<HotelPriceResponse> buildTop5(boolean weekend,
+                                               Hotel hotel,
+                                               HotelCity hotelCity) {
 
+        Comparator<HotelPriceResponse> DEAL_DESC =
+                Comparator.comparingDouble(HotelPriceResponse::getSailPercent)
+                        .reversed()
+                        .thenComparingDouble(r -> r.getCrossedOutRate() - r.getDailyRate())
+                        .reversed()
+                        .thenComparing(HotelPriceResponse::getStayDate)
+                        .reversed();
+
+        return hotel.getPriceList().stream()
+                .filter(Objects::nonNull)
+                .filter(p -> !Double.isNaN(p.getSailPercent()))
+                .filter(p -> p.getSailPercent() >= 0)
+                .filter(p -> p.isWeekend() == weekend)
+                .map(p -> new HotelPriceResponse(p, hotel.getId(), hotelCity.getAsq()))
+                .sorted(DEAL_DESC)
+                .limit(5)
+                .toList();
+    }
     //other=================================
 
 
