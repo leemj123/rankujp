@@ -1,14 +1,13 @@
 package com.lee.rankujp.hotel.mvc.service;
 
-import com.lee.rankujp.hotel.infra.Hotel;
-import com.lee.rankujp.hotel.infra.HotelCity;
-import com.lee.rankujp.hotel.infra.HotelPrice;
-import com.lee.rankujp.hotel.infra.QHotel;
+import com.lee.rankujp.hotel.cumtom.PointLocation;
+import com.lee.rankujp.hotel.infra.*;
 import com.lee.rankujp.hotel.mvc.dto.*;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.hotel.review.RankuScoreCalculator;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,23 +25,30 @@ public class HotelService {
     private final JPAQueryFactory jpaQueryFactory;
     private final HotelRepo hotelRepo;
     private final QHotel qHotel = QHotel.hotel;
+    private final QHotelCity qHotelCity = QHotelCity.hotelCity;
 
     //list==================================
 
-    public Page<PremiumResponse> salePage(int location, int type, int page) {
-        BooleanExpression predicate = this.filterQueryExpression(location, type);
-
+    public Page<PremiumResponse> salePage(int location, int sort, int page) {
         Pageable pageable = PageRequest.of(page, 20);
+        //
+        BooleanExpression predicate = this.filterQueryExpression(location);
+
+        //정렬 null들어가면 에러나서 커버
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+
+        orders.add(qHotel.bestSailPrecent.desc());
+        OrderSpecifier<?> order = this.orderType(sort);
+        if (order != null) orders.add(order);
+        orders.add(qHotel.rankuScore.desc());
 
         List<Hotel> results = jpaQueryFactory
                 .selectFrom(qHotel)
+                .join(qHotelCity, qHotel.hotelCity)
                 .where(predicate)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(
-                        qHotel.bestSailPrecent.desc(),
-                        qHotel.rankuScore.desc()
-                        )
+                .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .fetch();
 
         long total = Optional.ofNullable(
@@ -55,21 +61,24 @@ public class HotelService {
 
         return new PageImpl<>(results.stream().map(PremiumResponse::new).toList(), pageable, total);
     }
-    public Page<ScoreResponse> scorePage(int location, int type, int page) {
-        BooleanExpression predicate = this.filterQueryExpression(location, type);
-
-
+    public Page<ScoreResponse> scorePage(int location, int sort, int page) {
         Pageable pageable = PageRequest.of(page, 20);
+        //
+        BooleanExpression predicate = this.filterQueryExpression(location);
+        //
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+
+        orders.add(qHotel.rankuScore.desc());
+        OrderSpecifier<?> order = this.orderType(sort);
+        if (order != null) orders.add(order);
+        orders.add(qHotel.starRating.desc());
 
         List<Hotel> results = jpaQueryFactory
                 .selectFrom(qHotel)
                 .where(predicate)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(
-                        qHotel.rankuScore.desc(),
-                        qHotel.starRating.desc()
-                )
+                .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .fetch();
 
         long total = Optional.ofNullable(
@@ -82,28 +91,25 @@ public class HotelService {
 
         return new PageImpl<>(results.stream().map(ScoreResponse::new).toList(), pageable, total);
     }
-    public Page<PremiumResponse> premiumPage(int location, int type, int page) {
-        //리뷰수가 천개 이상이면서
-        //성급은 4성이상
-        //랭쿠평점은 71점 이상
-        //베스트크로스아웃레이트가 5만 이상
-        //베스트크로스아웃레이트 높은 순 정렬
-
-        BooleanExpression predicate = this.filterQueryExpression(location, type);
-
-
+    public Page<PremiumResponse> premiumPage(int location, int sort, int page) {
         Pageable pageable = PageRequest.of(page, 20);
+
+        BooleanExpression predicate = this.premiumFilterQueryExpression(location);
+
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+
+        orders.add(qHotel.starRating.desc());
+        OrderSpecifier<?> order = this.orderType(sort);
+        if (order != null) orders.add(order);
+        orders.add(qHotel.rankuScore.desc());
+        orders.add(qHotel.bestCrossedOutRate.desc());
 
         List<Hotel> results = jpaQueryFactory
                 .selectFrom(qHotel)
                 .where(predicate)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(
-                        qHotel.starRating.desc(),
-                        qHotel.bestCrossedOutRate.desc(),
-                        qHotel.rankuScore.desc()
-                        )
+                .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .fetch();
 
         long total = Optional.ofNullable(
@@ -118,14 +124,96 @@ public class HotelService {
 
     }
 
-
-    private BooleanExpression filterQueryExpression(int location, int type) {
-        if (location == 1 && type == 1) {return null;}
-
-
-        return null;
+    private  OrderSpecifier<?> orderType (int sort) {
+        PathBuilder<Hotel> path = new PathBuilder<>(Hotel.class, "hotel");
+        return switch (sort) {
+            case 2 -> path.getString("averageFamilyScore").desc();
+            case 3 -> path.getString("averageBusinessScore").desc();
+            case 4 -> path.getString("averageCoupleScore").desc();
+            case 5 -> path.getString("averageSoloScore").desc();
+            default -> null;
+        };
     }
 
+
+    private BooleanExpression filterQueryExpression(int location) {
+        BooleanExpression predicate = null;
+
+        if (location == 1) {return predicate;}
+
+        if (location < 7) {
+            switch (location) {
+                case 2: {
+                    predicate = qHotel.pointLocation.eq(PointLocation.NAMBA); break;
+                }
+                case 3: {
+                    predicate = qHotel.pointLocation.eq(PointLocation.UMEDA); break;
+                }
+                case 4: {
+                    predicate = qHotel.pointLocation.eq(PointLocation.SHINSAIBASHI); break;
+                }
+                case 5: {
+                    predicate = qHotel.pointLocation.eq(PointLocation.TENOJI); break;
+                }
+                case 6: {
+                    predicate = qHotel.pointLocation.eq(PointLocation.USJ); break;
+                }
+            }
+        } else {
+            switch (location) {
+                case 7: {
+                    predicate = qHotel.hotelCity.id.eq(9590L); break;
+                }
+                case 8: {
+                    predicate = qHotel.hotelCity.id.eq(1784L); break;
+                }
+                case 9: {
+                    predicate = qHotel.hotelCity.id.eq(5235L); break;
+                }
+                case 10: {
+                    predicate = qHotel.hotelCity.id.eq(13313L); break;
+                }
+            }
+        }
+
+        return predicate;
+    }
+    private BooleanExpression premiumFilterQueryExpression(int location) {
+        // 공통 필터 조건
+        BooleanExpression common = qHotel.starRating.goe(4.0)
+                .and(qHotel.reviewNum.goe(100))
+                .and(qHotel.bestCrossedOutRate.goe(20000.0));
+
+        BooleanExpression predicate;
+
+        if (location == 1) {
+            return common; // 바로 리턴
+        }
+
+        if (location < 7) {
+            predicate = switch (location) {
+                case 2 -> qHotel.pointLocation.eq(PointLocation.NAMBA);
+                case 3 -> qHotel.pointLocation.eq(PointLocation.UMEDA);
+                case 4 -> qHotel.pointLocation.eq(PointLocation.SHINSAIBASHI);
+                case 5 -> qHotel.pointLocation.eq(PointLocation.TENOJI);
+                case 6 -> qHotel.pointLocation.eq(PointLocation.USJ);
+                default -> null; // 미매칭 시 null
+            };
+        } else if (location < 11) {
+            predicate = switch (location) {
+                case 7 -> qHotel.hotelCity.id.eq(9590L);
+                case 8 -> qHotel.hotelCity.id.eq(1784L);
+                case 9 -> qHotel.hotelCity.id.eq(5235L);
+                case 10 -> qHotel.hotelCity.id.eq(13313L);
+                default -> null;
+            };
+        } else {
+            return common;
+        }
+
+        // predicate가 null이면 그냥 common 리턴
+        return (predicate != null) ? predicate.and(common) : common;
+    }
 
 
     //detail================================
