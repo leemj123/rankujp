@@ -2,6 +2,11 @@ const wrapper = document.getElementById('filters');
 const topSection = document.getElementById('top-item-section');
 const normalSection = document.getElementById('normal-item-section');
 
+let page = 1;
+let paramLocation = 1;
+let paramType = 1;
+let tempRank = 0;
+
 wrapper.addEventListener('click', (e) => {
     const btn = e.target.closest('button.chip');
     if (!btn || !wrapper.contains(btn)) return;
@@ -176,10 +181,9 @@ function renderRanking(data){
     // TOP 3
     topSection.innerHTML = '';
     const topFrag = document.createDocumentFragment();
-    top3.forEach((item, i) => {
-        const rank = i + 1;
+    top3.forEach((item) => {
         const wrap = document.createElement('div');
-        wrap.innerHTML = topCard(item, rank);
+        wrap.innerHTML = topCard(item, tempRank++);
         topFrag.appendChild(wrap.firstElementChild);
     });
     topSection.appendChild(topFrag);
@@ -187,11 +191,67 @@ function renderRanking(data){
     // NORMAL (4위~)
     normalSection.innerHTML = '';
     const normalFrag = document.createDocumentFragment();
-    rest.forEach((item, i) => {
-        const rank = i + 4;
+    rest.forEach((item) => {
         const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, rank);
+        wrap.innerHTML = normalCard(item, tempRank++);
         normalFrag.appendChild(wrap.firstElementChild);
     });
+    normalSection.appendChild(normalFrag);
+}
+
+
+
+
+let ticking = false;
+let LOCK = false;
+
+
+function nearBottom() {
+    const gap = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+    return gap < 1200; // 1200px 남았을 때
+}
+
+window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+        if (nearBottom() && !LOCK) {
+            LOCK = true;
+            renderInfinityPageNation();      // <-- 호출만
+            setTimeout(() => { LOCK = false; }, 800);
+        }
+        ticking = false;
+    });
+}, { passive: true });
+
+function renderInfinityPageNation() {
+
+    const url = new URL('/rest/score', location.origin);
+    url.searchParams.set('page', page);
+    url.searchParams.set('location', paramLocation);
+    url.searchParams.set('type', paramType);
+
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            renderNormal(data.content);
+            page++;
+        })
+        .catch(console.error);
+
+}
+
+function renderNormal(data) {
+    const base = 4 + normalSection.querySelectorAll('li').length;
+    const normalFrag = document.createDocumentFragment();
+    data.forEach((item, i) => {
+        const wrap = document.createElement('div');
+        wrap.innerHTML = normalCard(item, base + i);
+        normalFrag.appendChild(wrap.firstElementChild);
+    });
+
     normalSection.appendChild(normalFrag);
 }
