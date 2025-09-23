@@ -148,7 +148,7 @@
               </div>
               <div style="display: flex; gap: .8rem;">
                 <p class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
-                <p class="daily-price xl" th:text="${content.bestDailyRate}"></p>
+                <p class="daily-price xl JPY" th:text="${content.bestDailyRate}"></p>
               </div>
             </div>
           </div>
@@ -166,7 +166,7 @@
               </div>
             </div>
             <div style="display: flex; gap: .6rem; align-items: center;">
-              <p style="font-size: 1.4rem; line-height: 1.4; color: #919191;">25.09.30</p>
+              <p style="font-size: 1.4rem; line-height: 1.4; color: #919191;">25.09.23</p>
               <div class="update-date-svg"></div>
             </div>
           </div>
@@ -187,8 +187,8 @@
                                    (iterStat.count == 2 ? ' sliver' :
                                    (iterStat.count == 3 ? ' bronze' : ' normal'))
                                  }">
-          <span class="ranku-value"
-                th:text="${iterStat.count}">?</span>
+                                      <span class="ranku-value"
+                                            th:text="${iterStat.count}">?</span>
                                   </div>
 
                                   <p class="f-15 f-b"
@@ -201,10 +201,10 @@
                                       <div style="display: flex; gap: .2rem;">
                                           <p class="discount-percent f-12"
                                              th:text="${price.sailPercent}"></p>
-                                          <p class="crossed-out-rate f-12"
+                                          <p class="crossed-out-rate f-12 JPY"
                                              th:text="${price.crossedOutRate}"></p>
                                       </div>
-                                      <p class="daily-price f-15"
+                                      <p class="daily-price f-15 JPY"
                                          th:text="${price.dailyRate}"></p>
                                   </div>
                                   <div class="location-right-big"></div>
@@ -214,9 +214,12 @@
                       <div class="price-line-seperator"></div>
                   </li>
               </ol>
-              <button class="btn-st more-price">더보기</button>
+                <button th:if="${#lists.size(content.weekdayPriceList) >= 3}"
+                        class="btn-st more-price" type="button">
+                    더보기
+                </button>
             </div>
-            <div class="price-list active">
+            <div class="price-list">
               <div class="price-list-header">
                 <h3 class="padding-30 f-17 f-b">주말</h3>
               </div>
@@ -246,10 +249,10 @@
                                       <div style="display: flex; gap: .2rem;">
                                           <p class="discount-percent f-12"
                                              th:text="${price.sailPercent}"></p>
-                                          <p class="crossed-out-rate f-12"
+                                          <p class="crossed-out-rate f-12 JPY"
                                              th:text="${price.crossedOutRate}"></p>
                                       </div>
-                                      <p class="daily-price f-15"
+                                      <p class="daily-price f-15 JPY"
                                          th:text="${price.dailyRate}"></p>
                                   </div>
                                   <div class="location-right-big"></div>
@@ -259,7 +262,10 @@
                       <div class="price-line-seperator"></div>
                   </li>
               </ol>
-              <button class="btn-st more-price">더보기</button>
+                <button th:if="${#lists.size(content.weekendPriceList) >= 3}"
+                        class="btn-st more-price" type="button">
+                    더보기
+                </button>
             </div>
           </article>
         </section>
@@ -433,5 +439,6 @@
     </div>
   </footer>
 </body>
-<script src="/js/main.js" defer></script>
+<script src="/js/main.js"></script>
+<script src="/js/hotel-detail.js"></script>
 </html>
