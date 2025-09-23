@@ -92,7 +92,7 @@ const topCard = (item, rank) => {
             <h2 class="ml top-item-title">${esc(item.koName)}</h2>
             <div style="display:flex; gap:.8rem;">
               <p class="discount-percent ml">${esc(item.bestSailPrecent)}</p>
-              <p class="daily-price ml">${fmt.format(item.bestDailyRate)}</p>
+              <p class="daily-price ml JPY">${fmt.format(item.bestDailyRate)}</p>
             </div>
           </div>
         </div>
@@ -144,9 +144,9 @@ const normalCard = (item, rank) => {
                   <div class="price-value">
                     <div style="display:flex;gap:.2rem;">
                       <p class="discount-percent f-20">${esc(item.bestSailPrecent)}</p>
-                      <p class="crossed-out-rate f-20" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
+                      <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
                     </div>
-                    <p class="daily-price xl">${fmt.format(item.bestDailyRate)}</p>
+                    <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
                   </div>
                 </div>
               </div>
@@ -184,9 +184,9 @@ const noneRankCard = (item, rank) => {
                   <div class="price-value">
                     <div style="display:flex;gap:.2rem;">
                       <p class="discount-percent f-20">${esc(item.bestSailPrecent)}</p>
-                      <p class="crossed-out-rate f-20" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
+                      <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
                     </div>
-                    <p class="daily-price xl">${fmt.format(item.bestDailyRate)}</p>
+                    <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
                   </div>
                 </div>
               </div>

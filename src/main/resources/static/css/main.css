@@ -576,6 +576,7 @@ footer .foot-container {
     display: flex;
     background-color: #ffffff;
     box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.1);
+    z-index: 3;
 }
 
 .bottom-fix-section .go-agoda-warpper {
@@ -593,6 +594,8 @@ footer .foot-container {
     width: 100%;
     max-width: 850px;
 }
+
+
 
 .shine-btn {
     position: relative;
@@ -651,7 +654,17 @@ footer .foot-container {
         opacity: 0;
     }
 }
-
+@media (max-width: 600px) {
+    .go-agoda p{
+        display: none;
+    }
+    .go-agoda a {
+        flex: 1;
+    }
+    .shine-btn {
+        width: 100%;
+    }
+}
 @media (max-width: 768px) {
     .header-warpper {
         flex-direction: column;

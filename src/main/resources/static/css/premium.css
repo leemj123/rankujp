@@ -79,7 +79,7 @@ main {
 
 .top-item {
     cursor: pointer;
-    
+
     flex: 1;
     overflow: hidden;
     display: flex;
