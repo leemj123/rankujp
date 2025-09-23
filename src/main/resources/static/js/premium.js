@@ -5,7 +5,6 @@ const normalSection = document.getElementById('normal-item-section');
 let page = 1;
 let paramLocation = 1;
 let paramType = 1;
-let tempRank = 0;
 
 wrapper.addEventListener('click', (e) => {
     const btn = e.target.closest('button.chip');
@@ -166,6 +165,46 @@ const normalCard = (item, rank) => `
     </li>
   `.trim();
 
+const noneRankCard = (item, rank) => `
+    <li>
+      <a href="/hotel/${esc(item.id)}?top=${rank}">
+        <div class="premium-seperator"></div>
+        <article class="ranku-item">
+          <div class="ranku-img-box">
+            <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진">
+          </div>
+          <div class="description-warpper">
+            <div class="price-left">
+              <h2 class="skip-2">${esc(item.koName)}</h2>
+              <section>
+                <div class="price-left-content">
+                  <div class="${prefIconClass(item.preferenceValue)}"></div>
+                  <p class="f-17">
+                    <b class="f-b">${esc(prefLabel(item.preferenceValue))}</b>
+                    에게 가장인기!
+                  </p>
+                </div>
+                <div class="price-left-content">
+                  <div class="hotel-star-svg"></div>
+                  <p class="f-17">${esc(item.starRating)}성</p>
+                </div>
+              </section>
+            </div>
+            <div class="price-right">
+              <div class="price-value">
+                <div style="display:flex; gap:.2rem;">
+                  <p class="discount-percent f-20">${esc(item.bestSailPrecent)}</p>
+                  <p class="crossed-out-rate f-20">${esc(item.bestCrossedOutRate)}</p>
+                </div>
+                <p class="daily-price xl">${esc(item.bestDailyRate)}</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </a>
+    </li>
+  `.trim();
+
 // 렌더 함수: content 배열을 받아 두 섹션에 배치
 function renderRanking(data){
     const top3 = data.content.slice(0, 3);
@@ -174,10 +213,10 @@ function renderRanking(data){
     // TOP 3
     topSection.innerHTML = '';
     const topFrag = document.createDocumentFragment();
-    top3.forEach((item) => {
+    top3.forEach((item, i) => {
 
         const wrap = document.createElement('div');
-        wrap.innerHTML = topCard(item, tempRank++);
+        wrap.innerHTML = topCard(item, i+1);
         topFrag.appendChild(wrap.firstElementChild);
     });
     topSection.appendChild(topFrag);
@@ -185,9 +224,9 @@ function renderRanking(data){
     // NORMAL (4위~)
     normalSection.innerHTML = '';
     const normalFrag = document.createDocumentFragment();
-    rest.forEach((item) => {
+    rest.forEach((item, i) => {
         const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, tempRank++);
+        wrap.innerHTML = normalCard(item, i+4);
         normalFrag.appendChild(wrap.firstElementChild);
     });
     normalSection.appendChild(normalFrag);
@@ -239,11 +278,21 @@ function renderInfinityPageNation() {
 function renderNormal(data) {
     const base = 4 + normalSection.querySelectorAll('li').length;
     const normalFrag = document.createDocumentFragment();
-    data.forEach((item, i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, base +i);
-        normalFrag.appendChild(wrap.firstElementChild);
-    });
+
+    if (base < 99) {
+        data.forEach((item, i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, base +i);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+    } else {
+        data.forEach((item, i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = noneRankCard(item, base +i);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+    }
+
 
     normalSection.appendChild(normalFrag);
 }

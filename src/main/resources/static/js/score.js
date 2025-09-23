@@ -5,7 +5,6 @@ const normalSection = document.getElementById('normal-item-section');
 let page = 1;
 let paramLocation = 1;
 let paramType = 1;
-let tempRank = 0;
 
 wrapper.addEventListener('click', (e) => {
     const btn = e.target.closest('button.chip');
@@ -79,20 +78,23 @@ const rankBadgeClass = (rank) => {
     return '';
 };
 const rankuScoreSVGClass = (rank) => {
-    switch (Number(rank)) {
-        case rank >= 86: return 'best';
-        case rank >= 71: return 'verygood';
-        case rank >= 41: return 'good';
-        case 3: return 'normal';
-    }
+    console.log(rank);
+    const v = Number(rank);
+    console.log(v);
+    if (v >= 86) return 'best';
+    if (v >= 71) return 'verygood';
+    if (v >= 41) return 'good';
+
+    return 'normal';
 };
 const rankuScoreClass = (rank) => {
-    switch (Number(rank)) {
-        case rank >= 86: return '매우 훌륭함';
-        case rank >= 71: return '훌륭함';
-        case rank >= 41: return '좋음';
-        case 3: return '보통';
-    }
+    console.log(rank);
+    const v = Number(rank);
+    if (v >= 86) return '매우 훌륭함';
+    if (v >= 71) return '훌륭함';
+    if (v >= 41) return '좋음';
+
+    return '보통';
 };
 
 
@@ -107,7 +109,7 @@ const topCard = (item, rank) => {
         </div>
         <div class="top-item-description up">
            <div>
-              <h2 class="ml top-item-title">{item.koName}</h2>
+              <h2 class="ml top-item-title">${esc(item.koName)}</h2>
               <div style="display: flex; align-items: center; gap: .6rem;">
                 <span class="xl" style="color: #fff;">${item.rankuScore}</span>
                   <span class="f-15" style="color: #fff;">/100</span>
@@ -134,6 +136,7 @@ const topCard = (item, rank) => {
 
 // 일반 랭킹 카드 (4위~)
 const normalCard = (item, rank) => {
+    console.log(item)
     return `
       <li>
         <a href="/hotel/${item.id}?top=${rank}">
@@ -162,9 +165,48 @@ const normalCard = (item, rank) => {
                 </div>
                 <div class="score-warpper">
                         <div class="ranku-total-score">
-                        <div class="score ${rankuScoreSVGClass(item.rank)} "></div>
+                        <div class="score ${rankuScoreSVGClass(item.rankuScore)} "></div>
                           <p class="score-value xl">${item.rankuScore}</p>
-                            <p class="f-15">${rankuScoreClass(item.rank)}</p>
+                            <p class="f-15">${rankuScoreClass(item.rankuScore)}</p>
+                        </div>
+                      </div>
+              </div>
+            </article>
+        </a>
+      </li>
+    `.trim();
+};
+
+const noneRankCard = (item, rank) => {
+    console.log(item)
+    return `
+      <li>
+        <a href="/hotel/${item.id}?top=${rank}">
+            <article class="ranku-item">
+              <div class="ranku-img-box">
+                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy">
+              </div>
+              <div class="description-warpper">
+                <div class="price-left">
+                  <h2 class="skip-2">${esc(item.koName)}</h2>
+                  <section>
+                    <div class="price-left-content">
+                      <div class="${prefIconClass(item.preferenceValue)}"></div>
+                      <p class="f-17">
+                        <span class="highlight f-b">${prefLabel(item.preferenceValue)}</span>에게 가장인기!
+                      </p>
+                    </div>
+                    <div class="price-left-content">
+                      <div class="hotel-star-svg"></div>
+                      <p class="f-17">${esc(item.starRating)}성</p>
+                    </div>
+                  </section>
+                </div>
+                <div class="score-warpper">
+                        <div class="ranku-total-score">
+                        <div class="score ${rankuScoreSVGClass(item.rankuScore)} "></div>
+                          <p class="score-value xl">${item.rankuScore}</p>
+                            <p class="f-15">${rankuScoreClass(item.rankuScore)}</p>
                         </div>
                       </div>
               </div>
@@ -181,9 +223,9 @@ function renderRanking(data){
     // TOP 3
     topSection.innerHTML = '';
     const topFrag = document.createDocumentFragment();
-    top3.forEach((item) => {
+    top3.forEach((item,i) => {
         const wrap = document.createElement('div');
-        wrap.innerHTML = topCard(item, tempRank++);
+        wrap.innerHTML = topCard(item, i+1);
         topFrag.appendChild(wrap.firstElementChild);
     });
     topSection.appendChild(topFrag);
@@ -191,15 +233,13 @@ function renderRanking(data){
     // NORMAL (4위~)
     normalSection.innerHTML = '';
     const normalFrag = document.createDocumentFragment();
-    rest.forEach((item) => {
+    rest.forEach((item,i) => {
         const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, tempRank++);
+        wrap.innerHTML = normalCard(item, i+4);
         normalFrag.appendChild(wrap.firstElementChild);
     });
     normalSection.appendChild(normalFrag);
 }
-
-
 
 
 let ticking = false;
@@ -233,7 +273,7 @@ function renderInfinityPageNation() {
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            if (!res.ok) throw new Error(`HTTPS ${res.status}`);
             return res.json();
         })
         .then(data => {
@@ -247,11 +287,21 @@ function renderInfinityPageNation() {
 function renderNormal(data) {
     const base = 4 + normalSection.querySelectorAll('li').length;
     const normalFrag = document.createDocumentFragment();
-    data.forEach((item, i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, base + i);
-        normalFrag.appendChild(wrap.firstElementChild);
-    });
+
+    if (base < 99) {
+        data.forEach((item, i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, base + i);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+    } else {
+        data.forEach((item, i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = noneRankCard(item, base + i);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+    }
+
 
     normalSection.appendChild(normalFrag);
 }
