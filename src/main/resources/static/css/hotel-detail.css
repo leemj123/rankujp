@@ -110,6 +110,7 @@ main {
 
 #nav-prev-warpper ol {
     display: flex;
+    align-items: center;
 }
 
 #nav-prev-warpper ol li {
@@ -119,8 +120,15 @@ main {
 #nav-prev-warpper ol .nav-prev {
     color: #919191;
     cursor: pointer;
+    white-space: nowrap;
 }
-
+#nav-prev-warpper ol .nav-current {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 #nav-prev-warpper ol .nav-prev::after {
     content: '>';
     margin-left: .3rem;
@@ -147,7 +155,17 @@ main {
 .head-info-row>div {
     color: #919191;
 }
-
+.no-price {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.no-price-svg {
+    content: url('/public/no-price.svg');
+}
 /* ===================== */
 
 .calendar-warpper {

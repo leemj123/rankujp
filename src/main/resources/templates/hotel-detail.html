@@ -24,19 +24,12 @@
       <div class="logo-box"><a href="/"><img class="logo" src="/public/logo.png" alt="랭쿠jp 로고"></a></div>
       <nav class="header-nav">
         <ul>
-          <a href="/">
-            <li>할인랭킹</li>
-          </a>
-          <a href="/score">
-            <li>종합랭킹</li>
-          </a>
-          <a href="/premium">
-            <li>프리미엄</li>
-          </a>
+            <li><a href="/">할인랭킹</a></li>
+            <li><a href="/score">종합랭킹</a></li>
+            <li><a href="/premium">프리미엄</a></li>
         </ul>
       </nav>
     </div>
-
   </header>
   <main id="main">
     <section class="main-l">
@@ -62,7 +55,7 @@
             <ol>
                 <li><a class="f-14 nav-prev" href="/">호텔 랭킹</a></li>
                 <li><a class="f-14 nav-prev" href="/" th:text="${content.stateName}"></a></li>
-                <li><a class="f-14" th:text ="${content.koName}"></a></li>
+                <li><a class="f-14 nav-current" th:text ="${content.koName}"></a></li>
             </ol>
             <div class="share-this"></div>
           </div>
@@ -213,6 +206,10 @@
                       </a>
                       <div class="price-line-seperator"></div>
                   </li>
+                  <li class="no-price" th:if="${#lists.isEmpty(content.weekdayPriceList)}">
+                      <div class="no-price-svg"></div>
+                      <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
+                  </li>
               </ol>
                 <button th:if="${#lists.size(content.weekdayPriceList) >= 3}"
                         class="btn-st more-price" type="button">
@@ -260,6 +257,10 @@
                           </div>
                       </a>
                       <div class="price-line-seperator"></div>
+                  </li>
+                  <li class="no-price" th:if="${#lists.isEmpty(content.weekendPriceList)}">
+                      <div class="no-price-svg"></div>
+                      <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
                   </li>
               </ol>
                 <button th:if="${#lists.size(content.weekendPriceList) >= 3}"
