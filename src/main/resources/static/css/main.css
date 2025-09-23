@@ -504,14 +504,15 @@ header {
     gap: 6rem;
 }
 
-.header-nav ul a {
+.header-nav ul li {
     width: auto;
     height: 100%;
     padding: 0 2rem;
     cursor: pointer;
 }
 
-.header-nav ul a li {
+.header-nav ul li a {
+    display: block;
     height: 100%;
     text-align: center;
     align-content: center;
@@ -520,8 +521,8 @@ header {
     border: none;
 }
 
-.header-nav ul a:hover {
-    li {
+.header-nav ul li:hover {
+    a {
         color: #000000;
         font-weight: bold;
         border-bottom: 2px solid #2f2f2f;
@@ -529,7 +530,7 @@ header {
 
 }
 
-.header-nav ul a li.active {
+.header-nav ul li a.active {
     color: #000000;
     font-weight: bold;
     border-bottom: 2px solid #2f2f2f;
