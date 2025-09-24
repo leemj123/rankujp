@@ -90,7 +90,7 @@
                         <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
                             <div class="top-item-img-box">
                                 <div class="head-line"></div>
-                                <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표 이미지'}" />
+                                <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표 이미지'}" loading="lazy"  onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
                                 <div class="ranku list"
                                      th:classappend="${stat.index == 0 ? ' gold' :
                                              (stat.index == 1 ? ' sliver' :
@@ -150,7 +150,7 @@
                                 <div class="premium-seperator"></div>
                                 <article class="ranku-item">
                                     <div class="ranku-img-box">
-                                        <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}">
+                                        <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
                                         <div class="ranku list normal">
                                             <span class="ranku-value" th:text="${stat.index + 1}">4</span>
                                         </div>
