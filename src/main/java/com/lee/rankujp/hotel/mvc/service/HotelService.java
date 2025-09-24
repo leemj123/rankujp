@@ -90,6 +90,7 @@ public class HotelService {
 
         return new PageImpl<>(results.stream().map(ScoreResponse::new).toList(), pageable, total);
     }
+
     public Page<PremiumResponse> premiumPage(int location, int sort, int page) {
         Pageable pageable = PageRequest.of(page, 20);
 
@@ -97,11 +98,10 @@ public class HotelService {
 
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 
-        orders.add(qHotel.starRating.desc());
+        orders.add(qHotel.bestCrossedOutRate.desc());
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) orders.add(order);
-        orders.add(qHotel.rankuScore.desc());
-        orders.add(qHotel.bestCrossedOutRate.desc());
+        orders.add(qHotel.starRating.desc());
 
         List<Hotel> results = jpaQueryFactory
                 .selectFrom(qHotel)
@@ -179,9 +179,7 @@ public class HotelService {
     }
     private BooleanExpression premiumFilterQueryExpression(int location) {
         // 공통 필터 조건
-        BooleanExpression common = qHotel.starRating.goe(4.0)
-                .and(qHotel.reviewNum.goe(100))
-                .and(qHotel.bestCrossedOutRate.goe(20000.0));
+        BooleanExpression common = qHotel.starRating.goe(4.0);
 
         BooleanExpression predicate;
 
