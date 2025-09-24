@@ -43,6 +43,7 @@ public class HotelInfoUpdater {
                     continue;
                 }
                 // ✅ DB 반영만 짧게 새 트랜잭션으로 커밋
+                Thread.sleep(1000);
                 hotelPersistService.saveImgStarInNewTx(h.getId(), resp);
                 log.info("{} updated", h.getId());
             } catch (Exception e) {
