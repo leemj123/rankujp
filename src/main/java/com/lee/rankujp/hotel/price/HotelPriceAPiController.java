@@ -12,13 +12,13 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/hotel/price")
+@RequestMapping("/hotel")
 @Slf4j
 public class HotelPriceAPiController {
 
     private final HotelPriceService hotelPriceService;
 
-    @PostMapping
+    @PostMapping("/price")
     public ResponseEntity<Map<String,String>> HotelPriceApiRequester() {
 
         Mono<Void> run = hotelPriceService.syncAllPriceWindowBatched()
@@ -30,4 +30,10 @@ public class HotelPriceAPiController {
 
         return ResponseEntity.accepted().body(Map.of("status","started"));
     }
+//    @PostMapping("/update")
+//    public void HotelImgAndStarApiRequester() {
+//
+//        hotelPriceService.imgAndStarUpdate();
+//
+//    }
 }

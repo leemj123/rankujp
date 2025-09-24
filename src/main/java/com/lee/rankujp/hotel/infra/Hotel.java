@@ -1,6 +1,7 @@
 package com.lee.rankujp.hotel.infra;
 
 import com.lee.rankujp.hotel.cumtom.PointLocation;
+import com.lee.rankujp.hotel.price.dto.ImgStarResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -94,5 +95,12 @@ public class Hotel {
         this.bestCrossedOutRate = bco;
         this.bestDailyRate = bdr;
         this.bestSailPrecent = bsp;
+    }
+
+
+    public void imgStarUpdate(ImgStarResponse.HotelApiInfo info) {
+        this.enName = info.getHotelName();
+        this.starRating = info.getStarRating();
+        this.thumbnailImg = info.getImageUrl();
     }
 }

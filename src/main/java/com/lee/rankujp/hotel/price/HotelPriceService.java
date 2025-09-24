@@ -1,12 +1,16 @@
 package com.lee.rankujp.hotel.price;
 
+import com.lee.rankujp.hotel.infra.Hotel;
 import com.lee.rankujp.hotel.infra.QHotel;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceRequest;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
+import com.lee.rankujp.hotel.price.dto.ImgStarResponse;
 import com.lee.rankujp.hotel.price.dto.TopBucket;
 import com.lee.rankujp.hotel.price.function.PriceNormalize;
 import com.lee.rankujp.hotel.price.function.TopKCollectors;
+import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -35,6 +39,7 @@ public class HotelPriceService {
     private final QHotel qHotel = QHotel.hotel;
     private final WebClient agodaApiClient;
     private final HotelPersistService persistService;
+    private final HotelRepo hotelRepo;
 
     private static final int BATCH_CONCURRENCY = 8;
     private static final int BATCH = 100;
@@ -79,7 +84,6 @@ public class HotelPriceService {
                 .fetch();
     }
 
-
     public Mono<Void> syncAllPriceWindowBatched() {
         LocalDate baseDate = LocalDate.now();
         return persistService.truncateHotelPrice()
@@ -116,8 +120,7 @@ public class HotelPriceService {
                 .collect(TopKCollectors.top5WeekdayWeekendPerHotel());
     }
 
-    public Flux<Tuple2<LocalDate, AgodaPriceResponse>> priceProcessFluxWithDate(LocalDate stayDate,
-                                                                                List<Long> ids) {
+    public Flux<Tuple2<LocalDate, AgodaPriceResponse>> priceProcessFluxWithDate(LocalDate stayDate, List<Long> ids) {
         return Flux.range(0, 45)
                 .map(stayDate::plusDays)
                 .concatMap(day ->
@@ -126,6 +129,7 @@ public class HotelPriceService {
                                                 .map(resp -> Tuples.of(day, resp)))
                         , 1);
     }
+
 
     public Mono<AgodaPriceResponse> callApiForDay(LocalDate stayDate, LocalDate finDate, List<Long> hotelId) {
 
@@ -141,5 +145,68 @@ public class HotelPriceService {
                 .bodyToMono(AgodaPriceResponse.class);
     }
 
+//============================================================
+
+    private static final int MAX_DAY_SHIFT = 45;          // 최대 45번(=45일)까지 날짜 이동 시도
+    private static final Duration REQ_TIMEOUT = Duration.ofSeconds(15);
+
+    @Transactional
+    public void imgAndStarUpdate() {
+        List<Hotel> hotels = hotelRepo.findAll();
+        LocalDate baseStay = LocalDate.now().plusDays(20);
+
+        for (Hotel h : hotels) {
+            LocalDate stayDate = baseStay;
+            LocalDate finDate  = stayDate.plusDays(2);
+
+            boolean updated = false;
+
+            for (int shift = 0; shift < MAX_DAY_SHIFT; shift++) {
+                try {
+                    ImgStarResponse resp = requestAgodaBlocking(stayDate, finDate, h.getId());
+
+                    if (resp != null && resp.getError() == null) {
+                        h.imgStarUpdate(resp.getResults().get(0));
+                        updated = true;
+                        break;
+                    } else {
+                        // 에러 응답 → 날짜 +1일 이동 후 재시도
+                        log.info("Agoda error for hotel {} on {}~{} → shift+1. reason={}",
+                                h.getId(), stayDate, finDate,
+                                resp != null && resp.getError() != null ? resp.getError().getMessage() : "unknown");
+                    }
+                } catch (Exception e) {
+                    log.warn("Request failed for hotel {} on {}~{} → shift+1. err={}",
+                            h.getId(), stayDate, finDate, e.toString());
+                }
+
+                // 날짜 +1일씩 이동
+                stayDate = stayDate.plusDays(1);
+                finDate  = finDate.plusDays(1);
+
+            }
+
+            if (!updated) {
+                log.warn("No valid response within {} shifts for hotel {}", MAX_DAY_SHIFT, h.getId());
+            } else {
+                log.info("{} updated", h.getId());
+            }
+        }
+    }
+
+    private ImgStarResponse requestAgodaBlocking(LocalDate stayDate, LocalDate finDate, long hotelId) {
+        return agodaApiClient.post()
+                .uri("/affiliateservice/lt_v1")
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(new AgodaPriceRequest(stayDate, finDate, hotelId))
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, r ->
+                        r.bodyToMono(String.class)
+                                .flatMap(body -> Mono.error(new IllegalStateException(
+                                        "Agoda API error %s: %s".formatted(r.statusCode(), body)))))
+                .bodyToMono(ImgStarResponse.class)
+                .timeout(REQ_TIMEOUT)
+                .block();
+    }
 
 }
