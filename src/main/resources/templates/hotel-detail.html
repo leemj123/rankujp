@@ -69,14 +69,14 @@
     <section class="main-l">
       <section class="photo-section">
         <div class="photo-card thumbnail">
-          <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill">
+          <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
         </div>
         <div class="photo-mini-section">
           <div class="photo-card sub">
-            <img th:src="${content.photo2}" th:alt="${content.koName + '의 호실사진'}" decoding="async" data-nimg="fill">
+            <img th:src="${content.photo2}" th:alt="${content.koName + '의 호실사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
           </div>
           <div class="photo-card sub">
-            <img th:src="${content.photo3}" th:alt="${content.koName + '의 주변 풍경사진'}" decoding="async" data-nimg="fill">
+            <img th:src="${content.photo3}" th:alt="${content.koName + '의 주변 풍경사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
           </div>
         </div>
         <div class="photo-more">1/20</div>

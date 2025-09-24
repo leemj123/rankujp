@@ -49,6 +49,7 @@ main {
 .photo-card {
     position: relative;
     overflow: hidden;
+    background-color: #E1E3EB;
 }
 
 .photo-card.thumbnail {

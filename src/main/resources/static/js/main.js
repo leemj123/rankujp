@@ -18,3 +18,4 @@ const mo = new MutationObserver(muts => {
     }
 });
 mo.observe(document.body, { childList: true, subtree: true });
+
