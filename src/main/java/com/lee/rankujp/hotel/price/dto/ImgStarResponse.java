@@ -16,7 +16,7 @@ public class ImgStarResponse {
     public static class HotelApiInfo {
         private String hotelName;
         private double starRating;
-        private String imageUrl;
+        private String imageURL;
     }
     @Data
     public static class ErrorResponse {

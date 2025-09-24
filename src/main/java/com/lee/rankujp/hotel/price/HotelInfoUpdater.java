@@ -1,7 +1,6 @@
-package com.lee.rankujp.hotel.price.legacy;
+package com.lee.rankujp.hotel.price;
 
 import com.lee.rankujp.hotel.infra.Hotel;
-import com.lee.rankujp.hotel.price.HotelPersistService;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceRequest;
 import com.lee.rankujp.hotel.price.dto.ImgStarResponse;
 import com.lee.rankujp.hotel.repo.HotelRepo;

@@ -1,6 +1,5 @@
 package com.lee.rankujp.hotel.price;
 
-import com.lee.rankujp.hotel.price.legacy.HotelInfoUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
