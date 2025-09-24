@@ -1,5 +1,6 @@
 package com.lee.rankujp.hotel.price;
 
+import com.lee.rankujp.hotel.price.legacy.HotelInfoUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class HotelPriceAPiController {
 
     private final HotelPriceService hotelPriceService;
+    private final HotelInfoUpdater hotelInfoUpdater;
 
     @PostMapping("/price")
     public ResponseEntity<Map<String,String>> HotelPriceApiRequester() {
@@ -30,10 +32,10 @@ public class HotelPriceAPiController {
 
         return ResponseEntity.accepted().body(Map.of("status","started"));
     }
-//    @PostMapping("/update")
-//    public void HotelImgAndStarApiRequester() {
-//
-//        hotelPriceService.imgAndStarUpdate();
-//
-//    }
+    @PostMapping("/update")
+    public void HotelImgAndStarApiRequester() {
+
+        hotelInfoUpdater.imgAndStarUpdate();
+
+    }
 }

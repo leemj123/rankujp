@@ -5,7 +5,6 @@ import com.lee.rankujp.hotel.mvc.dto.ScoreResponse;
 import com.lee.rankujp.hotel.mvc.service.HotelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

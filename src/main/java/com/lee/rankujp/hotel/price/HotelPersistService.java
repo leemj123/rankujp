@@ -1,10 +1,15 @@
 package com.lee.rankujp.hotel.price;
+import com.lee.rankujp.hotel.infra.Hotel;
 import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
+import com.lee.rankujp.hotel.price.dto.ImgStarResponse;
 import com.lee.rankujp.hotel.price.dto.TopBucket;
+import com.lee.rankujp.hotel.repo.HotelRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -22,7 +27,7 @@ import static com.lee.rankujp.hotel.price.HotelPriceService.DB_ELASTIC;
 @RequiredArgsConstructor
 @Slf4j
 public class HotelPersistService {
-
+    private final HotelRepo hotelRepo;
     private final DataSource dataSource;
     private final TransactionTemplate tx;
 
@@ -97,6 +102,13 @@ public class HotelPersistService {
     /** TopBucket 내부의 두 리스트(평/주) 순회 */
     private static Iterable<HotelPriceRow> iterate(TopBucket b) {
         return () -> Stream.concat(b.weekdayList().stream(), b.weekendList().stream()).iterator();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveImgStarInNewTx(long hotelId, ImgStarResponse resp) {
+        Hotel h = hotelRepo.findById(hotelId).orElseThrow();
+        h.imgStarUpdate(resp.getResults().get(0));
+        hotelRepo.saveAndFlush(h);
     }
 }
 
