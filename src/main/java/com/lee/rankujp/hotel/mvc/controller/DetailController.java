@@ -15,7 +15,7 @@ public class DetailController {
     private final HotelService hotelService;
 
     @GetMapping("/hotel/{id}")
-    public String hotel(Model model, @PathVariable Long id, @RequestParam int top){
+    public String hotel(Model model, @PathVariable Long id, @RequestParam(defaultValue = "0") int top){
         model.addAttribute("top", top);
         model.addAttribute("content", hotelService.HotelDetail(id));
         return "hotel-detail";

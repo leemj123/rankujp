@@ -2,20 +2,53 @@
 <html lang="ko">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>오늘의 할인 랭킹</title>
-  <meta name="description" content="">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}"></title>
+    <meta name="description" th:content="${description}">
+    <meta name="keywords" th:content="${keywords}">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="thumbnail" th:content="${thumbnail}">
+
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:site_name" content="rankujp.com">
+    <meta property="og:type" content="article">
+    <meta property="og:title" th:content="${title}">
+    <meta property="og:url" content="https://rankujp.com/score">
+    <meta property="og:description" th:content="${description}">
+    <meta property="og:image" th:content="${thumbnail}">
+
+    <meta property="twitter:card" content="article">
+    <meta property="twitter:title" th:content="${title}">
+    <meta property="twitter:description" th:content="${description}">
+    <meta property="twitter:image" th:content="${thumbnail}">
+    <meta name="twitter:creator" content="@rankujp">
+
+    <link rel="canonical" href="https://rankujp.com/score">
+    <meta name="agd-partner-manual-verification" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ECZDFLQJ5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-9ECZDFLQJ5');
+    </script>
+    <link rel="preload" href="/css/main.css" as="style">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/list.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/list.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <header>
     <div class="header-warpper">
-      <div class="logo-box"><a><img class="logo" src="/public/logo.png" alt="랭쿠jp 로고"></a></div>
+      <div class="logo-box"><a href="/"><img class="logo" src="/public/logo.png" alt="랭쿠jp 로고"></a></div>
       <nav class="header-nav">
           <ul>
               <li><a href="/">할인랭킹</a></li>
@@ -166,7 +199,7 @@
     </section>
     <section class="main-r">
       <div class="banner-colum">
-        <a><img src="/banner/ago-colum-banner.png" style="width: 18rem;"></a>
+        <a><img src="/public/banner/ago-colum-banner.png" style="width: 18rem;"></a>
       </div>
     </section>
   </main>

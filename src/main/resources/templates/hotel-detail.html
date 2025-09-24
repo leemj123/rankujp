@@ -2,20 +2,54 @@
 <html lang="ko">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="${content.getTitle()}"></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${content.title}"></title>
     <meta name="description" th:attr="content=${content.description}" />
     <meta name="keywords" th:attr="content=${content.keyword}" />
+
+    <meta name="description" content="일본 저렴한 호텔 추천 & 가격 비교｜예약 사이트 랭킹과 할인 정보 총정리 | 일본 호텔을 가장 합리적으로 예약하려면 언제가 가장 저렴할까? 인기 예약 사이트의 가격・평점・할인 정보까지 한눈에 비교하고, 최저가 예약 꿀팁까지 확인해보세요">
+    <meta name="keywords" th:content="${keywords}">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="thumbnail" th:content="${thumbnail}">
+
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:site_name" content="rankujp.com">
+    <meta property="og:type" content="article">
+    <meta property="og:title" th:content="${content.title}">
+    <meta property="og:url" th:content="'https://rankujp.com/hotel/' + ${content.id} + '?top=' + ${top}" />
+    <meta property="og:description" th:content="${content.description}">
+    <meta property="og:image" th:content="${thumbnail}">
+
+    <meta property="twitter:card" content="article">
+    <meta property="twitter:title" th:content="${content.title}">
+    <meta property="twitter:description" th:content="${content.description}">
+    <meta property="twitter:image" th:content="${thumbnail}">
+    <meta name="twitter:creator" content="@rankujp">
+
+    <link rel="preload" href="/css/main.css" as="style">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="canonical"  th:href="'https://rankujp.com/hotel'+${content.id}">
+
+    <meta name="agd-partner-manual-verification" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ECZDFLQJ5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-9ECZDFLQJ5');
+    </script>
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
-
-
-
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/hotel-detail.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hotel-detail.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -65,7 +99,7 @@
                 <div class="ranku detail" th:classappend="${
                      top == 1 ? 'gold' :
                     (top == 2 ? 'sliver' :
-                    (top == 41 ? 'bronze' : 'normal' ))
+                    (top == 3 ? 'bronze' : 'normal' ))
                     }">
                   <span class="ranku-value" th:text="${top}"></span>
                 </div>
