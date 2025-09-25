@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.*;
 
 @Service
@@ -361,6 +362,23 @@ public class HotelService {
     }
 
 
+    public List<String> getImageList(Long id) {
+        Hotel hotel = hotelRepo.findById(id).orElse(null);
+
+        List<String> result = new ArrayList<>();
+        result.add(hotel.getThumbnailImg());
+        result.add(stripParams(hotel.getPhoto2()));
+        result.add(stripParams(hotel.getPhoto3()));
+        result.add(stripParams(hotel.getPhoto4()));
+        result.add(stripParams(hotel.getPhoto5()));
+
+        return result;
+    }
+    private String stripParams(String url) {
+        if (url == null) return null;
+        int idx = url.indexOf("?");
+        return (idx >= 0) ? url.substring(0, idx) : url;
+    }
 
 
 //    @Transactional

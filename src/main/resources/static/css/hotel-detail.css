@@ -50,6 +50,7 @@ main {
     position: relative;
     overflow: hidden;
     background-color: #E1E3EB;
+    cursor: pointer;
 }
 
 .photo-card.thumbnail {
@@ -62,6 +63,100 @@ main {
     flex: 1;
     height: 20.5rem;
 }
+.modal-close {
+    cursor: pointer;
+    content: url('/public/detail/modal-close.svg');
+    z-index: 5;
+    position: absolute;
+    top: 24px;
+    right: 20px;
+}
+
+.photo-more, .photo-index {
+    position: absolute;
+    display: block;
+    color: #ffffff;
+    font-size: 1.4rem;
+    bottom: 12px;
+    font-weight: bold;
+    right: 12px;
+    z-index: 10;
+    cursor: pointer;
+    padding: .6rem 1rem;
+    background-color: #2f2f2f60;
+    border-radius: 30px;
+}
+.photo-index {
+    cursor: default;
+}
+.photo-more span, .photo-index span {
+    color: #fff;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+
+.modal-content {
+    position: relative;
+    z-index: 10;
+    min-width: 375px;
+    max-width: 850px;
+    width: 100vw;
+    min-height: 303px;
+    height: 100vh;
+    max-height: 55rem;
+    margin: auto 6rem;
+    display: flex;
+    align-items: center;
+    background-color: #919191;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+
+#modalImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    position: absolute;
+    inset: 0;
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    background: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    height: 50%;
+    padding: 2rem
+}
+
+#prevBtn { left: 0; }
+#nextBtn { right: 0;}
+
 
 .photo-card img {
     position: absolute;
@@ -83,9 +178,9 @@ main {
     background-color: #00000060;
 }
 
-.photo-more {
+.photo-more, .photo-index {
     position: absolute;
-    display: block;
+    display: none;
     color: #ffffff;
     bottom: 12px;
     right: 12px;
@@ -93,14 +188,45 @@ main {
     cursor: pointer;
     padding: .6rem 1rem;
     background-color: #2f2f2f60;
-    visibility: 60%;
     border-radius: 30px;
     font-size: 1.4rem;
     font-weight: bold;
     line-height: 1.4;
 }
+.photo-index {
+    display: block;
+}
+@media (max-width: 768px) {
 
+    .modal-backdrop {
+        background: rgba(0, 0, 0);
+    }
+    .modal-content {
+        margin: 0;
+        height: auto;
+        aspect-ratio: 4/3;
+        border-radius: 0;
+        overflow: visible;
+    }
+    .modal-close {
+        position: fixed;
+        top: 30px;
+        right: 20px;
 
+    }
+    .nav-btn {
+        display: none;
+    }
+    .photo-more {
+        display: block;
+    }
+    .photo-index {
+        display: block;
+        position: fixed;
+        bottom: 30px;
+        right: 20px;
+    }
+}
 /* ===================== */
 #nav-prev-warpper {
     display: flex;
@@ -566,7 +692,6 @@ main {
         width: 100vw;
         height: 12rem;
         background: url('/public/banner/ago-768row.png') no-repeat center / contain;
-        ;
     }
 
     .price-list.active {
