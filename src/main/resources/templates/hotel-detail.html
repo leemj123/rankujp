@@ -51,7 +51,46 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
+<div id="imageModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <div class="modal-close" onclick="closeModal()"></div>
+        <img id="modalImage" src="" alt="modal image" decoding="async" data-nimg="fill">
+        <button id="prevBtn" class="nav-btn">
+            <div style="
+            width: 34px;
+            height: 34px;
+            background-color: #ffffff70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M7.6944 0.307535C7.28689 -0.102512 6.62619 -0.102512 6.21869 0.307535L0.305626 6.25755C-0.101875 6.6676 -0.101875 7.33243 0.305626 7.74248L6.21869 13.6925C6.62619 14.1025 7.28689 14.1025 7.6944 13.6925C8.10187 13.2824 8.10187 12.6177 7.6944 12.2076L2.51918 7.00002L7.6944 1.79246C8.10187 1.38242 8.10187 0.717582 7.6944 0.307535Z"
+                          fill="#24292E" />
+                </svg>
+            </div>
+        </button>
+        <button id="nextBtn" class="nav-btn">
+            <div style="
+            width: 34px;
+            height: 34px;
+            background-color: #ffffff70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M0.305605 0.307535C0.713106 -0.102512 1.37381 -0.102512 1.78131 0.307535L7.69437 6.25755C8.10187 6.6676 8.10187 7.33243 7.69437 7.74248L1.78131 13.6925C1.37381 14.1025 0.713105 14.1025 0.305604 13.6925C-0.101868 13.2824 -0.101868 12.6177 0.305604 12.2076L5.48082 7.00002L0.305605 1.79246C-0.101868 1.38242 -0.101868 0.717582 0.305605 0.307535Z"
+                          fill="#24292E" />
+                </svg>
+            </div>
+        </button>
+        <div class="photo-index" onclick="openModal()"><span class="f-14 f-b" id="photo-index">1</span><span class="f-14 f-b">/5</span></div>
+    </div>
+</div>
 <body>
   <header>
     <div class="header-warpper">
@@ -67,6 +106,7 @@
   </header>
   <main id="main">
     <section class="main-l">
+
       <section class="photo-section">
         <div class="photo-card thumbnail">
           <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -79,7 +119,7 @@
             <img th:src="${content.photo3}" th:alt="${content.koName + '의 주변 풍경사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
           </div>
         </div>
-        <div class="photo-more">1/20</div>
+        <div class="photo-more" onclick="openModal()">1/20</div>
       </section>
 
       <section class="content-warpper">
