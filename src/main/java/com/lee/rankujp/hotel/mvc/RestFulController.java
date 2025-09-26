@@ -3,11 +3,14 @@ package com.lee.rankujp.hotel.mvc;
 import com.lee.rankujp.hotel.mvc.dto.PremiumResponse;
 import com.lee.rankujp.hotel.mvc.dto.ScoreResponse;
 import com.lee.rankujp.hotel.mvc.service.HotelService;
+import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
+import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -32,4 +35,9 @@ public class RestFulController {
     public List<String> hotelPhoto(@PathVariable Long id){
         return hotelService.getImageList(id);
     }
+    @GetMapping("/search/hotel/{id}/date")
+    public AgodaPriceResponse.HotelApiInfo hotelDateSearcher(@PathVariable Long id , @RequestParam LocalDate day) {
+        return hotelService.getHotelDateSearcher(id, day);
+    }
+
 }

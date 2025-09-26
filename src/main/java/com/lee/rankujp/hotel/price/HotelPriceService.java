@@ -141,7 +141,7 @@ public class HotelPriceService {
                 .onStatus(HttpStatusCode::isError, resp ->
                         resp.bodyToMono(String.class)
                                 .flatMap(body -> Mono.error(new IllegalStateException(
-                                        "Agoda API error %s: %s".formatted(resp.statusCode(), body)))))
+                                        "Agoda API error %s".formatted(resp.statusCode())))))
                 .bodyToMono(AgodaPriceResponse.class);
     }
 

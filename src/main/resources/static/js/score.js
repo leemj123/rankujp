@@ -33,7 +33,9 @@ wrapper.addEventListener('click', (e) => {
     url.searchParams.set('location', firstValue);
     url.searchParams.set('type', secondValue);
 
-    page=2;
+    page = 2;
+    paramLocation = firstValue;
+    paramType = secondValue;
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -78,9 +80,7 @@ const rankBadgeClass = (rank) => {
     return '';
 };
 const rankuScoreSVGClass = (rank) => {
-    console.log(rank);
     const v = Number(rank);
-    console.log(v);
     if (v >= 86) return 'best';
     if (v >= 71) return 'verygood';
     if (v >= 41) return 'good';
@@ -88,7 +88,6 @@ const rankuScoreSVGClass = (rank) => {
     return 'normal';
 };
 const rankuScoreClass = (rank) => {
-    console.log(rank);
     const v = Number(rank);
     if (v >= 86) return '매우 훌륭함';
     if (v >= 71) return '훌륭함';
@@ -136,7 +135,6 @@ const topCard = (item, rank) => {
 
 // 일반 랭킹 카드 (4위~)
 const normalCard = (item, rank) => {
-    console.log(item)
     return `
       <li>
         <a href="/hotel/${item.id}?top=${rank}">
@@ -178,7 +176,6 @@ const normalCard = (item, rank) => {
 };
 
 const noneRankCard = (item, rank) => {
-    console.log(item)
     return `
       <li>
         <a href="/hotel/${item.id}?top=${rank}">

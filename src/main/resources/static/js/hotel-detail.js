@@ -2,6 +2,13 @@ let imgList = [];
 let currentIndex = 0;
 let id = null;
 
+const hotelPriceSearchValue = document.getElementById('search-value');
+const topDailyPercent = document.getElementById('daily-percent');
+const topDailyPrice = document.getElementById('daily-price');
+const topOnPrice = document.getElementById('top-on-price');
+const topNoPrice = document.getElementById('top-no-price');
+const topPriceWarpper = document.getElementById('top-price-warpper');
+
 document.addEventListener("DOMContentLoaded", async () => {
     // URL에서 roomId 추출
     const segs = window.location.pathname.replace(/\/+$/, "").split("/");
@@ -55,6 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             photoIndexUpdate();
         });
     }
+
 });
 
 const photoIndexSpan = document.getElementById('photo-index');
@@ -118,4 +126,39 @@ function updateModalImage() {
     if (!imgList.length) return;
     const modalImage = document.getElementById("modalImage");
     if (modalImage) modalImage.src = imgList[currentIndex];
+}
+
+
+function searchHotelPrice() {
+    const searchUrl = '/rest/search/hotel/' + id + '/date?day=' + hotelPriceSearchValue.value;
+    topPriceWarpper.classList.add('on-load');
+    fetch(searchUrl, { headers: { 'Accept': 'application/json' } })
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            topDailyPercent.textContent = Math.round(((data.crossedOutRate - data.dailyRate) / data.crossedOutRate) * 100);
+            topDailyPrice.textContent = data.dailyRate;
+
+            // ✅ 정상일 때: topNoPrice에 at400 없으면 추가
+            if (!topNoPrice.classList.contains('at400')) {
+                topNoPrice.classList.add('at400');
+            }
+            topOnPrice.classList.remove('at400');
+        })
+        .catch(err => {
+            console.error(err);
+
+            // ✅ 에러일 때: topOnPrice에 at400 없으면 추가
+            if (!topOnPrice.classList.contains('at400')) {
+                topOnPrice.classList.add('at400');
+            }
+
+            // topNoPrice에서 at400 제거
+            topNoPrice.classList.remove('at400');
+        })
+        .finally(()=> {
+                topPriceWarpper.classList.remove('on-load')
+            });
 }

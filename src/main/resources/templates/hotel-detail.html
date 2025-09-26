@@ -197,27 +197,35 @@
 
           </div>
           <div style="margin: 2rem 0; width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
-          <div class="calendar-warpper">
+          <div class="calendar-warpper" id="top-price-warpper">
             <div class="calendar-head">
               <div class="f-15 f-b"><span class="calendar-svg"></span>&nbsp;날짜</div>
               <div style="gap: 1rem;">
-                <input style="cursor: inherit; width: 11.6rem;  padding: 1rem 2rem;" class="btn-st" type="text"
-                  placeholder="0000-00-00" autocomplete="off" th:value="${#temporals.format(content.bestStayDate, 'yyyy-MM-dd')}">
-                <button class="btn-st">검색</button>
+                <input id="search-value" style="cursor: inherit; width: 15rem;  padding: 1rem 2rem;" class="btn-st"
+                       type="date"
+                       pattern="^\d{4}-\d{2}-\d{2}$"
+                       required
+                       autocomplete="off"
+                       th:value="${#temporals.format(content.bestStayDate, 'yyyy-MM-dd')}">
+                <button class="btn-st" onclick="searchHotelPrice()">검색</button>
               </div>
             </div>
 
-            <div class="detail-price-warpper">
+            <div class="detail-price-warpper" id="top-on-price">
               <div style="display: flex; gap: 1rem; justify-content: flex-end; align-items: center;">
                 <p class="f-15 f-b">최저가</p>
                 <div style="height: 1.4rem; width: 1px; border-left: 1px solid #d9d9d9;"></div>
                 <p class="f-15" style="color: #959595;">1박당 요금</p>
               </div>
               <div style="display: flex; gap: .8rem;">
-                <p class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
-                <p class="daily-price xl JPY" th:text="${content.bestDailyRate}"></p>
+                <p id="daily-percent" class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
+                <p id="daily-price" class="daily-price xl JPY" th:text="${content.bestDailyRate}"></p>
               </div>
             </div>
+              <div class="detail-price-warpper at400" id="top-no-price">
+                  <div class="no-price-svg"></div>
+                  <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
+              </div>
           </div>
         </section>
         <a class="banner-row">

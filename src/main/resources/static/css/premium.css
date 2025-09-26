@@ -262,6 +262,7 @@ main {
     height: 100%;
     border-radius: 20px;
     overflow: hidden;
+    background-color: #E1E3EB;
 }
 
 .ranku-img-box img {
