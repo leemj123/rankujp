@@ -34,6 +34,10 @@ wrapper.addEventListener('click', (e) => {
     url.searchParams.set('location', firstValue);
     url.searchParams.set('type', secondValue);
 
+    page = 2;
+    paramLocation = firstValue;
+    paramType = secondValue;
+
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {

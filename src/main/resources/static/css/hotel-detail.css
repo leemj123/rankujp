@@ -17,6 +17,7 @@ main {
 }
 
 .main-r {
+    display: none;
     width: 18rem;
     height: auto;
     position: relative;
@@ -293,6 +294,7 @@ main {
 .no-price-svg {
     content: url('/public/no-price.svg');
 }
+
 /* ===================== */
 
 .calendar-warpper {
@@ -320,7 +322,26 @@ main {
     flex-direction: column;
     gap: .6rem;
 }
+.detail-price-warpper.at400 {
+    display: none;
+}
+.on-load {
+    filter: blur(3px);
+    opacity: 0.3;
+}
+.on-load::after {
+    content: url("/public/detail/loading.svg");
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
+#top-no-price {
+    flex-direction: row;
+    justify-content: flex-start;
+}
 @media (max-width: 786px) {
     .calendar-warpper {
         flex-direction: column-reverse;

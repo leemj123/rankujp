@@ -3,6 +3,9 @@ package com.lee.rankujp.hotel.mvc.service;
 import com.lee.rankujp.hotel.cumtom.PointLocation;
 import com.lee.rankujp.hotel.infra.*;
 import com.lee.rankujp.hotel.mvc.dto.*;
+import com.lee.rankujp.hotel.price.HotelPriceService;
+import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
+import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.hotel.review.RankuScoreCalculator;
 import com.querydsl.core.types.OrderSpecifier;
@@ -16,8 +19,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -27,6 +32,7 @@ public class HotelService {
     private final HotelRepo hotelRepo;
     private final QHotel qHotel = QHotel.hotel;
     private final QHotelCity qHotelCity = QHotelCity.hotelCity;
+    private final HotelPriceService hotelPriceService;
 
     //list==================================
 
@@ -38,9 +44,10 @@ public class HotelService {
         //정렬 null들어가면 에러나서 커버
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 
-        orders.add(qHotel.bestSailPrecent.desc());
+
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) orders.add(order);
+        orders.add(qHotel.bestSailPrecent.desc());
         orders.add(qHotel.rankuScore.desc());
 
         List<Hotel> results = jpaQueryFactory
@@ -68,9 +75,10 @@ public class HotelService {
         //
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 
-        orders.add(qHotel.rankuScore.desc());
+
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) orders.add(order);
+        orders.add(qHotel.rankuScore.desc());
         orders.add(qHotel.starRating.desc());
 
         List<Hotel> results = jpaQueryFactory
@@ -99,9 +107,10 @@ public class HotelService {
 
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 
-        orders.add(qHotel.bestCrossedOutRate.desc());
+
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) orders.add(order);
+        orders.add(qHotel.bestCrossedOutRate.desc());
         orders.add(qHotel.starRating.desc());
 
         List<Hotel> results = jpaQueryFactory
@@ -137,41 +146,41 @@ public class HotelService {
 
 
     private BooleanExpression filterQueryExpression(int location) {
-        BooleanExpression predicate = null;
+        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0);
 
         if (location == 1) {return predicate;}
 
         if (location < 7) {
             switch (location) {
                 case 2: {
-                    predicate = qHotel.pointLocation.eq(PointLocation.NAMBA); break;
+                    predicate = predicate.and(qHotel.pointLocation.eq(PointLocation.NAMBA)); break;
                 }
                 case 3: {
-                    predicate = qHotel.pointLocation.eq(PointLocation.UMEDA); break;
+                    predicate = predicate.and(qHotel.pointLocation.eq(PointLocation.UMEDA)); break;
                 }
                 case 4: {
-                    predicate = qHotel.pointLocation.eq(PointLocation.SHINSAIBASHI); break;
+                    predicate = predicate.and(qHotel.pointLocation.eq(PointLocation.SHINSAIBASHI)); break;
                 }
                 case 5: {
-                    predicate = qHotel.pointLocation.eq(PointLocation.TENOJI); break;
+                    predicate = predicate.and(qHotel.pointLocation.eq(PointLocation.TENOJI)); break;
                 }
                 case 6: {
-                    predicate = qHotel.pointLocation.eq(PointLocation.USJ); break;
+                    predicate = predicate.and(qHotel.pointLocation.eq(PointLocation.USJ)); break;
                 }
             }
         } else {
             switch (location) {
                 case 7: {
-                    predicate = qHotel.hotelCity.id.eq(9590L); break;
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(9590L)); break;
                 }
                 case 8: {
-                    predicate = qHotel.hotelCity.id.eq(1784L); break;
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(1784L)); break;
                 }
                 case 9: {
-                    predicate = qHotel.hotelCity.id.eq(5235L); break;
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(5235L)); break;
                 }
                 case 10: {
-                    predicate = qHotel.hotelCity.id.eq(13313L); break;
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(13313L)); break;
                 }
             }
         }
@@ -378,6 +387,14 @@ public class HotelService {
         if (url == null) return null;
         int idx = url.indexOf("?");
         return (idx >= 0) ? url.substring(0, idx) : url;
+    }
+
+    public AgodaPriceResponse.HotelApiInfo getHotelDateSearcher(long id, LocalDate day) {
+        AgodaPriceResponse res = hotelPriceService.callApiForDay(day, day.plusDays(2), Collections.singletonList(id)).block();
+
+        if (res == null || res.getResults().isEmpty()) return null;
+
+        return res.getResults().get(0);
     }
 
 
