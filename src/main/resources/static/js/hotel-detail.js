@@ -128,6 +128,8 @@ function updateModalImage() {
     if (modalImage) modalImage.src = imgList[currentIndex];
 }
 
+const fmtNum = n => Number(n).toLocaleString('ja-JP');
+
 
 function searchHotelPrice() {
     const searchUrl = '/rest/search/hotel/' + id + '/date?day=' + hotelPriceSearchValue.value;
@@ -138,8 +140,12 @@ function searchHotelPrice() {
             return res.json();
         })
         .then(data => {
-            topDailyPercent.textContent = Math.round(((data.crossedOutRate - data.dailyRate) / data.crossedOutRate) * 100);
-            topDailyPrice.textContent = data.dailyRate;
+            topDailyPercent.textContent = fmtNum(
+                Math.round(((data.crossedOutRate - data.dailyRate) / data.crossedOutRate) * 100)
+            );
+            topDailyPrice.textContent = fmtNum(
+                Math.round(data.dailyRate)
+            );
 
             // ✅ 정상일 때: topNoPrice에 at400 없으면 추가
             if (!topNoPrice.classList.contains('at400')) {
