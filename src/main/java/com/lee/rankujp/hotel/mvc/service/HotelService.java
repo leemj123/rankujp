@@ -278,8 +278,14 @@ public class HotelService {
                 .bestStayDate(hotel.getBestStayDate())
                 .bestDailyRate((int)hotel.getBestDailyRate())
                 .bestSailPrecent((int)hotel.getBestSailPrecent())
-                .bestLink("https://www.agoda.com/ko-kr/search?selectedproperty="+ hotel.getId() +"&checkIn="+ hotel.getBestStayDate() +"&currency=JPY"+
-                        "&asq="+hotel.getHotelCity().getAsq())
+//                .bestLink("https://www.agoda.com/ko-kr/search?selectedproperty="+ hotel.getId() +"&checkIn="+ hotel.getBestStayDate() +"&currency=JPY"+
+//                        "&asq="+hotel.getHotelCity().getAsq())
+                .bestLink("https://www.agoda.com/ko-kr/partners/partnersearch.aspx?cid=1911730"
+                        +"&hid="+ hotel.getId()
+                        +"&checkin="+ hotel.getBestStayDate()
+                        +"&checkout="+ hotel.getBestStayDate().plusDays(2)
+                        +"&currency=JPY"
+                        +"&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6")
                 .weekdayPriceList(buildTop5(false, hotel, hotelCity))
                 .weekendPriceList(buildTop5(true,  hotel, hotelCity))
                 .preferenceValue(maxLabel)

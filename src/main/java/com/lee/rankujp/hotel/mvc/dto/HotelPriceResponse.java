@@ -23,7 +23,12 @@ public class HotelPriceResponse {
         this.sailPercent = (int) hp.getSailPercent();
         this.updatedAt = hp.getUpdatedAt();
         this.isWeekend = hp.isWeekend();
-        this.link = "https://www.agoda.com/ko-kr/search?selectedproperty="+ id +"&checkIn="+ hp.getStayDate() +"&currency=JPY"+
-            "&asq="+asq;
+        this.link = "https://www.agoda.com/ko-kr/partners/partnersearch.aspx?cid=1911730" +
+                "&hid="+ id
+                +"&checkin="+ hp.getStayDate()
+                +"&checkout="+ hp.getStayDate().plusDays(2)
+                +"&currency=JPY"
+                +"&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6";
     }
 }
+//https://www.agoda.com/ko-kr/partners/partnersearch.aspx?cid=1911730&hid=38094586&currency=JPY&checkin=2025-11-02&checkout=2025-11-04&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6
