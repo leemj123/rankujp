@@ -224,11 +224,6 @@ public class HotelService {
 
 
     //detail================================
-    private static final Comparator<HotelPriceResponse> DEAL_DESC =
-            Comparator.comparingDouble(HotelPriceResponse::getSailPercent)           // 할인율 큰 순
-                    .thenComparingDouble(r -> r.getCrossedOutRate() - r.getDailyRate()) // 절대 할인액 큰 순
-                    .thenComparing(HotelPriceResponse::getStayDate)                 // 날짜 늦은 순
-                    .reversed(); // 위 세 기준을 전부 반대로(=내림차순) 정렬
 
 
     public HotelDetailResponse HotelDetail(Long id) {
@@ -249,10 +244,6 @@ public class HotelService {
         if (hotel.getAverageFamilyScore() > max) {
             maxLabel = 4;
         }
-
-
-
-
 
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
@@ -297,9 +288,7 @@ public class HotelService {
                 .brandReviewList(hotel.getHotelReviewList().stream().map(HotelReviewResponse::new).toList())
                 .build();
     }
-    private List<HotelPriceResponse> buildTop5(boolean weekend,
-                                               Hotel hotel,
-                                               HotelCity hotelCity) {
+    private List<HotelPriceResponse> buildTop5(boolean weekend, Hotel hotel, HotelCity hotelCity) {
 
         Comparator<HotelPriceResponse> DEAL_DESC =
                 Comparator.comparingDouble(HotelPriceResponse::getSailPercent)
@@ -394,7 +383,7 @@ public class HotelService {
         int idx = url.indexOf("?");
         return (idx >= 0) ? url.substring(0, idx) : url;
     }
-
+    //OTU === other=================================
     public AgodaPriceResponse.HotelApiInfo getHotelDateSearcher(long id, LocalDate day) {
         AgodaPriceResponse res = hotelPriceService.callApiForDay(day, day.plusDays(2), Collections.singletonList(id)).block();
 
@@ -402,6 +391,7 @@ public class HotelService {
 
         return res.getResults().get(0);
     }
+
 
 
 //    @Transactional
