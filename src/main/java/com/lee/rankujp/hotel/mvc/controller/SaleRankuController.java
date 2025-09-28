@@ -5,17 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/")
 public class SaleRankuController {
 
     private final HotelService hotelService;
 
-    @GetMapping
+    @GetMapping("/")
     public String sale(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
         model.addAttribute("title", "일본 호텔 할인 랭킹｜호텔 가격・평점 비교로 저렴하게 호텔 찾는 법과 일본 호텔 예약 사이트 추천");
         model.addAttribute("thumbnail", "/public/logo");

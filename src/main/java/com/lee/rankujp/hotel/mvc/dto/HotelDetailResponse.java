@@ -17,6 +17,8 @@ public class HotelDetailResponse {
     private String keyword;
 
     private String koName;
+    private String jpName;
+    private String enName;
 
     private String stateName;
     private long stateId;

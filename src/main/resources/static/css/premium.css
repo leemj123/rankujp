@@ -101,6 +101,7 @@ main {
     text-align: left;
     border-radius: 20px 20px 20px 80px;
     height: 32.8rem;
+    background-color: #DCDCDC;
 }
 
 .top-item-img-box img{

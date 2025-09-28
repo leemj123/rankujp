@@ -209,4 +209,53 @@ public class HotelPriceService {
                 .block();
     }
 
+    @Transactional
+    public List<Long> updateEnName() {
+
+        List<Hotel> hotels = jpaQueryFactory
+                .selectFrom(qHotel)
+                .fetch();
+
+        List<Long> errorIds = new ArrayList<>();
+
+        for (Hotel h : hotels) {
+            LocalDate stayDate = h.getBestStayDate() != null ? h.getBestStayDate() : LocalDate.of(2025,11,21);
+            ImgStarResponse resp = requestAgodaBlocking(stayDate, stayDate.plusDays(2), h.getId());
+            if (resp != null && resp.getError() == null) {
+                h.enNameUpdate(resp.getResults().get(0));
+            } else {
+                // 에러 응답 → 날짜 +1일 이동 후 재시도
+                errorIds.add(h.getId());
+                log.info("Agoda error for hotel {} on {} → shift+1. reason={}",
+                        h.getId(), stayDate,
+                        resp != null && resp.getError() != null ? resp.getError().getMessage() : "unknown");
+            }
+        }
+        return errorIds;
+    }
+    @Transactional
+    public List<Long> updateJpName() {
+
+        List<Hotel> hotels = jpaQueryFactory
+                .selectFrom(qHotel)
+                .fetch();
+
+        List<Long> errorIds = new ArrayList<>();
+
+        for (Hotel h : hotels) {
+            LocalDate stayDate = h.getBestStayDate() != null ? h.getBestStayDate() : LocalDate.of(2025,11,21);
+            ImgStarResponse resp = requestAgodaBlocking(stayDate, stayDate.plusDays(2), h.getId());
+            if (resp != null && resp.getError() == null) {
+                h.jpNameUpdate(resp.getResults().get(0));
+            } else {
+                // 에러 응답 → 날짜 +1일 이동 후 재시도
+                errorIds.add(h.getId());
+                log.info("Agoda error for hotel {} on {} → shift+1. reason={}",
+                        h.getId(), stayDate,
+                        resp != null && resp.getError() != null ? resp.getError().getMessage() : "unknown");
+            }
+        }
+        return errorIds;
+    }
+
 }

@@ -5,7 +5,6 @@ import com.lee.rankujp.hotel.infra.*;
 import com.lee.rankujp.hotel.mvc.dto.*;
 import com.lee.rankujp.hotel.price.HotelPriceService;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
-import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.hotel.review.RankuScoreCalculator;
 import com.querydsl.core.types.OrderSpecifier;
@@ -19,9 +18,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import java.net.URI;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -31,7 +30,6 @@ public class HotelService {
     private final JPAQueryFactory jpaQueryFactory;
     private final HotelRepo hotelRepo;
     private final QHotel qHotel = QHotel.hotel;
-    private final QHotelCity qHotelCity = QHotelCity.hotelCity;
     private final HotelPriceService hotelPriceService;
 
     //list==================================
@@ -224,11 +222,6 @@ public class HotelService {
 
 
     //detail================================
-    private static final Comparator<HotelPriceResponse> DEAL_DESC =
-            Comparator.comparingDouble(HotelPriceResponse::getSailPercent)           // 할인율 큰 순
-                    .thenComparingDouble(r -> r.getCrossedOutRate() - r.getDailyRate()) // 절대 할인액 큰 순
-                    .thenComparing(HotelPriceResponse::getStayDate)                 // 날짜 늦은 순
-                    .reversed(); // 위 세 기준을 전부 반대로(=내림차순) 정렬
 
 
     public HotelDetailResponse HotelDetail(Long id) {
@@ -251,8 +244,15 @@ public class HotelService {
         }
 
 
-
-
+        String shift_jis = null;
+        if ( hotel.getJpName() != null) {
+            shift_jis = hotel.getJpName().replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
+            try {
+                shift_jis = URLEncoder.encode(shift_jis, "Shift_JIS");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
@@ -264,6 +264,8 @@ public class HotelService {
                 .stateName(hotel.getHotelCity().getKoName())
                 .stateId(hotel.getHotelCity().getId())
                 .koName(hotel.getKoName())
+                .jpName(shift_jis)
+                .enName(hotel.getEnName())
                 .address(hotel.getAddress())
                 .zipcode(hotel.getZipcode())
                 .starRating(hotel.getStarRating())
@@ -297,9 +299,7 @@ public class HotelService {
                 .brandReviewList(hotel.getHotelReviewList().stream().map(HotelReviewResponse::new).toList())
                 .build();
     }
-    private List<HotelPriceResponse> buildTop5(boolean weekend,
-                                               Hotel hotel,
-                                               HotelCity hotelCity) {
+    private List<HotelPriceResponse> buildTop5(boolean weekend, Hotel hotel, HotelCity hotelCity) {
 
         Comparator<HotelPriceResponse> DEAL_DESC =
                 Comparator.comparingDouble(HotelPriceResponse::getSailPercent)
@@ -319,6 +319,8 @@ public class HotelService {
                 .limit(5)
                 .toList();
     }
+
+
     //other=================================
 
 
@@ -394,7 +396,7 @@ public class HotelService {
         int idx = url.indexOf("?");
         return (idx >= 0) ? url.substring(0, idx) : url;
     }
-
+    //OTU === other=================================
     public AgodaPriceResponse.HotelApiInfo getHotelDateSearcher(long id, LocalDate day) {
         AgodaPriceResponse res = hotelPriceService.callApiForDay(day, day.plusDays(2), Collections.singletonList(id)).block();
 
@@ -402,6 +404,7 @@ public class HotelService {
 
         return res.getResults().get(0);
     }
+
 
 
 //    @Transactional

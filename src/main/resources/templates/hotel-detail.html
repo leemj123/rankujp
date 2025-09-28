@@ -106,7 +106,6 @@
   </header>
   <main id="main">
     <section class="main-l">
-
       <section class="photo-section">
         <div class="photo-card thumbnail">
           <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -127,9 +126,8 @@
         <section class="item-head">
           <div id="nav-prev-warpper">
             <ol>
-                <li><a class="f-14 nav-prev" href="/">호텔 랭킹</a></li>
-                <li><a class="f-14 nav-prev" href="/" th:text="${content.stateName}"></a></li>
-                <li><a class="f-14 nav-current" th:text ="${content.koName}"></a></li>
+                <li><a class="f-14 nav-prev" href="/">Rankujp</a></li>
+                <li><a class="f-14 nav-current"  th:text ="${content.koName}"></a></li>
             </ol>
             <div class="share-this"></div>
           </div>
@@ -386,7 +384,7 @@
                       <button class="btn-st">리뷰 확인해보기</button>
                   </div>
               </a>
-            <a>
+            <a target="_blank" th:href="${'https://kr.trip.com/global-search/searchlist/search/?keyword='+content.getEnName()+'&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D5618272'}">
               <div class="review-item">
                 <div class="site-logo tripcom"></div>
                 <h4 class="f-14">글로벌 여행 플랫폼</h4>
@@ -399,10 +397,10 @@
                 <button class="btn-st">리뷰 확인해보기</button>
               </div>
             </a>
-            <a>
+            <a target="_blank" th:href="${'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword='+ content.jpName +'&distCd=06&rootCd=7701&screenId=FWPCTOP&ccnt=button-fw&image1='}">
               <div class="review-item">
                 <div class="site-logo jyaran"></div>
-                <h4 class="f-14">일본여행·숙박 1위</h4>
+                <h4 class="f-14">일본 현지 예약 1위</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
                   <div class="score review normal"></div>
@@ -412,23 +410,10 @@
                 <button class="btn-st">리뷰 확인해보기</button>
               </div>
             </a>
-            <a>
-              <div class="review-item">
-                <div class="site-logo rakuten"></div>
-                <h4 class="f-14">일본 최대 여행몰</h4>
-                <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
-                <div class="ranku-total-score">
-                  <div class="score review normal"></div>
-                  <p class="score-value f-17 f-b">?</p>
-                  <div style="height: 1.6rem;"></div>
-                </div>
-                <button class="btn-st">리뷰 확인해보기</button>
-              </div>
-            </a>
-            <a>
+            <a target="_blank" th:href="${'https://www.tripadvisor.co.kr/Search?q='+ content.getEnName() +'&geo=1&ssrc=a&searchNearby=false&searchSessionId=0012e6dd0723828c.ssid&offset=0'}">
               <div class="review-item">
                 <div class="site-logo tripadvisor"></div>
-                <h4 class="f-14">여행자 리뷰 1위</h4>
+                <h4 class="f-14">영미권 사용자 리뷰</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
                   <div class="score review normal"></div>
@@ -438,13 +423,26 @@
                 <button class="btn-st">리뷰 확인해보기</button>
               </div>
             </a>
+              <a>
+                  <div class="review-item" style="cursor: not-allowed">
+                      <div class="site-logo rakuten"></div>
+                      <h4 class="f-14">일본 최대 여행몰</h4>
+                      <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
+                      <div class="ranku-total-score">
+                          <div class="score review normal"></div>
+                          <p class="score-value f-17 f-b">?</p>
+                          <div style="height: 1.6rem;"></div>
+                      </div>
+                      <button class="btn-st">업데이트 중..</button>
+                  </div>
+              </a>
           </div>
         </section>
 
         <section class="description-section">
           <h3>세부내용</h3>
           <p class="hotel-description f-15" th:text="${content.description}"></p>
-          <a><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
+          <a target="_blank" th:href ="${content.bestLink}"><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
         </section>
 
         <section class="group-review">
