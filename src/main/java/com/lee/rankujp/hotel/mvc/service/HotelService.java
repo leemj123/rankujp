@@ -5,7 +5,6 @@ import com.lee.rankujp.hotel.infra.*;
 import com.lee.rankujp.hotel.mvc.dto.*;
 import com.lee.rankujp.hotel.price.HotelPriceService;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
-import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.hotel.review.RankuScoreCalculator;
 import com.querydsl.core.types.OrderSpecifier;
@@ -19,9 +18,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import java.net.URI;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -31,7 +30,6 @@ public class HotelService {
     private final JPAQueryFactory jpaQueryFactory;
     private final HotelRepo hotelRepo;
     private final QHotel qHotel = QHotel.hotel;
-    private final QHotelCity qHotelCity = QHotelCity.hotelCity;
     private final HotelPriceService hotelPriceService;
 
     //list==================================
@@ -245,6 +243,17 @@ public class HotelService {
             maxLabel = 4;
         }
 
+
+        String shift_jis = null;
+        if ( hotel.getJpName() != null) {
+            shift_jis = hotel.getJpName().replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
+            try {
+                shift_jis = URLEncoder.encode(shift_jis, "Shift_JIS");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
                 .updateDate(hotel.getUpdateDateTime().toLocalDate())
@@ -255,6 +264,8 @@ public class HotelService {
                 .stateName(hotel.getHotelCity().getKoName())
                 .stateId(hotel.getHotelCity().getId())
                 .koName(hotel.getKoName())
+                .jpName(shift_jis)
+                .enName(hotel.getEnName())
                 .address(hotel.getAddress())
                 .zipcode(hotel.getZipcode())
                 .starRating(hotel.getStarRating())
@@ -308,6 +319,8 @@ public class HotelService {
                 .limit(5)
                 .toList();
     }
+
+
     //other=================================
 
 
