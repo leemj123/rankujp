@@ -30,6 +30,8 @@ public class HotelService {
     private final JPAQueryFactory jpaQueryFactory;
     private final HotelRepo hotelRepo;
     private final QHotel qHotel = QHotel.hotel;
+    private final QHotelCity qHotelCity = QHotelCity.hotelCity;
+    private final QHotelReview qHotelReview = QHotelReview.hotelReview;
     private final HotelPriceService hotelPriceService;
 
     //list==================================
@@ -225,8 +227,21 @@ public class HotelService {
 
 
     public HotelDetailResponse HotelDetail(Long id) {
-        Hotel hotel = hotelRepo.findById(id).orElseThrow();
-        HotelCity hotelCity = hotel.getHotelCity();
+//        Hotel hotel = hotelRepo.findById(id).orElseThrow();
+//        HotelCity hotelCity = hotel.getHotelCity();
+//        List<HotelReview> hotelReviewList = hotel.getHotelReviewList();
+
+        Hotel hotel = jpaQueryFactory
+                .selectFrom(qHotel)
+                .distinct() // 컬렉션 fetch join 시 중복 행 방지
+                .leftJoin(qHotel.hotelCity, qHotelCity).fetchJoin()
+                .where(qHotel.id.eq(id))
+                .fetchOne();
+
+        List<HotelReview> reviews = jpaQueryFactory
+                .selectFrom(qHotelReview)
+                .where(qHotelReview.hotel.id.eq(id))
+                .fetch();
 
         double max = hotel.getAverageBusinessScore();
         int maxLabel = 1;
@@ -288,15 +303,15 @@ public class HotelService {
                         +"&checkout="+ hotel.getBestStayDate().plusDays(2)
                         +"&currency=JPY"
                         +"&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6")
-                .weekdayPriceList(buildTop5(false, hotel, hotelCity))
-                .weekendPriceList(buildTop5(true,  hotel, hotelCity))
+                .weekdayPriceList(buildTop5(false, hotel, hotel.getHotelCity()))
+                .weekendPriceList(buildTop5(true,  hotel, hotel.getHotelCity()))
                 .preferenceValue(maxLabel)
                 .averageAllScore((int)(hotel.getAverageAllScore() *10))
                 .averageBusinessScore((int)(hotel.getAverageBusinessScore()*10))
                 .averageCoupleScore((int)(hotel.getAverageCoupleScore()*10))
                 .averageSoloScore((int)(hotel.getAverageSoloScore()*10))
                 .averageFamilyScore((int)(hotel.getAverageFamilyScore()*10))
-                .brandReviewList(hotel.getHotelReviewList().stream().map(HotelReviewResponse::new).toList())
+                .brandReviewList(reviews.stream().map(HotelReviewResponse::new).toList())
                 .build();
     }
     private List<HotelPriceResponse> buildTop5(boolean weekend, Hotel hotel, HotelCity hotelCity) {

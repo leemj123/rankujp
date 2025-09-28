@@ -13,7 +13,7 @@ public class HotelReview {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_review_list")
+    @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
     @Enumerated(EnumType.STRING)
