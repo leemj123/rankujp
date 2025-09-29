@@ -6,12 +6,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class TripReviewScrapper {
+public class WebReviewScrapper {
 
     private final TripService tripService;
+    private final JalanService jalanService;
 
 //    @PostMapping("/odong/scrap/trip")
 //    public void tripReview() {
 //        tripService.startReviewScrap();
 //    }
+
+    @PostMapping("/odong/scrap/jalan")
+    public void jalanReview() {
+        jalanService.startReviewScrap();
+    }
 }
