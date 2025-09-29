@@ -10,8 +10,8 @@ public class TripReviewScrapper {
 
     private final TripService tripService;
 
-    @PostMapping("/odong/scrap/trip")
-    public void tripReview() {
-        tripService.startReviewScrap();
-    }
+//    @PostMapping("/odong/scrap/trip")
+//    public void tripReview() {
+//        tripService.startReviewScrap();
+//    }
 }
