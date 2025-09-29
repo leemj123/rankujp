@@ -22,4 +22,13 @@ public class SaleRankuController {
         model.addAttribute("salePage", hotelService.salePage(location, type, page));
         return "ranku-sale";
     }
+    @GetMapping("/ranku-terms-of-service")
+    public String termsOfService(Model model){
+        model.addAttribute("title", "RankuJP | 이용약관");
+        model.addAttribute("thumbnail", "/public/logo");
+        model.addAttribute("description", "랭쿠jp를 이용해주셔셔 감사합니다. 본 사이트의 할인율 및 가격 정보는 각 예약사이트에서 제공받은 데이터를 기반으로 합니다. 최종 예약 및 결제는 해당 예약사이트에서 진행되며, 가격 변동이 있을 수 있습니다.");
+        model.addAttribute("keywords","랭크, 할인, 할인율");
+
+        return "terms-of-use";
+    }
 }
