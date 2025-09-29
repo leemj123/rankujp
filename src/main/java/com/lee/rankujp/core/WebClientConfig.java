@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @Configuration
 public class WebClientConfig {
@@ -47,9 +48,17 @@ public class WebClientConfig {
     }
     @Bean(name = "jalanWebClient")
     public WebClient jalanWebClient() {
+        DefaultUriBuilderFactory f =
+                new DefaultUriBuilderFactory("https://www.jalan.net/uw/uwp2011/uww2011init.do");
+        // ★ 이미 인코딩된 쿼리스트링을 다시 인코딩하지 않도록
+        f.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+
         return WebClient.builder()
-                .baseUrl("https://www.jalan.net/uw/uwp2011/uww2011init.do")
-                .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .uriBuilderFactory(f)
+                .defaultHeaders(h -> {
+                    h.remove(HttpHeaders.CONTENT_TYPE);               // GET에 불필요
+                    h.set(HttpHeaders.ACCEPT_LANGUAGE, "ja-JP,ja;q=0.9"); // 선택
+                })
                 .build();
     }
 }

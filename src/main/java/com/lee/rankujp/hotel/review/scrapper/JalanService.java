@@ -27,33 +27,53 @@ public class JalanService {
     private final AnotherReviewTran saver;
 
     public void startReviewScrap() {
-        List<Hotel> target =  hotelRepo.findAll();
-        for (Hotel h : target) {
+//        List<Hotel> target =  hotelRepo.findAll();
+//        for (Hotel h : target) {
+//            try {
+//
+//                if (h.getJpName() == null) {continue;}
+//
+//                String cleaned = h.getJpName().replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
+//                String encodedName = URLEncoder.encode(cleaned, "Shift_JIS");
+//
+//                // 1) 네트워크(트랜잭션 밖)
+//                var doc = jalanFlux(encodedName)
+//                        .block(java.time.Duration.ofSeconds(10));
+//                if (doc == null) continue;
+//
+//                double score = scoreExtraction(doc);
+//                int count = reviewCountExtraction(doc);
+//
+//                // 2) 단건 트랜잭션으로 즉시 저장
+////                saver.insertOne(h, ReviewBrand.JALAN, score, count);
+//
+//                Thread.sleep(60);
+//
+//            } catch (Exception e) {
+//
+//                log.warn("Hotel {} failed: {}", h.getId(), e.toString());
+//            }
+//        }
+
+        String name = "神戸三宮東急REIホテル";
             try {
 
-                if (h.getJpName() == null) {continue;}
-
-                String cleaned = h.getJpName().replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
+                String cleaned = name.replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
                 String encodedName = URLEncoder.encode(cleaned, "Shift_JIS");
 
                 // 1) 네트워크(트랜잭션 밖)
-                var doc = jalanFlux(encodedName)
-                        .block(java.time.Duration.ofSeconds(10));
-                if (doc == null) continue;
+                Document doc = this.jalanFlux(encodedName).block();
 
                 double score = scoreExtraction(doc);
                 int count = reviewCountExtraction(doc);
 
-                // 2) 단건 트랜잭션으로 즉시 저장
-                saver.insertOne(h, ReviewBrand.JALAN, score, count);
 
                 Thread.sleep(60);
 
             } catch (Exception e) {
-
-                log.warn("Hotel {} failed: {}", h.getId(), e.toString());
+                log.warn("Hotel {} failed: {}",name, e.toString());
             }
-        }
+
 
     }
 
@@ -94,28 +114,21 @@ public class JalanService {
 
     }
 
-   //?keyword=%83J%83%93%83f%83I%83z%83e%83%8B%83Y+%91%E5%8D%E3%82%C8%82%F1%82%CE&distCd=06&rootCd=7701&screenId=FWPCTOP&ccnt=button-fw&image1=
+    private Mono<Document> jalanFlux(String encoded) {
 
-    private Mono<Document> jalanFlux(String name) {
+        // 쿼리스트링을 직접 붙인다 → WebClient가 재인코딩하지 않음
+        String uri = "?keyword=" + encoded;
 
         return jalanWebClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("keyword", name) // 자동 인코딩
-                        .queryParam("rootCd", "7701")
-                        .queryParam("screenId", "FWPCTOP")
-                        .queryParam("ccnt", "button-fw")
-                        .queryParam("image1", "")
-                        .build())
+                .uri(uri) // baseUrl 뒤에 그대로 붙음 (Postman과 동일 동작)
                 .accept(MediaType.TEXT_HTML)
                 .header("User-Agent", "Mozilla/5.0 (compatible; RankuBot/1.0)")
                 .retrieve()
                 .bodyToMono(String.class)
                 .timeout(java.time.Duration.ofSeconds(10))
-                .retryWhen(
-                        reactor.util.retry.Retry.backoff(2, java.time.Duration.ofMillis(300))
-                                .filter(ex -> !(ex instanceof IllegalArgumentException))
-                )
-                .map(html -> Jsoup.parse(html))
-                .onErrorResume(ex -> Mono.empty()); // 실패 시 null 대신 empty
+                .retryWhen(reactor.util.retry.Retry.backoff(2, java.time.Duration.ofMillis(300))
+                        .filter(ex -> !(ex instanceof IllegalArgumentException)))
+                .map(Jsoup::parse)
+                .onErrorResume(ex -> Mono.empty());
     }
 }
