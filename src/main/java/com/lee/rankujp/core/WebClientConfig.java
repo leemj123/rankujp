@@ -56,8 +56,8 @@ public class WebClientConfig {
         return WebClient.builder()
                 .uriBuilderFactory(f)
                 .defaultHeaders(h -> {
-                    h.remove(HttpHeaders.CONTENT_TYPE);               // GET에 불필요
-                    h.set(HttpHeaders.ACCEPT_LANGUAGE, "ja-JP,ja;q=0.9"); // 선택
+                    h.remove(HttpHeaders.CONTENT_TYPE);
+                    h.set(HttpHeaders.ACCEPT_LANGUAGE, "ja-JP,ja;q=0.9");
                 })
                 .build();
     }

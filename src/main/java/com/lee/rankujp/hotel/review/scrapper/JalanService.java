@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -27,52 +26,52 @@ public class JalanService {
     private final AnotherReviewTran saver;
 
     public void startReviewScrap() {
-//        List<Hotel> target =  hotelRepo.findAll();
-//        for (Hotel h : target) {
-//            try {
-//
-//                if (h.getJpName() == null) {continue;}
-//
-//                String cleaned = h.getJpName().replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
-//                String encodedName = URLEncoder.encode(cleaned, "Shift_JIS");
-//
-//                // 1) 네트워크(트랜잭션 밖)
-//                var doc = jalanFlux(encodedName)
-//                        .block(java.time.Duration.ofSeconds(10));
-//                if (doc == null) continue;
-//
-//                double score = scoreExtraction(doc);
-//                int count = reviewCountExtraction(doc);
-//
-//                // 2) 단건 트랜잭션으로 즉시 저장
-////                saver.insertOne(h, ReviewBrand.JALAN, score, count);
-//
-//                Thread.sleep(60);
-//
-//            } catch (Exception e) {
-//
-//                log.warn("Hotel {} failed: {}", h.getId(), e.toString());
-//            }
-//        }
-
-        String name = "神戸三宮東急REIホテル";
+        List<Hotel> target =  hotelRepo.findAll();
+        for (Hotel h : target) {
             try {
 
-                String cleaned = name.replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
+                if (h.getJpName() == null) {continue;}
+
+                String cleaned = h.getJpName().replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
                 String encodedName = URLEncoder.encode(cleaned, "Shift_JIS");
 
                 // 1) 네트워크(트랜잭션 밖)
-                Document doc = this.jalanFlux(encodedName).block();
+                Document doc = jalanFlux(encodedName)
+                        .block(java.time.Duration.ofSeconds(10));
+                if (doc == null) continue;
 
                 double score = scoreExtraction(doc);
                 int count = reviewCountExtraction(doc);
 
+                // 2) 단건 트랜잭션으로 즉시 저장
+                saver.insertOne(h, ReviewBrand.JALAN, score, count);
 
                 Thread.sleep(60);
 
             } catch (Exception e) {
-                log.warn("Hotel {} failed: {}",name, e.toString());
+
+                log.warn("Hotel {} failed: {}", h.getId(), e.toString());
             }
+        }
+
+//        String name = "神戸三宮東急REIホテル";
+//            try {
+//
+//                String cleaned = name.replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
+//                String encodedName = URLEncoder.encode(cleaned, "Shift_JIS");
+//
+//                // 1) 네트워크(트랜잭션 밖)
+//                Document doc = this.jalanFlux(encodedName).block();
+//
+//                double score = scoreExtraction(doc);
+//                int count = reviewCountExtraction(doc);
+//
+//
+//                Thread.sleep(60);
+//
+//            } catch (Exception e) {
+//                log.warn("Hotel {} failed: {}",name, e.toString());
+//            }
 
 
     }
