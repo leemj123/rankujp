@@ -562,11 +562,41 @@ footer .foot-container {
     padding: 0 2rem;
     gap: .8rem;
 }
-
 .f-meta {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: .8rem;
+    max-width: 37rem;
+    height: 6.6rem;
+}
+
+.f-meta-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-start;
+
+}
+.f-meta.right {
+    align-items: flex-end;
+    justify-content: space-between;
+
+}
+.f-meta-row.right {
+    justify-content: flex-end;
+
+}
+.foot-svg-list {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.foot-svg-list a {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 }
 
 .bottom-fix-section {
