@@ -117,7 +117,12 @@
               </div>
               <div class="top-item-description down">
                 <div style="display: flex; gap: .6rem;">
-                  <div class="couple-svg"></div>
+                    <div th:switch="${p.preferenceValue}">
+                        <div th:case="1" class="business-svg"></div>
+                        <div th:case="2" class="couple-svg"></div>
+                        <div th:case="3" class="solo-svg"></div>
+                        <div th:case="4" class="family-svg"></div>
+                    </div>
                     <p class="f-17 f-b" style="color: #fff;">
                         <b class="f-17 f-b" style="color: #fff;"
                            th:text="${p.preferenceValue == 1 ? '비지니스' :

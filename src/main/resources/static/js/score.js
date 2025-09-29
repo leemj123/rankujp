@@ -118,7 +118,7 @@ const topCard = (item, rank) => {
         </div>
         <div class="top-item-description down">
           <div style="display: flex; gap: .6rem;">
-              <div class="couple-svg"></div>
+              <div class="${prefIconClass(item.preferenceValue)}"></div>
                 <p class="f-17 f-b" style="color: #fff;">
                     <b class="f-17 f-b" style="color: #fff;">${prefLabel(item.preferenceValue)}</b>
                     에게 가장인기!
