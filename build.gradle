@@ -49,6 +49,8 @@ dependencies {
 
     implementation "com.querydsl:querydsl-core:${querydslVersion}"
 
+    implementation 'org.jsoup:jsoup:1.18.1'
+
 }
 configurations.configureEach {
     resolutionStrategy {

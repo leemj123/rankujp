@@ -362,41 +362,61 @@
                       <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
 
                       <div class="ranku-total-score"
-                           th:if="${content.brandReviewList != null and !#lists.isEmpty(content.brandReviewList)}">
-                          <div class="score review"
-                               th:classappend="${content.rankuScore >= 86 ? 'best' :
-                           (content.rankuScore >= 71 ? 'verygood' :
-                           (content.rankuScore >= 41 ? 'good' : 'normal'))}">
+                           th:if="${content.brandReviewList != null}">
+                          <div th:each="review : ${content.brandReviewList}"
+                               th:if="${review.reviewBrand.name() == 'AGODA'}">
+                              <div class="score review"
+                                   th:classappend="${review.allScore >= 86 ? 'best' :
+                (review.allScore >= 71 ? 'verygood' :
+                (review.allScore >= 41 ? 'good' : 'normal'))}">
+                              </div>
+                              <p class="score-value f-17 f-b" th:text="${review.allScore}"></p>
+                              <div style="height: 1.6rem"></div>
                           </div>
-                          <p class="score-value f-17 f-b"
-                             th:text="${content.brandReviewList.get(0).allScore}"></p>
-                          <div style="height: 1.6rem;"></div>
                       </div>
 
-                      <!-- 리스트가 없을 때 대체 UI -->
+                      <!-- 리스트가 없을 때 -->
                       <div class="ranku-total-score"
                            th:if="${content.brandReviewList == null or #lists.isEmpty(content.brandReviewList)}">
                           <div class="score review normal"></div>
                           <p class="score-value f-17 f-b">?</p>
-                          <div style="height: 1.6rem;"></div>
                       </div>
 
                       <button class="btn-st">리뷰 확인해보기</button>
                   </div>
               </a>
-            <a target="_blank" th:href="${'https://kr.trip.com/global-search/searchlist/search/?keyword='+content.getEnName()+'&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D5618272'}">
-              <div class="review-item">
-                <div class="site-logo tripcom"></div>
-                <h4 class="f-14">글로벌 여행 플랫폼</h4>
-                <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
-                <div class="ranku-total-score">
-                  <div class="score review normal"></div>
-                  <p class="score-value f-17 f-b">?</p>
-                  <div style="height: 1.6rem;"></div>
-                </div>
-                <button class="btn-st">리뷰 확인해보기</button>
-              </div>
-            </a>
+
+              <a target="_blank"
+                 th:href="${'https://kr.trip.com/global-search/searchlist/search/?keyword='+content.getEnName()+'&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D5618272'}">
+                  <div class="review-item">
+                      <div class="site-logo tripcom"></div>
+                      <h4 class="f-14">글로벌 여행 플랫폼</h4>
+                      <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
+
+                      <div class="ranku-total-score"
+                           th:if="${content.brandReviewList != null}">
+                          <div th:each="review : ${content.brandReviewList}"
+                               th:if="${review.reviewBrand.name() == 'TRIPDOTCOM'}">
+                              <div class="score review"
+                                   th:classappend="${review.allScore >= 86 ? 'best' :
+                (review.allScore >= 71 ? 'verygood' :
+                (review.allScore >= 41 ? 'good' : 'normal'))}">
+                              </div>
+                              <p class="score-value f-17 f-b" th:text="${review.allScore}"></p>
+                              <div style="height: 1.6rem"></div>
+                          </div>
+                      </div>
+
+                      <!-- 리스트가 없을 때 -->
+                      <div class="ranku-total-score"
+                           th:if="${content.brandReviewList == null or #lists.isEmpty(content.brandReviewList)}">
+                          <div class="score review normal"></div>
+                          <p class="score-value f-17 f-b">?</p>
+                      </div>
+
+                      <button class="btn-st">리뷰 확인해보기</button>
+                  </div>
+              </a>
             <a target="_blank" th:href="${'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword='+ content.jpName +'&distCd=06&rootCd=7701&screenId=FWPCTOP&ccnt=button-fw&image1='}">
               <div class="review-item">
                 <div class="site-logo jyaran"></div>
