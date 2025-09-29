@@ -3,12 +3,15 @@ package com.lee.rankujp.hotel.mvc;
 import com.lee.rankujp.hotel.mvc.dto.PremiumResponse;
 import com.lee.rankujp.hotel.mvc.dto.ScoreResponse;
 import com.lee.rankujp.hotel.mvc.service.HotelService;
+import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
+import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,4 +31,13 @@ public class RestFulController {
     public Page<PremiumResponse> premium(@RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
         return hotelService.premiumPage(location, type, page);
     }
+    @GetMapping("/file/hotel/{id}")
+    public List<String> hotelPhoto(@PathVariable Long id){
+        return hotelService.getImageList(id);
+    }
+    @GetMapping("/search/hotel/{id}/date")
+    public AgodaPriceResponse.HotelApiInfo hotelDateSearcher(@PathVariable Long id , @RequestParam LocalDate day) {
+        return hotelService.getHotelDateSearcher(id, day);
+    }
+
 }

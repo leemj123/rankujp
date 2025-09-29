@@ -2,20 +2,53 @@
 <html lang="ko">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>오늘의 할인 랭킹</title>
-  <meta name="description" content="">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}"></title>
+    <meta name="description" th:content="${description}">
+    <meta name="keywords" th:content="${keywords}">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="thumbnail" th:content="${thumbnail}">
+
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:site_name" content="rankujp.com">
+    <meta property="og:type" content="article">
+    <meta property="og:title" th:content="${title}">
+    <meta property="og:url" content="https://rankujp.com/">
+    <meta property="og:description" th:content="${description}">
+    <meta property="og:image" th:content="${thumbnail}">
+
+    <meta property="twitter:card" content="article">
+    <meta property="twitter:title" th:content="${title}">
+    <meta property="twitter:description" th:content="${description}">
+    <meta property="twitter:image" th:content="${thumbnail}">
+    <meta name="twitter:creator" content="@rankujp">
+
+    <link rel="preload" href="/css/main.css" as="style">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="canonical" href="https://rankujp.com/">
+
+    <meta name="agd-partner-manual-verification" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ECZDFLQJ5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-9ECZDFLQJ5');
+    </script>
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/list.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/list.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <header>
     <div class="header-warpper">
-      <div class="logo-box"><a><img class="logo" src="/public/logo.png" alt="랭쿠jp 로고"></a></div>
+      <div class="logo-box"><a href="/"><img class="logo" src="/public/logo.png" alt="랭쿠jp 로고"></a></div>
       <nav class="header-nav">
           <ul>
               <li><a class="active" href="/">할인랭킹</a></li>
@@ -59,7 +92,7 @@
               <th:block th:each="p, stat : ${list}" th:if="${stat.index < 3}">
                   <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
                     <div class="head-line"></div>
-                    <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표 이미지'}" />
+                    <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표 이미지'}" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
                     <div class="ranku list"
                          th:classappend="${stat.index == 0 ? ' gold' :
                                                  (stat.index == 1 ? ' sliver' :
@@ -106,7 +139,7 @@
                     <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
                       <article class="ranku-item">
                         <div class="ranku-img-box">
-                            <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}">
+                            <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}" loading="lazy"  onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
                           <div class="ranku list normal">
                               <span class="ranku-value" th:text="${stat.index + 1}">4</span>
                           </div>
@@ -166,8 +199,7 @@
     <div class="foot-container">
       <div class="f-meta">
         <p class="f-14 f-b" style="color: #7d7d7d;">ADERS</p>
-        <p class="f-14" style="color: #7d7d7d">대표이사: 이지형</p>
-        <p class="f-14" style="color: #7d7d7d;">Email: property@aders-international.com</p>
+        <p class="f-14" style="color: #7d7d7d;">Email: marketing@aders-international.com</p>
       </div>
       <div class="f-12" style="color: #7d7d7d">ⓒ 2025 rankujp INC.</div>
     </div>

@@ -2,7 +2,7 @@ const wrapper = document.getElementById('filters');
 const topSection = document.getElementById('top-item-section');
 const normalSection = document.getElementById('normal-item-section');
 
-let page = 1;
+let page = 2;
 let paramLocation = 1;
 let paramType = 1;
 
@@ -29,10 +29,14 @@ wrapper.addEventListener('click', (e) => {
 
     const [firstValue, secondValue] = Array.from(onButtons).map(b => b.dataset.value);
 
-
+    page =2;
     const url = new URL('/rest/sale', location.origin);
     url.searchParams.set('location', firstValue);
     url.searchParams.set('type', secondValue);
+
+    page = 2;
+    paramLocation = firstValue;
+    paramType = secondValue;
 
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
@@ -83,7 +87,7 @@ const topCard = (item, rank) => {
     return `
       <a href="/hotel/${item.id}?top=${rank}" class="top-item top-${rank}">
         <div class="head-line"></div>
-        <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표 이미지" loading="lazy" />
+        <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표 이미지" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
         <div class="ranku list ${rankBadgeClass(rank)}">
           <span class="ranku-value">${rank}</span>
         </div>
@@ -119,7 +123,7 @@ const normalCard = (item, rank) => {
         <a href="/hotel/${item.id}?top=${rank}">
             <article class="ranku-item">
               <div class="ranku-img-box">
-                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy">
+                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
                 <div class="ranku list normal">
                   <span class="ranku-value">${rank}</span>
                 </div>
@@ -162,7 +166,7 @@ const noneRankCard = (item, rank) => {
         <a href="/hotel/${item.id}?top=${rank}">
             <article class="ranku-item">
               <div class="ranku-img-box">
-                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy">
+                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
               </div>
               <div class="description-warpper">
                 <div class="price-left">

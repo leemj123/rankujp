@@ -7,13 +7,16 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class HotelReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_review_list")
+    @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
     @Enumerated(EnumType.STRING)
@@ -21,11 +24,5 @@ public class HotelReview {
 
     private long reviewCount;
     private double allScore;
-
-    private double businessScore;
-    private double coupleScore;
-    private double soloScore;
-    private double familyScore;
-    private double groupScore;
 
 }

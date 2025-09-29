@@ -2,7 +2,7 @@ const wrapper = document.getElementById('filters');
 const topSection = document.getElementById('top-item-section');
 const normalSection = document.getElementById('normal-item-section');
 
-let page = 1;
+let page = 2;
 let paramLocation = 1;
 let paramType = 1;
 
@@ -33,7 +33,9 @@ wrapper.addEventListener('click', (e) => {
     url.searchParams.set('location', firstValue);
     url.searchParams.set('type', secondValue);
 
-
+    page = 2;
+    paramLocation = firstValue;
+    paramType = secondValue;
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -78,9 +80,7 @@ const rankBadgeClass = (rank) => {
     return '';
 };
 const rankuScoreSVGClass = (rank) => {
-    console.log(rank);
     const v = Number(rank);
-    console.log(v);
     if (v >= 86) return 'best';
     if (v >= 71) return 'verygood';
     if (v >= 41) return 'good';
@@ -88,7 +88,6 @@ const rankuScoreSVGClass = (rank) => {
     return 'normal';
 };
 const rankuScoreClass = (rank) => {
-    console.log(rank);
     const v = Number(rank);
     if (v >= 86) return '매우 훌륭함';
     if (v >= 71) return '훌륭함';
@@ -103,7 +102,7 @@ const topCard = (item, rank) => {
     return `
       <a href="/hotel/${item.id}?top=${rank}" class="top-item top-${rank}">
         <div class="head-line"></div>
-        <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표 이미지" loading="lazy" />
+        <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표 이미지" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
         <div class="ranku list ${rankBadgeClass(rank)}">
           <span class="ranku-value">${rank}</span>
         </div>
@@ -136,13 +135,12 @@ const topCard = (item, rank) => {
 
 // 일반 랭킹 카드 (4위~)
 const normalCard = (item, rank) => {
-    console.log(item)
     return `
       <li>
         <a href="/hotel/${item.id}?top=${rank}">
             <article class="ranku-item">
               <div class="ranku-img-box">
-                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy">
+                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
                 <div class="ranku list normal">
                   <span class="ranku-value">${rank}</span>
                 </div>
@@ -178,13 +176,12 @@ const normalCard = (item, rank) => {
 };
 
 const noneRankCard = (item, rank) => {
-    console.log(item)
     return `
       <li>
         <a href="/hotel/${item.id}?top=${rank}">
             <article class="ranku-item">
               <div class="ranku-img-box">
-                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy">
+                <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
               </div>
               <div class="description-warpper">
                 <div class="price-left">

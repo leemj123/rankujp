@@ -101,6 +101,7 @@ main {
     text-align: left;
     border-radius: 20px 20px 20px 80px;
     height: 32.8rem;
+    background-color: #DCDCDC;
 }
 
 .top-item-img-box img{
@@ -262,6 +263,7 @@ main {
     height: 100%;
     border-radius: 20px;
     overflow: hidden;
+    background-color: #E1E3EB;
 }
 
 .ranku-img-box img {

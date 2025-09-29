@@ -2,22 +2,95 @@
 <html lang="ko">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="${content.getTitle()}"></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${content.title}"></title>
     <meta name="description" th:attr="content=${content.description}" />
     <meta name="keywords" th:attr="content=${content.keyword}" />
+
+    <meta name="description" content="일본 저렴한 호텔 추천 & 가격 비교｜예약 사이트 랭킹과 할인 정보 총정리 | 일본 호텔을 가장 합리적으로 예약하려면 언제가 가장 저렴할까? 인기 예약 사이트의 가격・평점・할인 정보까지 한눈에 비교하고, 최저가 예약 꿀팁까지 확인해보세요">
+    <meta name="keywords" th:content="${keywords}">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="thumbnail" th:content="${thumbnail}">
+
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:site_name" content="rankujp.com">
+    <meta property="og:type" content="article">
+    <meta property="og:title" th:content="${content.title}">
+    <meta property="og:url" th:content="'https://rankujp.com/hotel/' + ${content.id} + '?top=' + ${top}" />
+    <meta property="og:description" th:content="${content.description}">
+    <meta property="og:image" th:content="${thumbnail}">
+
+    <meta property="twitter:card" content="article">
+    <meta property="twitter:title" th:content="${content.title}">
+    <meta property="twitter:description" th:content="${content.description}">
+    <meta property="twitter:image" th:content="${thumbnail}">
+    <meta name="twitter:creator" content="@rankujp">
+
+    <link rel="preload" href="/css/main.css" as="style">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="canonical"  th:href="'https://rankujp.com/hotel'+${content.id}">
+
+    <meta name="agd-partner-manual-verification" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ECZDFLQJ5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-9ECZDFLQJ5');
+    </script>
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
-
-
-
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/hotel-detail.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/hotel-detail.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
+<div id="imageModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <div class="modal-close" onclick="closeModal()"></div>
+        <img id="modalImage" src="" alt="modal image" decoding="async" data-nimg="fill">
+        <button id="prevBtn" class="nav-btn">
+            <div style="
+            width: 34px;
+            height: 34px;
+            background-color: #ffffff70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M7.6944 0.307535C7.28689 -0.102512 6.62619 -0.102512 6.21869 0.307535L0.305626 6.25755C-0.101875 6.6676 -0.101875 7.33243 0.305626 7.74248L6.21869 13.6925C6.62619 14.1025 7.28689 14.1025 7.6944 13.6925C8.10187 13.2824 8.10187 12.6177 7.6944 12.2076L2.51918 7.00002L7.6944 1.79246C8.10187 1.38242 8.10187 0.717582 7.6944 0.307535Z"
+                          fill="#24292E" />
+                </svg>
+            </div>
+        </button>
+        <button id="nextBtn" class="nav-btn">
+            <div style="
+            width: 34px;
+            height: 34px;
+            background-color: #ffffff70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M0.305605 0.307535C0.713106 -0.102512 1.37381 -0.102512 1.78131 0.307535L7.69437 6.25755C8.10187 6.6676 8.10187 7.33243 7.69437 7.74248L1.78131 13.6925C1.37381 14.1025 0.713105 14.1025 0.305604 13.6925C-0.101868 13.2824 -0.101868 12.6177 0.305604 12.2076L5.48082 7.00002L0.305605 1.79246C-0.101868 1.38242 -0.101868 0.717582 0.305605 0.307535Z"
+                          fill="#24292E" />
+                </svg>
+            </div>
+        </button>
+        <div class="photo-index" onclick="openModal()"><span class="f-14 f-b" id="photo-index">1</span><span class="f-14 f-b">/5</span></div>
+    </div>
+</div>
 <body>
   <header>
     <div class="header-warpper">
@@ -35,17 +108,17 @@
     <section class="main-l">
       <section class="photo-section">
         <div class="photo-card thumbnail">
-          <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill">
+          <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
         </div>
         <div class="photo-mini-section">
           <div class="photo-card sub">
-            <img th:src="${content.photo2}" th:alt="${content.koName + '의 호실사진'}" decoding="async" data-nimg="fill">
+            <img th:src="${content.photo2}" th:alt="${content.koName + '의 호실사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
           </div>
           <div class="photo-card sub">
-            <img th:src="${content.photo3}" th:alt="${content.koName + '의 주변 풍경사진'}" decoding="async" data-nimg="fill">
+            <img th:src="${content.photo3}" th:alt="${content.koName + '의 주변 풍경사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
           </div>
         </div>
-        <div class="photo-more">1/20</div>
+        <div class="photo-more" onclick="openModal()">1/20</div>
       </section>
 
       <section class="content-warpper">
@@ -53,9 +126,8 @@
         <section class="item-head">
           <div id="nav-prev-warpper">
             <ol>
-                <li><a class="f-14 nav-prev" href="/">호텔 랭킹</a></li>
-                <li><a class="f-14 nav-prev" href="/" th:text="${content.stateName}"></a></li>
-                <li><a class="f-14 nav-current" th:text ="${content.koName}"></a></li>
+                <li><a class="f-14 nav-prev" href="/">Rankujp</a></li>
+                <li><a class="f-14 nav-current"  th:text ="${content.koName}"></a></li>
             </ol>
             <div class="share-this"></div>
           </div>
@@ -65,7 +137,7 @@
                 <div class="ranku detail" th:classappend="${
                      top == 1 ? 'gold' :
                     (top == 2 ? 'sliver' :
-                    (top == 41 ? 'bronze' : 'normal' ))
+                    (top == 3 ? 'bronze' : 'normal' ))
                     }">
                   <span class="ranku-value" th:text="${top}"></span>
                 </div>
@@ -123,27 +195,35 @@
 
           </div>
           <div style="margin: 2rem 0; width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
-          <div class="calendar-warpper">
+          <div class="calendar-warpper" id="top-price-warpper">
             <div class="calendar-head">
               <div class="f-15 f-b"><span class="calendar-svg"></span>&nbsp;날짜</div>
               <div style="gap: 1rem;">
-                <input style="cursor: inherit; width: 11.6rem;  padding: 1rem 2rem;" class="btn-st" type="text"
-                  placeholder="0000-00-00" autocomplete="off" th:value="${#temporals.format(content.bestStayDate, 'yyyy-MM-dd')}">
-                <button class="btn-st">검색</button>
+                <input id="search-value" style="cursor: pointer; width: 15rem;  padding: 1rem 2rem;" class="btn-st"
+                       type="date"
+                       pattern="^\d{4}-\d{2}-\d{2}$"
+                       required
+                       autocomplete="off"
+                       th:value="${#temporals.format(content.bestStayDate, 'yyyy-MM-dd')}">
+                <button class="btn-st" onclick="searchHotelPrice()">검색</button>
               </div>
             </div>
 
-            <div class="detail-price-warpper">
+            <div class="detail-price-warpper" id="top-on-price">
               <div style="display: flex; gap: 1rem; justify-content: flex-end; align-items: center;">
                 <p class="f-15 f-b">최저가</p>
                 <div style="height: 1.4rem; width: 1px; border-left: 1px solid #d9d9d9;"></div>
                 <p class="f-15" style="color: #959595;">1박당 요금</p>
               </div>
               <div style="display: flex; gap: .8rem;">
-                <p class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
-                <p class="daily-price xl JPY" th:text="${content.bestDailyRate}"></p>
+                <p id="daily-percent" class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
+                <p id="daily-price" class="daily-price xl JPY" th:text="${content.bestDailyRate}"></p>
               </div>
             </div>
+              <div class="detail-price-warpper at400" id="top-no-price">
+                  <div class="no-price-svg"></div>
+                  <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
+              </div>
           </div>
         </section>
         <a class="banner-row">
@@ -159,7 +239,8 @@
               </div>
             </div>
             <div style="display: flex; gap: .6rem; align-items: center;">
-              <p style="font-size: 1.4rem; line-height: 1.4; color: #919191;">25.09.23</p>
+              <p style="font-size: 1.4rem; line-height: 1.4; color: #919191;"
+                 th:text="${#dates.format(#dates.createNow(), 'yy.MM.dd')}"></p>
               <div class="update-date-svg"></div>
             </div>
           </div>
@@ -281,45 +362,65 @@
                       <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
 
                       <div class="ranku-total-score"
-                           th:if="${content.brandReviewList != null and !#lists.isEmpty(content.brandReviewList)}">
-                          <div class="score review"
-                               th:classappend="${content.rankuScore >= 86 ? 'best' :
-                           (content.rankuScore >= 71 ? 'verygood' :
-                           (content.rankuScore >= 41 ? 'good' : 'normal'))}">
+                           th:if="${content.brandReviewList != null}">
+                          <div th:each="review : ${content.brandReviewList}"
+                               th:if="${review.reviewBrand.name() == 'AGODA'}">
+                              <div class="score review"
+                                   th:classappend="${review.allScore >= 86 ? 'best' :
+                (review.allScore >= 71 ? 'verygood' :
+                (review.allScore >= 41 ? 'good' : 'normal'))}">
+                              </div>
+                              <p class="score-value f-17 f-b" th:text="${review.allScore}"></p>
+                              <div style="height: 1.6rem"></div>
                           </div>
-                          <p class="score-value f-17 f-b"
-                             th:text="${content.brandReviewList.get(0).allScore}"></p>
-                          <div style="height: 1.6rem;"></div>
                       </div>
 
-                      <!-- 리스트가 없을 때 대체 UI -->
+                      <!-- 리스트가 없을 때 -->
                       <div class="ranku-total-score"
                            th:if="${content.brandReviewList == null or #lists.isEmpty(content.brandReviewList)}">
                           <div class="score review normal"></div>
                           <p class="score-value f-17 f-b">?</p>
-                          <div style="height: 1.6rem;"></div>
                       </div>
 
                       <button class="btn-st">리뷰 확인해보기</button>
                   </div>
               </a>
-            <a>
-              <div class="review-item">
-                <div class="site-logo tripcom"></div>
-                <h4 class="f-14">글로벌 여행 플랫폼</h4>
-                <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
-                <div class="ranku-total-score">
-                  <div class="score review normal"></div>
-                  <p class="score-value f-17 f-b">?</p>
-                  <div style="height: 1.6rem;"></div>
-                </div>
-                <button class="btn-st">리뷰 확인해보기</button>
-              </div>
-            </a>
-            <a>
+
+              <a target="_blank"
+                 th:href="${'https://kr.trip.com/global-search/searchlist/search/?keyword='+content.getEnName()+'&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D5618272'}">
+                  <div class="review-item">
+                      <div class="site-logo tripcom"></div>
+                      <h4 class="f-14">글로벌 여행 플랫폼</h4>
+                      <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
+
+                      <div class="ranku-total-score"
+                           th:if="${content.brandReviewList != null}">
+                          <div th:each="review : ${content.brandReviewList}"
+                               th:if="${review.reviewBrand.name() == 'TRIPDOTCOM'}">
+                              <div class="score review"
+                                   th:classappend="${review.allScore >= 86 ? 'best' :
+                (review.allScore >= 71 ? 'verygood' :
+                (review.allScore >= 41 ? 'good' : 'normal'))}">
+                              </div>
+                              <p class="score-value f-17 f-b" th:text="${review.allScore}"></p>
+                              <div style="height: 1.6rem"></div>
+                          </div>
+                      </div>
+
+                      <!-- 리스트가 없을 때 -->
+                      <div class="ranku-total-score"
+                           th:if="${content.brandReviewList == null or #lists.isEmpty(content.brandReviewList)}">
+                          <div class="score review normal"></div>
+                          <p class="score-value f-17 f-b">?</p>
+                      </div>
+
+                      <button class="btn-st">리뷰 확인해보기</button>
+                  </div>
+              </a>
+            <a target="_blank" th:href="${'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword='+ content.jpName +'&distCd=06&rootCd=7701&screenId=FWPCTOP&ccnt=button-fw&image1='}">
               <div class="review-item">
                 <div class="site-logo jyaran"></div>
-                <h4 class="f-14">일본여행·숙박 1위</h4>
+                <h4 class="f-14">일본 현지 예약 1위</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
                   <div class="score review normal"></div>
@@ -329,23 +430,10 @@
                 <button class="btn-st">리뷰 확인해보기</button>
               </div>
             </a>
-            <a>
-              <div class="review-item">
-                <div class="site-logo rakuten"></div>
-                <h4 class="f-14">일본 최대 여행몰</h4>
-                <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
-                <div class="ranku-total-score">
-                  <div class="score review normal"></div>
-                  <p class="score-value f-17 f-b">?</p>
-                  <div style="height: 1.6rem;"></div>
-                </div>
-                <button class="btn-st">리뷰 확인해보기</button>
-              </div>
-            </a>
-            <a>
+            <a target="_blank" th:href="${'https://www.tripadvisor.co.kr/Search?q='+ content.getEnName() +'&geo=1&ssrc=a&searchNearby=false&searchSessionId=0012e6dd0723828c.ssid&offset=0'}">
               <div class="review-item">
                 <div class="site-logo tripadvisor"></div>
-                <h4 class="f-14">여행자 리뷰 1위</h4>
+                <h4 class="f-14">영미권 사용자 리뷰</h4>
                 <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
                 <div class="ranku-total-score">
                   <div class="score review normal"></div>
@@ -355,13 +443,26 @@
                 <button class="btn-st">리뷰 확인해보기</button>
               </div>
             </a>
+              <a>
+                  <div class="review-item" style="cursor: not-allowed">
+                      <div class="site-logo rakuten"></div>
+                      <h4 class="f-14">일본 최대 여행몰</h4>
+                      <div style="width: 100%; height: 1px; border-top: 1px solid #d9d9d9;"></div>
+                      <div class="ranku-total-score">
+                          <div class="score review normal"></div>
+                          <p class="score-value f-17 f-b">?</p>
+                          <div style="height: 1.6rem;"></div>
+                      </div>
+                      <button class="btn-st">업데이트 중..</button>
+                  </div>
+              </a>
           </div>
         </section>
 
         <section class="description-section">
           <h3>세부내용</h3>
           <p class="hotel-description f-15" th:text="${content.description}"></p>
-          <a><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
+          <a target="_blank" th:href ="${content.bestLink}"><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
         </section>
 
         <section class="group-review">
@@ -433,8 +534,7 @@
     <div class="foot-container">
       <div class="f-meta">
         <p class="f-14 f-b" style="color: #7d7d7d;">ADERS</p>
-        <p class="f-14" style="color: #7d7d7d">대표이사: 이지형</p>
-        <p class="f-14" style="color: #7d7d7d;">Email: property@aders-international.com</p>
+        <p class="f-14" style="color: #7d7d7d;">Email: marketing@aders-international.com</p>
       </div>
       <div class="f-12" style="color: #7d7d7d">ⓒ 2025 rankujp INC.</div>
     </div>

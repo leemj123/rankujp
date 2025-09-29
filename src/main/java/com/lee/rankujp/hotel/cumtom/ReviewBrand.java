@@ -7,4 +7,5 @@ public enum ReviewBrand {
     AGODA,
     TRIPDOTCOM,
     BOOKINGDOTCOM,
+    JALAN,
 }

@@ -37,4 +37,12 @@ public class WebClientConfig {
                 .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .build();
     }
+
+    @Bean(name = "tripWebClient")
+    public WebClient tripWebClient() {
+        return WebClient.builder()
+                .baseUrl("https://kr.trip.com/global-search/searchlist/search/")
+                .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .build();
+    }
 }

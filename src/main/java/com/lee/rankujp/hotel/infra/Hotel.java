@@ -29,6 +29,7 @@ public class Hotel {
 
     private String enName;
     private String koName;
+    private String jpName;
 
     private String address;
     private String zipcode;
@@ -87,6 +88,7 @@ public class Hotel {
         this.keyword = k;
     }
     public void rankuScoreUpdater (int r) {
+        this.updateDateTime = LocalDateTime.now();
         this.rankuScore = r;
     }
 
@@ -99,8 +101,14 @@ public class Hotel {
 
 
     public void imgStarUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.enName = info.getHotelName();
         this.starRating = info.getStarRating();
         this.thumbnailImg = info.getImageURL();
+    }
+
+    public void enNameUpdate(ImgStarResponse.HotelApiInfo info) {
+        this.enName = info.getHotelName();
+    }
+    public void jpNameUpdate(ImgStarResponse.HotelApiInfo info) {
+        this.jpName = info.getHotelName();
     }
 }
