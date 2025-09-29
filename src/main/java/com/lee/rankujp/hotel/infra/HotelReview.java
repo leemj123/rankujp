@@ -7,6 +7,9 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class HotelReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +24,5 @@ public class HotelReview {
 
     private long reviewCount;
     private double allScore;
-
-    private double businessScore;
-    private double coupleScore;
-    private double soloScore;
-    private double familyScore;
-    private double groupScore;
 
 }
