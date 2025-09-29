@@ -54,24 +54,6 @@ public class JalanService {
             }
         }
 
-//        String name = "神戸三宮東急REIホテル";
-//            try {
-//
-//                String cleaned = name.replaceAll("[ \\t\\n\\x0B\\f\\r]+", "");
-//                String encodedName = URLEncoder.encode(cleaned, "Shift_JIS");
-//
-//                // 1) 네트워크(트랜잭션 밖)
-//                Document doc = this.jalanFlux(encodedName).block();
-//
-//                double score = scoreExtraction(doc);
-//                int count = reviewCountExtraction(doc);
-//
-//
-//                Thread.sleep(60);
-//
-//            } catch (Exception e) {
-//                log.warn("Hotel {} failed: {}",name, e.toString());
-//            }
 
 
     }
