@@ -1,6 +1,7 @@
 package com.lee.rankujp.hotel.mvc.service;
 
 import com.lee.rankujp.hotel.cumtom.PointLocation;
+import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import com.lee.rankujp.hotel.infra.*;
 import com.lee.rankujp.hotel.mvc.dto.*;
 import com.lee.rankujp.hotel.price.HotelPriceService;
@@ -23,6 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -311,8 +314,19 @@ public class HotelService {
                 .averageCoupleScore((int)(hotel.getAverageCoupleScore()*10))
                 .averageSoloScore((int)(hotel.getAverageSoloScore()*10))
                 .averageFamilyScore((int)(hotel.getAverageFamilyScore()*10))
-                .brandReviewList(reviews.stream().map(HotelReviewResponse::new).toList())
+                .brandReviewMap(this.getBrandReviewMap(reviews))
                 .build();
+    }
+    public Map<ReviewBrand, HotelReviewResponse> getBrandReviewMap(List<HotelReview> reviews) {
+
+        if (reviews.isEmpty()) return Collections.emptyMap();
+        return reviews.stream()
+                .map(HotelReviewResponse::new)
+                .collect(Collectors.toMap(
+                        HotelReviewResponse::getReviewBrand,
+                        Function.identity(),
+                        (r1, r2) -> r1.getAllScore() >= r2.getAllScore() ? r1 : r2 // 충돌 시 점수 높은 것 선택
+                ));
     }
     private List<HotelPriceResponse> buildTop5(boolean weekend, Hotel hotel, HotelCity hotelCity) {
 
