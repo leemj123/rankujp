@@ -71,6 +71,7 @@ public class HotelService {
 
         return new PageImpl<>(results.stream().map(PremiumResponse::new).toList(), pageable, total);
     }
+
     public Page<ScoreResponse> scorePage(int location, int sort, int page) {
         Pageable pageable = PageRequest.of(page, 20);
         //
