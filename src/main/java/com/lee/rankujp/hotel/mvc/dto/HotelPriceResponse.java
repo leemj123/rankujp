@@ -23,7 +23,10 @@ public class HotelPriceResponse {
         this.sailPercent = (int) hp.getSailPercent();
         this.updatedAt = hp.getUpdatedAt();
         this.isWeekend = hp.isWeekend();
-        this.link = "https://www.agoda.com/ko-kr/partners/partnersearch.aspx?cid=1911730" +
+        this.link = "https://www.agoda.com/partners/partnersearch.aspx" +
+                "?pcs=1" +
+                "&cid=1950715" +
+                "&hl=ko-kr" +
                 "&hid="+ id
                 +"&checkin="+ hp.getStayDate()
                 +"&checkout="+ hp.getStayDate().plusDays(2)
