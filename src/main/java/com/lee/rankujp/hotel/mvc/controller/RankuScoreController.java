@@ -23,6 +23,11 @@ public class RankuScoreController {
         model.addAttribute("keywords","일본호텔 순위, 호텔 가격 비교, 호텔 할인, 예약사이트, 호텔 예약 꿀팁, 일본호텔추천, 일본호텔순위, 일본호텔랭킹, 일본호텔정보, 일본호텔예약,일본호텔비교");
         model.addAttribute("siteUrl", "");
         model.addAttribute("scorePage", hotelService.scorePage(location, type, page));
+
+        if (page == 1)
+            model.addAttribute("canonical", "https://rankujp.com/score");
+        else
+            model.addAttribute("canonical", "https://rankujp.com/score?page"+page);
         return "ranku-score";
     }
 }

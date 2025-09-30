@@ -101,8 +101,7 @@ public class Hotel {
     }
 
 
-    public void imgStarUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.starRating = info.getStarRating();
+    public void imgUpdate(ImgStarResponse.HotelApiInfo info) {
         this.thumbnailImg = info.getImageUrl();
     }
 

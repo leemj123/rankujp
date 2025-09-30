@@ -118,7 +118,7 @@
             <img th:src="${content.photo3}" th:alt="${content.koName + '의 주변 풍경사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
           </div>
         </div>
-        <div class="photo-more" onclick="openModal()">1/20</div>
+        <div class="photo-more" onclick="openModal()"></div>
       </section>
 
       <section class="content-warpper">
@@ -126,7 +126,7 @@
         <section class="item-head">
           <div id="nav-prev-warpper">
             <ol>
-                <li><a class="f-14 nav-prev" href="/">Rankujp</a></li>
+                <li><a class="f-14 nav-prev" th:href="${navBack}" th:text="${navValue}"></a></li>
                 <li><a class="f-14 nav-current"  th:text ="${content.koName}"></a></li>
             </ol>
             <div class="share-this"></div>

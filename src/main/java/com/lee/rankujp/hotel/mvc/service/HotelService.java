@@ -220,7 +220,7 @@ public class HotelService {
 
         Hotel hotel = jpaQueryFactory
                 .selectFrom(qHotel)
-                .distinct() // 컬렉션 fetch join 시 중복 행 방지
+                .distinct()
                 .leftJoin(qHotel.hotelCity, qHotelCity).fetchJoin()
                 .where(qHotel.id.eq(id))
                 .fetchOne();
@@ -282,8 +282,6 @@ public class HotelService {
                 .bestStayDate(hotel.getBestStayDate())
                 .bestDailyRate((int)hotel.getBestDailyRate())
                 .bestSailPrecent((int)hotel.getBestSailPrecent())
-//                .bestLink("https://www.agoda.com/ko-kr/search?selectedproperty="+ hotel.getId() +"&checkIn="+ hotel.getBestStayDate() +"&currency=JPY"+
-//                        "&asq="+hotel.getHotelCity().getAsq())
                 .bestLink("https://www.agoda.com/ko-kr/partners/partnersearch.aspx?cid=1911730"
                         +"&hid="+ hotel.getId()
                         +"&checkin="+ hotel.getBestStayDate()
@@ -335,7 +333,6 @@ public class HotelService {
 
 
     //other=================================
-
 
     @Transactional
     public void scoreCalculator(){

@@ -9,26 +9,27 @@
     <meta name="keywords" th:content="${keywords}">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="format-detection" content="telephone=no">
-    <meta name="thumbnail" th:content="${thumbnail}">
+    <meta name="thumbnail" content="https://rankujp.com/public/ranku_sns.png">
 
     <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="ja_JP">
     <meta property="og:site_name" content="rankujp.com">
-    <meta property="og:type" content="article">
+    <meta property="og:type" content="website">
     <meta property="og:title" th:content="${title}">
     <meta property="og:url" content="https://rankujp.com/">
     <meta property="og:description" th:content="${description}">
-    <meta property="og:image" th:content="${thumbnail}">
+    <meta property="og:image" content="https://rankujp.com/public/ranku_sns.png">
 
-    <meta property="twitter:card" content="article">
+    <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:title" th:content="${title}">
     <meta property="twitter:description" th:content="${description}">
-    <meta property="twitter:image" th:content="${thumbnail}">
-    <meta name="twitter:creator" content="@rankujp">
+    <meta property="twitter:image" content="https://rankujp.com/public/ranku_sns.png">
+    <meta name="twitter:creator" content="@rankujp_official">
 
     <link rel="preload" href="/css/main.css" as="style">
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="canonical" href="https://rankujp.com/">
+    <link rel="canonical" th:href="${canonical}">
 
     <meta name="agd-partner-manual-verification" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ECZDFLQJ5"></script>
@@ -39,6 +40,7 @@
 
         gtag('config', 'G-9ECZDFLQJ5');
     </script>
+
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/list.css">
@@ -90,7 +92,7 @@
             <!-- Top 3 -->
             <section class="ranking-top-warpper" id="top-item-section" th:if="${list != null and !#lists.isEmpty(list)}">
               <th:block th:each="p, stat : ${list}" th:if="${stat.index < 3}">
-                  <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
+                  <a th:href="${'/sale/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
                     <div class="head-line"></div>
                     <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표 이미지'}" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
                     <div class="ranku list"
@@ -136,7 +138,7 @@
             <section class="ranking-noraml-warpper" id="ranking-normal-warpper" th:if="${list != null and #lists.size(list) > 3}">
                 <ol id="normal-item-section">
                   <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
-                    <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
+                    <a th:href="${'/sale/hotel/' + p.id + '?top=' + (stat.index+1)}">
                       <article class="ranku-item">
                         <div class="ranku-img-box">
                             <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}" loading="lazy"  onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -187,6 +189,12 @@
                 <div id="infinite-sentinel" aria-hidden="true"></div>
               </section>
         </th:block>
+
+        <nav id="pager" aria-label="pageNation">
+            <a th:if="${salePage.pageable.pageNumber !=0}" th:href="@{/(page=${salePage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
+            <span class="page-info" th:text="${salePage.pageable.pageNumber+1 } + ' / ' + ${salePage.totalPages+1}"></span>
+            <a th:if="${salePage.pageable.pageNumber < salePage.totalPages}" th:href="@{/(page=${salePage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
+        </nav>
     </section>
     <section class="main-r">
       <div class="banner-colum">

@@ -30,10 +30,4 @@ public class HotelPriceAPiController {
 
         return ResponseEntity.accepted().body(Map.of("status","started"));
     }
-//    @PostMapping("/update")
-//    public void HotelImgAndStarApiRequester() {
-//
-//        hotelPriceService.imgAndStarUpdate();
-//
-//    }
 }
