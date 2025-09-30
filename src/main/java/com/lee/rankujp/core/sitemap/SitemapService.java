@@ -1,0 +1,198 @@
+package com.lee.rankujp.core.sitemap;
+
+import com.lee.rankujp.hotel.infra.QHotel;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class SitemapService {
+    private final JPAQueryFactory jpaQueryFactory;
+    private final QHotel qHotel = QHotel.hotel;
+
+    private List<SiteMap> siteMapQueryFactory() {
+        List<SiteMap> data = new ArrayList<>();
+        data.addAll(
+                jpaQueryFactory
+                        .select(Projections.constructor(SiteMap.class,
+                                qHotel.id,
+                                qHotel.updateDateTime
+                        ))
+                        .from(qHotel)
+                        .fetch()
+        );
+
+        return data;
+    }
+//    private List<RssMap> RssQueryFactory() {
+//        List<RssMap> data = new ArrayList<>();
+//        data.addAll(
+//                jpaQueryFactory
+//                        .select(Projections.constructor(RssMap.class,
+//                                qPost.title,
+//                                qPost.description,
+//                                qPost.id,
+//                                qPost.modifiedDate,
+//                                Expressions.constant("detail/")
+//                        ))
+//                        .from(qPost)
+//                        .limit(20)
+//                        .orderBy(qPost.modifiedDate.desc())
+//                        .fetch()
+//        );
+//        data.addAll(
+//                jpaQueryFactory
+//                        .select(Projections.constructor(RssMap.class,
+//                                qSnsContent.title,
+//                                qSnsContent.description,
+//                                qSnsContent.id,
+//                                qSnsContent.publishTime,
+//                                Expressions.constant("detail/sns-content/")
+//                        ))
+//                        .from(qSnsContent)
+//                        .limit(20)
+//                        .orderBy(qSnsContent.publishTime.desc())
+//                        .fetch()
+//        );
+//        // 날짜 기준 내림차순 정렬
+//        // 상위 20개만 선택
+//        return data.stream()
+//                .sorted(Comparator.comparing(RssMap::getModifiedTime).reversed()) // 날짜 기준 내림차순 정렬
+//                .limit(20) // 상위 20개만 선택
+//                .toList();
+//    }
+    public String makeSiteMap () {
+        List<SiteMap> list = siteMapQueryFactory();
+        StringBuilder xml = new StringBuilder();
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+
+        xml.append("""
+            <url>
+                <loc>https://rankujp.com/</loc>
+                <lastmod>2025-09-30</lastmod>
+                <priority>1.0</priority>
+            </url>
+           <url>
+                <loc>https://rankujp.com/?page=2</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/?page=3</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/?page=4</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/?page=5</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/score</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/score?page=2</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/score?page=3</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/score?page=4</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/score?page=5</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/premium</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/premium?page=2</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/premium?page=3</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/premium?page=4</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+            <url>
+                <loc>https://rankujp.com/premium?page=5</loc>
+                <lastmod>2025-09-30</lastmod>
+            </url>
+   """);
+        list.stream()
+                .map(s -> """
+            <url>
+                <loc>https://rankujp.com/hotel/%s</loc>
+                <lastmod>%s</lastmod>
+            </url>
+        """.formatted(s.getId(), s.getModifiedTime()))
+                .forEach(xml::append);
+
+        xml.append("</urlset>");
+        return xml.toString().trim();
+
+    }
+
+//    public String makeRss() {
+//        List<RssMap> latestPosts = this.RssQueryFactory();
+//        StringBuilder rss = new StringBuilder();
+//        rss.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+//        rss.append("<rss version=\"2.0\">\n");
+//        rss.append("<channel>\n");
+//        rss.append("""
+//
+//                <title>하우버 - 일본 생활의 모든 정보를 한눈에</title>
+//                <link>https://rankujp.com</link>
+//                <description>일본 생활 정보, 워킹홀리데이, 유학등 모든 콘텐츠를 알려드려요!</description>
+//                <lastBuildDate>%s</lastBuildDate>
+//                <language>ko</language>
+//        """.formatted(ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME)));
+//
+//        for (RssMap r : latestPosts) {
+//            rss.append("""
+//                <item>
+//                    <title>%s</title>
+//                    <link>https://rankujp.com/%s</link>
+//                    <description>%s</description>
+//                    <pubDate>%s</pubDate>
+//                </item>
+//            """.formatted(
+//                    r.getTitle(),
+//                    r.getLink(),
+//                    r.getDescription(),
+//                    formatToRFC1123(r.getModifiedTime()) // RFC-1123 포맷 적용
+//            ));
+//        }
+//
+//        rss.append("</channel>\n");
+//        rss.append("</rss>");
+//
+//        return rss.toString().trim();
+//    }
+//    private String formatToRFC1123(LocalDateTime localDateTime) {
+//        return ZonedDateTime.of(localDateTime, ZoneId.systemDefault()) // 시스템 타임존 적용
+//                .format(DateTimeFormatter.RFC_1123_DATE_TIME);
+//    }
+}

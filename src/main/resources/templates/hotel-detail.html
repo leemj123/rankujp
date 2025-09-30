@@ -8,30 +8,33 @@
     <meta name="description" th:attr="content=${content.description}" />
     <meta name="keywords" th:attr="content=${content.keyword}" />
 
-    <meta name="description" content="일본 저렴한 호텔 추천 & 가격 비교｜예약 사이트 랭킹과 할인 정보 총정리 | 일본 호텔을 가장 합리적으로 예약하려면 언제가 가장 저렴할까? 인기 예약 사이트의 가격・평점・할인 정보까지 한눈에 비교하고, 최저가 예약 꿀팁까지 확인해보세요">
-    <meta name="keywords" th:content="${keywords}">
+    <meta name="robots" content="index,follow"
+          th:if="${!isVariant}">
+    <meta name="robots" content="noindex,follow"
+          th:if="${isVariant}"/>
+
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="format-detection" content="telephone=no">
-    <meta name="thumbnail" th:content="${thumbnail}">
+    <meta name="thumbnail" th:content="${content.thumbnailImg}">
 
     <meta property="og:locale" content="ko_KR">
     <meta property="og:site_name" content="rankujp.com">
-    <meta property="og:type" content="article">
+    <meta property="og:type" content="website">
     <meta property="og:title" th:content="${content.title}">
-    <meta property="og:url" th:content="'https://rankujp.com/hotel/' + ${content.id} + '?top=' + ${top}" />
+    <meta property="og:url" th:content="${navBack} + '/hotel/' + ${content.id} + '?top=' + ${top}" />
     <meta property="og:description" th:content="${content.description}">
-    <meta property="og:image" th:content="${thumbnail}">
+    <meta property="og:image" th:content="${content.thumbnailImg}">
 
-    <meta property="twitter:card" content="article">
+    <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:title" th:content="${content.title}">
     <meta property="twitter:description" th:content="${content.description}">
-    <meta property="twitter:image" th:content="${thumbnail}">
-    <meta name="twitter:creator" content="@rankujp">
+    <meta property="twitter:image" th:content="${content.thumbnailImg}">
+    <meta name="twitter:creator" content="@rankujp_official">
 
     <link rel="preload" href="/css/main.css" as="style">
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="canonical"  th:href="'https://rankujp.com/hotel'+${content.id}">
+    <link rel="canonical" th:href="'https://rankujp.com/hotel/'+${content.id}">
 
     <meta name="agd-partner-manual-verification" />
 
@@ -122,7 +125,6 @@
       </section>
 
       <section class="content-warpper">
-
         <section class="item-head">
           <div id="nav-prev-warpper">
             <ol>
