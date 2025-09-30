@@ -40,7 +40,7 @@ public class HotelService {
     //list==================================
 
     public Page<PremiumResponse> salePage(int location, int sort, int page) {
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page-1, 20);
         //
         BooleanExpression predicate = this.filterQueryExpression(location);
 
@@ -73,12 +73,10 @@ public class HotelService {
     }
 
     public Page<ScoreResponse> scorePage(int location, int sort, int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        //
-        BooleanExpression predicate = this.filterQueryExpression(location);
-        //
-        List<OrderSpecifier<?>> orders = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page-1, 20);
 
+        BooleanExpression predicate = this.filterQueryExpression(location);
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
 
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) orders.add(order);
@@ -105,7 +103,7 @@ public class HotelService {
     }
 
     public Page<PremiumResponse> premiumPage(int location, int sort, int page) {
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page-1, 20);
 
         BooleanExpression predicate = this.premiumFilterQueryExpression(location);
 
@@ -197,30 +195,15 @@ public class HotelService {
 
         BooleanExpression predicate;
 
-        if (location == 1) {
-            return common; // 바로 리턴
-        }
+        if (location == 1) { return common; }
+        predicate = switch (location) {
+            case 7 -> qHotel.hotelCity.id.eq(9590L);
+            case 8 -> qHotel.hotelCity.id.eq(1784L);
+            case 9 -> qHotel.hotelCity.id.eq(5235L);
+            case 10 -> qHotel.hotelCity.id.eq(13313L);
+            default -> null;
+        };
 
-        if (location < 7) {
-            predicate = switch (location) {
-                case 2 -> qHotel.pointLocation.eq(PointLocation.NAMBA);
-                case 3 -> qHotel.pointLocation.eq(PointLocation.UMEDA);
-                case 4 -> qHotel.pointLocation.eq(PointLocation.SHINSAIBASHI);
-                case 5 -> qHotel.pointLocation.eq(PointLocation.TENOJI);
-                case 6 -> qHotel.pointLocation.eq(PointLocation.USJ);
-                default -> null; // 미매칭 시 null
-            };
-        } else if (location < 11) {
-            predicate = switch (location) {
-                case 7 -> qHotel.hotelCity.id.eq(9590L);
-                case 8 -> qHotel.hotelCity.id.eq(1784L);
-                case 9 -> qHotel.hotelCity.id.eq(5235L);
-                case 10 -> qHotel.hotelCity.id.eq(13313L);
-                default -> null;
-            };
-        } else {
-            return common;
-        }
 
         // predicate가 null이면 그냥 common 리턴
         return (predicate != null) ? predicate.and(common) : common;

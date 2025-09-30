@@ -68,6 +68,7 @@ public class Hotel {
     private double averageFamilyScore;
     private double averageGroupScore;
 
+    @Enumerated(EnumType.ORDINAL)
     private PointLocation pointLocation;
 
     public void averageScoreUpdate(double v, double v1, double v2, double v3, double v4, double v5) {
