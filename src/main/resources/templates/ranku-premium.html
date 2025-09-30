@@ -200,9 +200,9 @@
             </th:block>
 
             <nav id="pager" aria-label="pageNation">
-                <a th:if="${premiumPage.pageable.pageNumber !=0}" th:href="@{/premium/(page=${premiumPage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
+                <a th:if="${premiumPage.pageable.pageNumber !=0}" th:href="@{/premium(page=${premiumPage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
                 <span class="page-info" th:text="${premiumPage.pageable.pageNumber+1 } + ' / ' + ${premiumPage.totalPages+1}"></span>
-                <a th:if="${premiumPage.pageable.pageNumber < premiumPage.totalPages}" th:href="@{/premium/(page=${premiumPage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
+                <a th:if="${premiumPage.pageable.pageNumber < premiumPage.totalPages}" th:href="@{/premium(page=${premiumPage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
             </nav>
         </section>
         <section class="main-r">
