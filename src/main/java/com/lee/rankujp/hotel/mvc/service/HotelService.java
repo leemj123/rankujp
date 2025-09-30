@@ -282,8 +282,11 @@ public class HotelService {
                 .bestStayDate(hotel.getBestStayDate())
                 .bestDailyRate((int)hotel.getBestDailyRate())
                 .bestSailPrecent((int)hotel.getBestSailPrecent())
-                .bestLink("https://www.agoda.com/ko-kr/partners/partnersearch.aspx?cid=1911730"
-                        +"&hid="+ hotel.getId()
+                .bestLink("https://www.agoda.com/partners/partnersearch.aspx" +
+                        "?pcs=1" +
+                        "&cid=1950715" +
+                        "&hl=ko-kr" +
+                        "&hid="+ hotel.getId()
                         +"&checkin="+ hotel.getBestStayDate()
                         +"&checkout="+ hotel.getBestStayDate().plusDays(2)
                         +"&currency=JPY"
