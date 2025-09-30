@@ -15,12 +15,13 @@ public class DetailController {
 
     private final HotelService hotelService;
 
-    @GetMapping("/sale/hotel/{id}")
+    @GetMapping("/hotel/{id}")
     public String saleHotel(Model model, @PathVariable Long id, @RequestParam(defaultValue = "0") int top){
         model.addAttribute("top", top);
         model.addAttribute("content", hotelService.HotelDetail(id));
         model.addAttribute("navValue","할인랭킹");
-        model.addAttribute("navBack","/");
+        model.addAttribute("navBack","https://rankujp.com");
+        model.addAttribute("isVariant", false);
         return "hotel-detail";
     }
 
@@ -29,7 +30,8 @@ public class DetailController {
         model.addAttribute("top", top);
         model.addAttribute("content", hotelService.HotelDetail(id));
         model.addAttribute("navValue","종합랭킹");
-        model.addAttribute("navBack","/score");
+        model.addAttribute("navBack","https://rankujp.com/score");
+        model.addAttribute("isVariant", true);
         return "hotel-detail";
     }
 
@@ -38,7 +40,8 @@ public class DetailController {
         model.addAttribute("top", top);
         model.addAttribute("content", hotelService.HotelDetail(id));
         model.addAttribute("navValue","프리미엄");
-        model.addAttribute("navBack","/premium");
+        model.addAttribute("navBack","https://rankujp.com/premium");
+        model.addAttribute("isVariant", true);
         return "hotel-detail";
     }
 }
