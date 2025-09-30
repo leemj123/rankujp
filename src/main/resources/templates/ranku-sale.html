@@ -139,7 +139,7 @@
             <section class="ranking-noraml-warpper" id="ranking-normal-warpper" th:if="${list != null and #lists.size(list) > 3}">
                 <ol id="normal-item-section">
                   <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
-                    <a th:href="${'/sale/hotel/' + p.id + '?top=' + (stat.index+1)}">
+                    <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
                       <article class="ranku-item">
                         <div class="ranku-img-box">
                             <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}" loading="lazy"  onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
