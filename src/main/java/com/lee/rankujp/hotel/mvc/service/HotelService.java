@@ -256,6 +256,9 @@ public class HotelService {
             }
         }
 
+        LocalDate bestDate = hotel.getBestStayDate();
+        if ( bestDate == null ) {bestDate = LocalDate.now(); }
+
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
                 .updateDate(hotel.getUpdateDateTime().toLocalDate())
@@ -287,8 +290,8 @@ public class HotelService {
                         "&cid=1950715" +
                         "&hl=ko-kr" +
                         "&hid="+ hotel.getId()
-                        +"&checkin="+ hotel.getBestStayDate()
-                        +"&checkout="+ hotel.getBestStayDate().plusDays(2)
+                        +"&checkin="+   bestDate
+                        +"&checkout="+ bestDate.plusDays(2)
                         +"&currency=JPY"
                         +"&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6")
                 .weekdayPriceList(buildTop5(false, hotel, hotel.getHotelCity()))
