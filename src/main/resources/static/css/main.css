@@ -127,9 +127,13 @@ input:focus {
 }
 
 .discount-percent {
-    color: #ff7376;
+    color: #EB0C00;
     font-weight: bold;
 }
+.discount-percent.top {
+    color: #FF7376;
+}
+
 
 .discount-percent::before {
     content: '-';
@@ -140,7 +144,7 @@ input:focus {
 }
 
 .crossed-out-rate {
-    color: #959595;
+    color: #585858;
     text-decoration: line-through;
     text-decoration-thickness: 1px;
 }
@@ -258,7 +262,7 @@ input:focus {
     padding: 1.2rem 1.4rem;
     font-size: 1.2rem;
     line-height: 1.4;
-    color: #959595;
+    color: #585858;
     z-index: 200;
 }
 
@@ -507,7 +511,7 @@ header {
 .header-nav ul li {
     width: auto;
     height: 100%;
-    padding: 0 2rem;
+    margin: 0 2rem;
     cursor: pointer;
 }
 
@@ -516,7 +520,7 @@ header {
     height: 100%;
     text-align: center;
     align-content: center;
-    color: #7d7d7d;
+    color: #585858;
     white-space: nowrap;
     border: none;
 }
