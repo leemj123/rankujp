@@ -63,7 +63,13 @@
 
     <main id="main">
         <section class="main-l">
-            <h1>프리미엄 호텔 랭킹</h1>
+            <div style="display: flex; align-items: center; gap: 1rem">
+                <h1>프리미엄 호텔 랭킹</h1>
+                <div style="display: flex; align-items: center; gap: .6rem">
+                    <p id="page-update-time" class="f-14" style="color: #585858" role="note" th:text="${#dates.format(#dates.createNow(), 'yy.MM.dd')}"></p>
+                    <div class="update-date-svg"></div>
+                </div>
+            </div>
             <section class="filter-warpper" id="filters">
                 <div class="full-container chip-row" role="list" aria-label="지역" data-group="area">
                     <button class="chip on" data-value="1">전체</button>
@@ -133,7 +139,7 @@
                                 <div class="price-right">
                                     <div class="price-value">
                                         <div style="display:flex; gap:.2rem;">
-                                            <p class="discount-percent f-15" th:text="${p.bestSailPrecent}"></p>
+                                            <p class="discount-percent top f-15" th:text="${p.bestSailPrecent}"></p>
                                             <p class="crossed-out-rate f-15 JPY" th:text="${p.bestCrossedOutRate}"></p>
                                         </div>
                                         <p class="daily-price ml JPY" th:text="${p.bestDailyRate}"></p>
