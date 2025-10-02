@@ -136,7 +136,7 @@
           <div class="item-head-title">
             <div style="display: flex; flex-direction: column; gap: 1.4rem; justify-content: space-between;">
               <div style="display: flex; gap: 1rem;">
-                <div class="ranku detail" th:classappend="${
+                <div th:if="${top != null and top != 0 and top <= 100}" class="ranku detail" th:classappend="${
                      top == 1 ? 'gold' :
                     (top == 2 ? 'sliver' :
                     (top == 3 ? 'bronze' : 'normal' ))
