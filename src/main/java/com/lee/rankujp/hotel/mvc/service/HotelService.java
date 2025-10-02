@@ -421,8 +421,6 @@ public class HotelService {
         return res.getResults().get(0);
     }
 
-
-
 //    @Transactional
 //    public void updater() {
 //

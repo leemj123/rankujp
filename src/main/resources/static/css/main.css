@@ -344,6 +344,8 @@ input:focus {
 .ranku.detail {
     width: 2.6rem;
     height: 2.8rem;
+    min-width: 2.6rem;
+    min-height: 2.8rem;
     filter: drop-shadow(0 3px 12px rgba(0, 0, 0, .2));
 }
 
@@ -390,7 +392,9 @@ input:focus {
     }
     .ranku.detail {
         width: 4.6rem;
+        min-width: 4.6rem;
         height: 4.4rem;
+        min-height: 4.4rem;
         filter: drop-shadow(0 4px 15px rgba(0, 0, 0, .2));
     }
 

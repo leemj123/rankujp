@@ -112,10 +112,6 @@ const topCard = (item, rank) => `
 
         <div class="price-right">
           <div class="price-value">
-            <div style="display:flex; gap:.2rem;">
-              <p class="discount-percent top f-15">${esc(item.bestSailPrecent)}</p>
-              <p class="crossed-out-rate f-15 JPY">${esc(item.bestCrossedOutRate)}</p>
-            </div>
             <p class="daily-price ml JPY">${esc(item.bestDailyRate)}</p>
           </div>
         </div>
@@ -153,10 +149,6 @@ const normalCard = (item, rank) => `
             </div>
             <div class="price-right">
               <div class="price-value">
-                <div style="display:flex; gap:.2rem;">
-                  <p class="discount-percent f-20">${esc(item.bestSailPrecent)}</p>
-                  <p class="crossed-out-rate f-20 JPY">${esc(item.bestCrossedOutRate)}</p>
-                </div>
                 <p class="daily-price xl JPY">${esc(item.bestDailyRate)}</p>
               </div>
             </div>

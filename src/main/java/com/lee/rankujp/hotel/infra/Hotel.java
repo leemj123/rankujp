@@ -49,7 +49,7 @@ public class Hotel {
     private String photo5;
 
     //price
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<HotelPrice> priceList;
 
     private LocalDate bestStayDate;
@@ -58,7 +58,7 @@ public class Hotel {
     private double bestSailPrecent;
 
     //review
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<HotelReview> hotelReviewList = new ArrayList<>();
 
     private double averageAllScore;
