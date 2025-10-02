@@ -737,10 +737,27 @@ footer .foot-container {
         gap: 0;
     }
 
+    footer {
+        height: 18.2rem;
+    }
     footer .foot-container {
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
+        gap: 1rem;
+    }
+    footer .f-meta {
+        height: unset;
+    }
+
+    .f-meta.right {
+        align-items: flex-start;
+        justify-content: space-between;
+
+    }
+    .f-meta-row.right {
+        justify-content: flex-end;
+
     }
 
     .score-warpper {
