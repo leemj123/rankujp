@@ -372,6 +372,7 @@ main {
     flex-direction: row;
     justify-content: flex-start;
 }
+
 @media (max-width: 786px) {
     .calendar-warpper {
         flex-direction: column-reverse;
@@ -388,7 +389,11 @@ main {
         justify-content: space-between;
     }
 }
-
+@media (max-width: 500px) {
+    .head-info-row {
+        align-items: flex-start;
+    }
+}
 /* ============================ */
 
 .item-price-warpper {
