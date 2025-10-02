@@ -244,3 +244,18 @@ function searchHotelPrice() {
             topPriceWarpper.classList.remove('on-load');
         });
 }
+async function shareHotel() {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: document.title,
+                text: "이 페이지를 확인해보세요!",
+                url: window.location.href
+            });
+        } catch (err) {
+            console.error("공유 취소 또는 오류:", err);
+        }
+    } else {
+        alert("이 브라우저는 공유하기를 지원하지 않습니다.");
+    }
+}
