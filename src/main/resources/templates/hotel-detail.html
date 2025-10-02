@@ -131,7 +131,7 @@
                 <li><a class="f-14 nav-prev" th:href="${navBack}" th:text="${navValue}"></a></li>
                 <li><a class="f-14 nav-current"  th:text ="${content.koName}"></a></li>
             </ol>
-            <div class="share-this"></div>
+            <div class="share-this" onclick="shareHotel()"></div>
           </div>
           <div class="item-head-title">
             <div style="display: flex; flex-direction: column; gap: 1.4rem; justify-content: space-between;">
@@ -216,8 +216,6 @@
 
             <div class="detail-price-warpper" id="top-on-price">
               <div style="display: flex; gap: 1rem; justify-content: flex-end; align-items: center;">
-                <p class="f-15 f-b">최저가</p>
-                <div style="height: 1.4rem; width: 1px; border-left: 1px solid #d9d9d9;"></div>
                 <p class="f-15" style="color: #959595;">1박당 요금</p>
               </div>
               <div style="display: flex; gap: .8rem;">
@@ -231,7 +229,7 @@
               </div>
           </div>
         </section>
-        <a class="banner-row">
+        <a th:href="${content.bestLink}" class="banner-row">
           <div></div>
         </a>
         <section class="item-price-warpper">
@@ -470,14 +468,14 @@
           <h3>같이가면 좋은 곳? 유형별 랭킹</h3>
           <div class="group-flex-box">
             <div class="group-flex">
-              <div class="group" th:classappend="${content.preferenceValue ==2} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="couple-svg"></div>
                   <p><b>커플</b>에게 인기</p>
                 </div>
                 <div class="f-15 f-b" th:text="${content.averageCoupleScore }"></div>
               </div>
-              <div class="group" th:classappend="${content.preferenceValue == 4} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="family-svg"></div>
                   <p><b>가족</b>에게 인기</p>
@@ -486,14 +484,14 @@
               </div>
             </div>
             <div class="group-flex">
-              <div class="group" th:classappend="${content.preferenceValue == 3} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="solo-svg"></div>
                   <p><b>솔로</b>에게 인기</p>
                 </div>
                 <div class="f-15 f-b" th:text="${content.averageSoloScore }"></div>
               </div>
-              <div class="group" th:classappend="${content.preferenceValue == 1} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="business-svg"></div>
                   <p><b>비지니스</b>에게 인기</p>
@@ -537,7 +535,7 @@
               <div class="f-meta-row">
                   <p class="f-14 f-b" style="color: #585858;">ADERS</p>
                   <div style="width: 1px; height: 11px; border-left: 1px solid #585858;"></div>
-                  <p class="f-14 f-b" style="color: #585858; font-family:'Noto Sans JP', sans-serif;">〒550-0004 大阪市西区靱本町1-7-17 7F</p>
+                  <p class="f-12" style="color: #585858; font-family:'Noto Sans JP', sans-serif;">〒550-0004 大阪市西区靱本町1-7-17 7F</p>
               </div>
               <div class="f-meta">
                   <p class="f-12" style="color: #585858; letter-spacing: -.3px;">RANKUJP는 <span class="f-12" lang="ja" style="color: #585858; letter-spacing: -.3px; font-family:'Noto Sans JP', sans-serif;">株式会社エイダス</span>가 운영하는 호텔 할인 정보 제공 서비스로 실제 예약·결제는 각 예약사이트에서 직접 이루어지며, 당사는 정보 제공만을 담당합니다.</p>
