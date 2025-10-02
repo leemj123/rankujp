@@ -322,6 +322,8 @@ main {
 #search-value {
     width: 100%;
     height: 100%;
+    appearance: none;
+    -webkit-appearance: none;
     font-family: 'Noto Sans KR', sans-serif;
     padding: 1rem 2rem;
 }
