@@ -201,12 +201,15 @@
             <div class="calendar-head">
               <div class="f-15 f-b"><span class="calendar-svg"></span>&nbsp;날짜</div>
               <div style="gap: 1rem;">
-                <input id="search-value" style="cursor: pointer; width: 15rem;  padding: 1rem 2rem;" class="btn-st"
-                       type="date"
-                       pattern="^\d{4}-\d{2}-\d{2}$"
-                       required
-                       autocomplete="off"
-                       th:value="${#temporals.format(content.bestStayDate, 'yyyy-MM-dd')}">
+                  <label id="search-label" for="search-value">
+                      <input id="search-value"
+                             type="date"
+                             required
+                             autocomplete="off"
+                             class="f-14 btn-st"
+                             th:value="${#temporals.format(content.bestStayDate, 'yyyy-MM-dd')}">
+                  </label>
+
                 <button class="btn-st" onclick="searchHotelPrice()">검색</button>
               </div>
             </div>
