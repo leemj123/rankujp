@@ -1,5 +1,5 @@
 main {
-    padding: 2rem;
+    padding: 6rem 2rem 2rem 2rem;
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
@@ -196,6 +196,7 @@ main {
 
 @media (max-width: 1080px) {
     main {
+        padding: 3rem 2rem 2rem 2rem;
         justify-content: center;
     }
 
