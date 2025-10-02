@@ -323,7 +323,7 @@ main {
     align-items: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .ranking-top-warpper {
         height: 1024px;
     }

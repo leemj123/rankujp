@@ -368,7 +368,7 @@ input:focus {
 .skip-2 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -384,6 +384,9 @@ input:focus {
         font-size: 2.6rem;
     }
 
+    .skip-2 {
+        -webkit-line-clamp: 2;
+    }
     .ranku.detail {
         width: 4.6rem;
         height: 4.4rem;
