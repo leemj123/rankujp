@@ -73,24 +73,24 @@
         </div>
         <section class="filter-warpper" id="filters">
             <div class="full-container chip-row" aria-label="지역" data-group="area">
-                <button class="chip on" data-value="1">전체</button>
-                <button class="chip" data-value="2">난바</button>
-                <button class="chip" data-value="3">우메다</button>
-                <button class="chip" data-value="4">신사이바시</button>
-                <button class="chip" data-value="5">텐노지</button>
-                <button class="chip" data-value="6">유니버셜</button>
-                <button class="chip" data-value="7">오사카</button>
-                <button class="chip" data-value="8">교토</button>
-                <button class="chip" data-value="9">고베</button>
-                <button class="chip" data-value="10">나라</button>
+                <button class="f-15 chip on" data-value="1">전체</button>
+                <button class="f-15 chip" data-value="2">난바</button>
+                <button class="f-15 chip" data-value="3">우메다</button>
+                <button class="f-15 chip" data-value="4">신사이바시</button>
+                <button class="f-15 chip" data-value="5">텐노지</button>
+                <button class="f-15 chip" data-value="6">유니버셜</button>
+                <button class="f-15 chip" data-value="7">오사카</button>
+                <button class="f-15 chip" data-value="8">교토</button>
+                <button class="f-15 chip" data-value="9">고베</button>
+                <button class="f-15 chip" data-value="10">나라</button>
             </div>
 
             <div class="full-container chip-row" aria-label="타입" data-group="type">
-                <button class="chip on" data-value="1">전체</button>
-                <button class="chip" data-value="2">가족</button>
-                <button class="chip" data-value="3">비지니스</button>
-                <button class="chip" data-value="4">커플</button>
-                <button class="chip" data-value="5">혼자</button>
+                <button class="f-15 chip on" data-value="1">전체</button>
+                <button class="f-15 chip" data-value="2">가족</button>
+                <button class="f-15 chip" data-value="3">비지니스</button>
+                <button class="f-15 chip" data-value="4">커플</button>
+                <button class="f-15 chip" data-value="5">혼자</button>
             </div>
         </section>
 
@@ -137,8 +137,7 @@
                            th:text="${p.preferenceValue == 1 ? '비지니스' :
                                       (p.preferenceValue == 2 ? '커플' :
                                       (p.preferenceValue == 3 ? '혼자' : '가족'))}">
-                        </b>
-                        에게 가장인기!
+                        </b>에게 가장인기!
                     </p>
                 </div>
                 <div style="display: flex; gap: .6rem;">
@@ -175,10 +174,9 @@
                               <p class="f-17">
                                   <b class="f-b"
                                      th:text="${p.preferenceValue == 1 ? '비지니스' :
-                                                                  (p.preferenceValue == 2 ? '커플!' :
+                                                                  (p.preferenceValue == 2 ? '커플' :
                                                                   (p.preferenceValue == 3 ? '혼자' : '가족'))}">
-                                  </b>
-                                  에게 가장인기!
+                                  </b>에게 가장인기!
                               </p>
                           </div>
                           <div class="price-left-content">
