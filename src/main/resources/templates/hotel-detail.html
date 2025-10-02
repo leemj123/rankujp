@@ -468,14 +468,14 @@
           <h3>같이가면 좋은 곳? 유형별 랭킹</h3>
           <div class="group-flex-box">
             <div class="group-flex">
-              <div class="group" th:classappend="${content.preferenceValue ==2} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="couple-svg"></div>
                   <p><b>커플</b>에게 인기</p>
                 </div>
                 <div class="f-15 f-b" th:text="${content.averageCoupleScore }"></div>
               </div>
-              <div class="group" th:classappend="${content.preferenceValue == 4} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="family-svg"></div>
                   <p><b>가족</b>에게 인기</p>
@@ -484,14 +484,14 @@
               </div>
             </div>
             <div class="group-flex">
-              <div class="group" th:classappend="${content.preferenceValue == 3} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="solo-svg"></div>
                   <p><b>솔로</b>에게 인기</p>
                 </div>
                 <div class="f-15 f-b" th:text="${content.averageSoloScore }"></div>
               </div>
-              <div class="group" th:classappend="${content.preferenceValue == 1} ? ' best'">
+              <div class="group">
                 <div class="group-name">
                   <div class="business-svg"></div>
                   <p><b>비지니스</b>에게 인기</p>
