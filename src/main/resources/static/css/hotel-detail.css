@@ -388,8 +388,6 @@ main {
         flex-direction: row;
         justify-content: space-between;
     }
-}
-@media (max-width: 500px) {
     .head-info-row {
         align-items: flex-start;
     }
