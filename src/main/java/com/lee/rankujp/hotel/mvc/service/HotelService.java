@@ -400,18 +400,18 @@ public class HotelService {
 
         List<String> result = new ArrayList<>();
         result.add(hotel.getThumbnailImg());
-        result.add(stripParams(hotel.getPhoto2()));
-        result.add(stripParams(hotel.getPhoto3()));
-        result.add(stripParams(hotel.getPhoto4()));
-        result.add(stripParams(hotel.getPhoto5()));
+        result.add((hotel.getPhoto2()));
+        result.add((hotel.getPhoto3()));
+        result.add((hotel.getPhoto4()));
+        result.add((hotel.getPhoto5()));
 
         return result;
     }
-    private String stripParams(String url) {
-        if (url == null) return null;
-        int idx = url.indexOf("?");
-        return (idx >= 0) ? url.substring(0, idx) : url;
-    }
+//    private String stripParams(String url) {
+//        if (url == null) return null;
+//        int idx = url.indexOf("?");
+//        return (idx >= 0) ? url.substring(0, idx) : url;
+//    }
     //OTU === other=================================
     public AgodaPriceResponse.HotelApiInfo getHotelDateSearcher(long id, LocalDate day) {
         AgodaPriceResponse res = hotelPriceService.callApiForDay(day, day.plusDays(2), Collections.singletonList(id)).block();
