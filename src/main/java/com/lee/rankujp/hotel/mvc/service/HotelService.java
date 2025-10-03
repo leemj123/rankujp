@@ -191,7 +191,7 @@ public class HotelService {
     }
     private BooleanExpression premiumFilterQueryExpression(int location) {
         // 공통 필터 조건
-        BooleanExpression common = qHotel.starRating.goe(4.0);
+        BooleanExpression common = qHotel.starRating.goe(4.0).and(qHotel.isShow.isTrue());
 
         BooleanExpression predicate;
 

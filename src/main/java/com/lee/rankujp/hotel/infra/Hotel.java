@@ -71,6 +71,8 @@ public class Hotel {
     @Enumerated(EnumType.ORDINAL)
     private PointLocation pointLocation;
 
+    private boolean isShow;
+
     public void averageScoreUpdate(double v, double v1, double v2, double v3, double v4, double v5) {
         this.averageAllScore = v;
         this.averageBusinessScore = v1;
