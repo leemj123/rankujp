@@ -21,6 +21,7 @@ public class AnotherReviewTran {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 5) // 초단 트랜잭션
     public void insertOne(Hotel hotel, ReviewBrand brand, double score, int reviewCount) {
+
         HotelReview hr = HotelReview.builder()
                 .hotel(hotel)
                 .allScore(score)
@@ -31,19 +32,4 @@ public class AnotherReviewTran {
         hotelReviewRepo.saveAndFlush(hr); // 바로 커밋될 트랜잭션이므로 flush OK
         log.info("200");
     }
-
-//    @Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 5) // 초단 트랜잭션
-//    public void imgUpdate(long id, ImgStarResponse.HotelApiInfo info) {
-//        Hotel h = hotelRepo.findById(id).orElseThrow();
-//
-//        h.imgStarUpdate();
-//        HotelReview hr = HotelReview.builder()
-//                .hotel(hotel)
-//                .allScore(score)
-//                .reviewCount(reviewCount)
-//                .reviewBrand(brand)
-//                .build();
-//
-//        hotelReviewRepo.saveAndFlush(hr);
-//    }
 }

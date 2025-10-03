@@ -3,8 +3,11 @@ package com.lee.rankujp.hotel.review.scrapper;
 import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import com.lee.rankujp.hotel.infra.Hotel;
 import com.lee.rankujp.hotel.infra.HotelReview;
+import com.lee.rankujp.hotel.infra.QHotel;
+import com.lee.rankujp.hotel.infra.QHotelReview;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.hotel.repo.HotelReviewRepo;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +30,18 @@ public class TripService {
     private final WebClient tripWebClient;
     private final HotelRepo hotelRepo;
     private final AnotherReviewTran saver;
+    private final JPAQueryFactory jpaQueryFactory;
+    private final QHotel qHotel = QHotel.hotel;
+    private final QHotelReview qHotelReview = QHotelReview.hotelReview;
 
     public void startReviewScrap() {
-        List<Hotel> target =  hotelRepo.findAll();
+        List<Hotel> target =  jpaQueryFactory
+                .selectFrom(qHotel)
+                .leftJoin(qHotel.hotelReviewList, qHotelReview)
+                .where(qHotelReview.id.isNull())
+                .fetch();
+
+
         for (Hotel h : target) {
             try {
                 // 1) 네트워크(트랜잭션 밖)
@@ -68,6 +80,7 @@ public class TripService {
             return 0;
         }
     }
+
     private int reviewCountExtraction(Document document) {
 
         Element reviewElement = document.selectFirst("span.score-review_review");
