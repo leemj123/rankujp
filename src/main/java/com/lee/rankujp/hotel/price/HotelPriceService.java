@@ -67,7 +67,6 @@ public class HotelPriceService {
                      else
                         sink.next(ids);
 
-                    log.info("idBatches: {}", ids);
                     return page + 1;
                 }
         ).subscribeOn(Schedulers.boundedElastic()); // 블로킹을 별도 스케줄러로

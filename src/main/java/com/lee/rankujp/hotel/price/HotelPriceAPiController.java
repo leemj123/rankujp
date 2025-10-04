@@ -15,19 +15,4 @@ import java.util.Map;
 @RequestMapping("/hotel")
 @Slf4j
 public class HotelPriceAPiController {
-
-    private final HotelPriceService hotelPriceService;
-
-    @PostMapping("/price")
-    public ResponseEntity<Map<String,String>> HotelPriceApiRequester() {
-
-        Mono<Void> run = hotelPriceService.syncAllPriceWindowBatched()
-                .doOnSubscribe(s -> log.info("[/agoda] sync started"))
-                .doOnError(e -> log.error("[/agoda] sync failed", e))
-                .doFinally(sig -> log.info("[/agoda] finally: {}", sig));
-
-        run.subscribe();
-
-        return ResponseEntity.accepted().body(Map.of("status","started"));
-    }
 }
