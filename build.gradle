@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 group = 'com.lee'
@@ -26,7 +27,20 @@ repositories {
 ext {
     querydslVersion = '5.1.0'
 }
-
+jib {
+    from {
+        image = 'eclipse-temurin:17-jre'
+    }
+    to {
+        image = 'rankujp:latest'
+    }
+    container {
+        ports = ['40005']
+        jvmFlags = ['-Xms512m', '-Xmx512m']
+        environment = [TZ: 'Asia/Seoul']
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+    }
+}
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
