@@ -7,6 +7,9 @@ spring:
     url: ENC(jwl+isoveIDH7Lkq65odEDnQ3bhZiqhhvsAOKEqwLL0r3+9L8Xc2//2Wv7DvGIGEd/ZNAmnYerw6wlarB3GusYYAqwBfcBqkSCXMDJTraGV4JAf/+7UQci3hsk5wZJI7x6wn8WSDR1UXwTXAOJEzjSriVifjhzHh)
     username: ENC(hy2RQj/en0H+sZebqYHfrg==)
     password: ENC(GfPTCPid6UXGjG4G1pH4xusGFGHiB7sK)
+    hikari:
+      idle-timeout: 60000
+      minimum-idle: 0
 
   thymeleaf:
     prefix: classpath:/templates/

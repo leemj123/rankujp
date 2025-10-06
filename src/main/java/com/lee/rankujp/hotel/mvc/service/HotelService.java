@@ -305,6 +305,7 @@ public class HotelService {
                 .brandReviewMap(this.getBrandReviewMap(reviews))
                 .build();
     }
+
     public Map<ReviewBrand, HotelReviewResponse> getBrandReviewMap(List<HotelReview> reviews) {
 
         if (reviews.isEmpty()) return Collections.emptyMap();
