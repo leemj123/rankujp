@@ -14,11 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
 import java.util.List;
 
 
@@ -46,7 +49,7 @@ public class TripService {
             try {
                 // 1) 네트워크(트랜잭션 밖)
                 var doc = tripFlux(h.getEnName())
-                        .block(java.time.Duration.ofSeconds(10));
+                        .block(Duration.ofSeconds(10));
                 if (doc == null) continue;
 
                 double score = scoreExtraction(doc);
@@ -97,8 +100,6 @@ public class TripService {
 
     }
 
-//   ?keyword=IROHA GRAND HOTEL Kintetsu-Nara&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D561827
-
     private Mono<Document> tripFlux(String name) {
         return tripWebClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -113,9 +114,9 @@ public class TripService {
                 .header("User-Agent", "Mozilla/5.0 (compatible; RankuBot/1.0)")
                 .retrieve()
                 .bodyToMono(String.class)
-                .timeout(java.time.Duration.ofSeconds(10))
+                .timeout(Duration.ofSeconds(10))
                 .retryWhen(
-                        reactor.util.retry.Retry.backoff(2, java.time.Duration.ofMillis(300))
+                        Retry.backoff(2, Duration.ofMillis(300))
                                 .filter(ex -> !(ex instanceof IllegalArgumentException))
                 )
                 .map(html -> Jsoup.parse(html))

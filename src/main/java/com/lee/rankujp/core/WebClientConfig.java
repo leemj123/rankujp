@@ -45,4 +45,11 @@ public class WebClientConfig {
                 .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .build();
     }
+    @Bean(name = "jalanWebClient")
+    public WebClient jalanWebClient() {
+        return WebClient.builder()
+                .baseUrl("https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=")
+                .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .build();
+    }
 }
