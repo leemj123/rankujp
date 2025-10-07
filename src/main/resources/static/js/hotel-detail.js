@@ -64,6 +64,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         modalImage.style.touchAction = 'pan-y';        // 세로 스크롤 유지, 가로만 우리가 처리
         bindSwipe(modalImage);
     }
+
+    const hoverInfoSvg = document.getElementById('des-svg');
+    const hoverInfoBox = document.getElementById('des-box');
+
+    hoverInfoBox.style.display = 'none';
+
+    // 마우스 올렸을 때
+    hoverInfoSvg.addEventListener('mouseenter', () => {
+        hoverInfoBox.style.display = 'block';
+    });
+
+    // 마우스 벗어났을 때
+    hoverInfoSvg.addEventListener('mouseleave', () => {
+        hoverInfoBox.style.display = 'none';
+    });
 });
 
 function photoIndexUpdate() {

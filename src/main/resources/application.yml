@@ -25,6 +25,9 @@ spring:
       ddl-auto: update
 agoda:
   key: ENC(IaqGs3hpll/ldG01Z/m/WLCX4uCUh9qgPijf4aEMlgbp5GuujOx3pJjqVZduiT1qDGzSv5PGkT4=)
+google:
+  place:
+    key: ENC(v7v4rrkogSR9xp8qyzaHro0CacaEEzfMChAZho0kvQMA8w3lEiqoMqgLd8FovV5u)
 
 jasypt:
   encryptor:

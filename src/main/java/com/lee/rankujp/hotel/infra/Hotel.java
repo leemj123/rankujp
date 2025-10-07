@@ -73,7 +73,8 @@ public class Hotel {
 
     private boolean isShow;
 
-    public void averageScoreUpdate(double v, double v1, double v2, double v3, double v4, double v5) {
+    public void averageScoreUpdate(long count ,double v, double v1, double v2, double v3, double v4, double v5) {
+        this.reviewNum = count;
         this.averageAllScore = v;
         this.averageBusinessScore = v1;
         this.averageCoupleScore = v2;
@@ -81,15 +82,7 @@ public class Hotel {
         this.averageFamilyScore = v4;
         this.averageGroupScore = v5;
     }
-    public void titleUpdater (String t) {
-        this.title = t;
-    }
-    public void descriptionUpdater (String d) {
-        this.description = d;
-    }
-    public void keywordUpdater (String k) {
-        this.keyword = k;
-    }
+
     public void rankuScoreUpdater (int r) {
         this.updateDateTime = LocalDateTime.now();
         this.rankuScore = r;
@@ -102,15 +95,9 @@ public class Hotel {
         this.bestSailPrecent = bsp;
     }
 
-
-    public void imgUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.thumbnailImg = info.getImageUrl();
+    public void faUp() {
+        double temp = this.averageFamilyScore / 2;
+        this.averageFamilyScore = Math.floor(temp * 10) / 10.0;
     }
 
-    public void enNameUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.enName = info.getHotelName();
-    }
-    public void jpNameUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.jpName = info.getHotelName();
-    }
 }

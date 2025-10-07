@@ -148,7 +148,7 @@ public class HotelService {
 
 
     private BooleanExpression filterQueryExpression(int location) {
-        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0);
+        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
 
         if (location == 1) {return predicate;}
 
@@ -261,7 +261,7 @@ public class HotelService {
 
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
-                .updateDate(hotel.getUpdateDateTime().toLocalDate())
+                .updateDate(hotel.getUpdateDateTime())
                 .title(hotel.getTitle())
                 .description(hotel.getDescription())
                 .keyword(hotel.getKeyword())
@@ -305,7 +305,6 @@ public class HotelService {
                 .brandReviewMap(this.getBrandReviewMap(reviews))
                 .build();
     }
-
     public Map<ReviewBrand, HotelReviewResponse> getBrandReviewMap(List<HotelReview> reviews) {
 
         if (reviews.isEmpty()) return Collections.emptyMap();
