@@ -4,9 +4,11 @@ import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import com.lee.rankujp.hotel.infra.Hotel;
 import com.lee.rankujp.hotel.infra.HotelReview;
 import com.lee.rankujp.hotel.infra.QHotel;
+import com.lee.rankujp.hotel.infra.QHotelReview;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.hotel.repo.HotelReviewRepo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -43,6 +45,7 @@ public class HotelReviewService {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final QHotel qHotel = QHotel.hotel;
+    private final QHotelReview qHotelReview = QHotelReview.hotelReview;
 
 
     public Mono<Void> syncAllReviews() {
@@ -60,6 +63,9 @@ public class HotelReviewService {
         return jpaQueryFactory
                 .select(qHotel.id)
                 .from(qHotel)
+                .leftJoin(qHotel.hotelReviewList, qHotelReview)
+                .on(qHotelReview.reviewBrand.eq(ReviewBrand.AGODA))
+                .where(qHotelReview.id.isNull())
                 .orderBy(qHotel.id.asc())
                 .limit(BATCH)
                 .offset(offset)
@@ -191,7 +197,14 @@ public class HotelReviewService {
                     break;
                 }
                 case "Families with young children": case "Families with teens" : {
-                    v4 += d.getScore();
+                    if (v4 != 0) {
+                        v4 += d.getScore();
+                        double temp = (v4 + d.getScore()) / 2;
+                        v4 = Math.floor(temp * 10) / 10.0;
+                    } else {
+                        v4 += d.getScore();
+                    }
+
                     break;
                 }
                 case "Groups": {
@@ -207,5 +220,19 @@ public class HotelReviewService {
         hr.setHotel(h);
 
         return hr;
+    }
+
+    //tkrwp
+    @Transactional
+    public void hotelFReviewRevise() {
+        List<Hotel> hlist = jpaQueryFactory
+                .selectFrom(qHotel)
+                .where(qHotel.averageFamilyScore.gt(10))
+                .fetch();
+        log.info("lenth: {}", hlist.size());
+
+        for (Hotel h : hlist) {
+            h.faUp();
+        }
     }
 }

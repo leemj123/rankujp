@@ -2,7 +2,10 @@ package com.lee.rankujp.hotel.review.scrapper;
 
 import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import com.lee.rankujp.hotel.infra.Hotel;
+import com.lee.rankujp.hotel.infra.QHotel;
+import com.lee.rankujp.hotel.infra.QHotelReview;
 import com.lee.rankujp.hotel.repo.HotelRepo;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -22,11 +25,20 @@ import java.util.List;
 public class JalanService {
 
     private final WebClient jalanWebClient;
-    private final HotelRepo hotelRepo;
+    private final JPAQueryFactory jpaQueryFactory;
+    private final QHotel qHotel = QHotel.hotel;
+    private final QHotelReview qHotelReview = QHotelReview.hotelReview;
     private final AnotherReviewTran saver;
 
     public void startReviewScrap() {
-        List<Hotel> target =  hotelRepo.findAll();
+        List<Hotel> target =  jpaQueryFactory
+                .selectFrom(qHotel)
+                .leftJoin(qHotel.hotelReviewList, qHotelReview)
+                .on(qHotelReview.reviewBrand.eq(ReviewBrand.JALAN))
+                .where(qHotelReview.id.isNull())
+                .fetch();
+
+        log.info("str item cnt: {}",target.size());
         for (Hotel h : target) {
             try {
 
@@ -46,7 +58,7 @@ public class JalanService {
                 // 2) 단건 트랜잭션으로 즉시 저장
                 saver.insertOne(h, ReviewBrand.JALAN, score, count);
 
-                Thread.sleep(60);
+                Thread.sleep(1000);
 
             } catch (Exception e) {
 
@@ -55,7 +67,7 @@ public class JalanService {
         }
 
 
-
+        log.info("fin item cnt: {}",target.size());
     }
 
     private double scoreExtraction(Document document) {

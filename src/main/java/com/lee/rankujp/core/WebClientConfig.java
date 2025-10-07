@@ -61,4 +61,15 @@ public class WebClientConfig {
                 })
                 .build();
     }
+    @Bean(name = "googleWebClient")
+    public WebClient googleWebClient() {
+        return WebClient.builder()
+                .baseUrl("https://places.googleapis.com/v1/places")
+                .defaultHeaders(headers -> {
+                    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+                    headers.set("X-Goog-Api-Key", MediaType.APPLICATION_JSON_VALUE);
+                    headers.set("X-Goog-FieldMask", "places.id");
+                })
+                .build();
+    }
 }
