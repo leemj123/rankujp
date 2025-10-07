@@ -17,7 +17,7 @@ public class ScoreResponse {
         this.thumbnailImg = hotel.getThumbnailImg();
         this.koName = hotel.getKoName();
         this.preferenceValue =
-                this.preferenceValueCalculator(hotel.getAverageAllScore(), hotel.getAverageCoupleScore(), hotel.getAverageSoloScore(), hotel.getAverageFamilyScore());
+                this.preferenceValueCalculator(hotel.getAverageBusinessScore(), hotel.getAverageCoupleScore(), hotel.getAverageSoloScore(), hotel.getAverageFamilyScore());
         this.starRating = hotel.getStarRating();
         this.rankuScore = hotel.getRankuScore();
     }

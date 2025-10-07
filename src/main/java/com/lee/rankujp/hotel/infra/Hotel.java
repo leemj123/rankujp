@@ -49,7 +49,7 @@ public class Hotel {
     private String photo5;
 
     //price
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<HotelPrice> priceList;
 
     private LocalDate bestStayDate;
@@ -58,7 +58,7 @@ public class Hotel {
     private double bestSailPrecent;
 
     //review
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<HotelReview> hotelReviewList = new ArrayList<>();
 
     private double averageAllScore;
@@ -68,9 +68,13 @@ public class Hotel {
     private double averageFamilyScore;
     private double averageGroupScore;
 
+    @Enumerated(EnumType.ORDINAL)
     private PointLocation pointLocation;
 
-    public void averageScoreUpdate(double v, double v1, double v2, double v3, double v4, double v5) {
+    private boolean isShow;
+
+    public void averageScoreUpdate(long count ,double v, double v1, double v2, double v3, double v4, double v5) {
+        this.reviewNum = count;
         this.averageAllScore = v;
         this.averageBusinessScore = v1;
         this.averageCoupleScore = v2;
@@ -100,15 +104,12 @@ public class Hotel {
     }
 
 
-    public void imgStarUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.starRating = info.getStarRating();
+    public void imgUpdate(ImgStarResponse.HotelApiInfo info) {
         this.thumbnailImg = info.getImageUrl();
     }
 
-    public void enNameUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.enName = info.getHotelName();
-    }
-    public void jpNameUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.jpName = info.getHotelName();
+
+    public void jpNameUpdate(String name) {
+        this.jpName = name;
     }
 }

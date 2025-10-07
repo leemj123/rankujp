@@ -1,17 +1,20 @@
 package com.lee.rankujp.hotel.mvc.dto;
 
+import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
 public class HotelDetailResponse {
 
     private long id;
-    private LocalDate updateDate;
+    private LocalDateTime updateDate;
     private String title;
     private String description;
     private String keyword;
@@ -56,5 +59,5 @@ public class HotelDetailResponse {
     private int averageSoloScore;
     private int averageFamilyScore;
 
-    List<HotelReviewResponse> brandReviewList;
+    Map<ReviewBrand,HotelReviewResponse> brandReviewMap;
 }

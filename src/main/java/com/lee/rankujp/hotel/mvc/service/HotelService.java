@@ -1,6 +1,7 @@
 package com.lee.rankujp.hotel.mvc.service;
 
 import com.lee.rankujp.hotel.cumtom.PointLocation;
+import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import com.lee.rankujp.hotel.infra.*;
 import com.lee.rankujp.hotel.mvc.dto.*;
 import com.lee.rankujp.hotel.price.HotelPriceService;
@@ -23,6 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class HotelService {
     //list==================================
 
     public Page<PremiumResponse> salePage(int location, int sort, int page) {
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page-1, 20);
         //
         BooleanExpression predicate = this.filterQueryExpression(location);
 
@@ -68,13 +71,12 @@ public class HotelService {
 
         return new PageImpl<>(results.stream().map(PremiumResponse::new).toList(), pageable, total);
     }
-    public Page<ScoreResponse> scorePage(int location, int sort, int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        //
-        BooleanExpression predicate = this.filterQueryExpression(location);
-        //
-        List<OrderSpecifier<?>> orders = new ArrayList<>();
 
+    public Page<ScoreResponse> scorePage(int location, int sort, int page) {
+        Pageable pageable = PageRequest.of(page-1, 20);
+
+        BooleanExpression predicate = this.filterQueryExpression(location);
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
 
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) orders.add(order);
@@ -101,7 +103,7 @@ public class HotelService {
     }
 
     public Page<PremiumResponse> premiumPage(int location, int sort, int page) {
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page-1, 20);
 
         BooleanExpression predicate = this.premiumFilterQueryExpression(location);
 
@@ -189,34 +191,19 @@ public class HotelService {
     }
     private BooleanExpression premiumFilterQueryExpression(int location) {
         // 공통 필터 조건
-        BooleanExpression common = qHotel.starRating.goe(4.0);
+        BooleanExpression common = qHotel.starRating.goe(4.0).and(qHotel.isShow.isTrue());
 
         BooleanExpression predicate;
 
-        if (location == 1) {
-            return common; // 바로 리턴
-        }
+        if (location == 1) { return common; }
+        predicate = switch (location) {
+            case 7 -> qHotel.hotelCity.id.eq(9590L);
+            case 8 -> qHotel.hotelCity.id.eq(1784L);
+            case 9 -> qHotel.hotelCity.id.eq(5235L);
+            case 10 -> qHotel.hotelCity.id.eq(13313L);
+            default -> null;
+        };
 
-        if (location < 7) {
-            predicate = switch (location) {
-                case 2 -> qHotel.pointLocation.eq(PointLocation.NAMBA);
-                case 3 -> qHotel.pointLocation.eq(PointLocation.UMEDA);
-                case 4 -> qHotel.pointLocation.eq(PointLocation.SHINSAIBASHI);
-                case 5 -> qHotel.pointLocation.eq(PointLocation.TENOJI);
-                case 6 -> qHotel.pointLocation.eq(PointLocation.USJ);
-                default -> null; // 미매칭 시 null
-            };
-        } else if (location < 11) {
-            predicate = switch (location) {
-                case 7 -> qHotel.hotelCity.id.eq(9590L);
-                case 8 -> qHotel.hotelCity.id.eq(1784L);
-                case 9 -> qHotel.hotelCity.id.eq(5235L);
-                case 10 -> qHotel.hotelCity.id.eq(13313L);
-                default -> null;
-            };
-        } else {
-            return common;
-        }
 
         // predicate가 null이면 그냥 common 리턴
         return (predicate != null) ? predicate.and(common) : common;
@@ -233,7 +220,7 @@ public class HotelService {
 
         Hotel hotel = jpaQueryFactory
                 .selectFrom(qHotel)
-                .distinct() // 컬렉션 fetch join 시 중복 행 방지
+                .distinct()
                 .leftJoin(qHotel.hotelCity, qHotelCity).fetchJoin()
                 .where(qHotel.id.eq(id))
                 .fetchOne();
@@ -269,9 +256,12 @@ public class HotelService {
             }
         }
 
+        LocalDate bestDate = hotel.getBestStayDate();
+        if ( bestDate == null ) {bestDate = LocalDate.now(); }
+
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
-                .updateDate(hotel.getUpdateDateTime().toLocalDate())
+                .updateDate(hotel.getUpdateDateTime())
                 .title(hotel.getTitle())
                 .description(hotel.getDescription())
                 .keyword(hotel.getKeyword())
@@ -295,12 +285,13 @@ public class HotelService {
                 .bestStayDate(hotel.getBestStayDate())
                 .bestDailyRate((int)hotel.getBestDailyRate())
                 .bestSailPrecent((int)hotel.getBestSailPrecent())
-//                .bestLink("https://www.agoda.com/ko-kr/search?selectedproperty="+ hotel.getId() +"&checkIn="+ hotel.getBestStayDate() +"&currency=JPY"+
-//                        "&asq="+hotel.getHotelCity().getAsq())
-                .bestLink("https://www.agoda.com/ko-kr/partners/partnersearch.aspx?cid=1911730"
-                        +"&hid="+ hotel.getId()
-                        +"&checkin="+ hotel.getBestStayDate()
-                        +"&checkout="+ hotel.getBestStayDate().plusDays(2)
+                .bestLink("https://www.agoda.com/partners/partnersearch.aspx" +
+                        "?pcs=1" +
+                        "&cid=1950715" +
+                        "&hl=ko-kr" +
+                        "&hid="+ hotel.getId()
+                        +"&checkin="+   bestDate
+                        +"&checkout="+ bestDate.plusDays(2)
                         +"&currency=JPY"
                         +"&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6")
                 .weekdayPriceList(buildTop5(false, hotel, hotel.getHotelCity()))
@@ -311,8 +302,19 @@ public class HotelService {
                 .averageCoupleScore((int)(hotel.getAverageCoupleScore()*10))
                 .averageSoloScore((int)(hotel.getAverageSoloScore()*10))
                 .averageFamilyScore((int)(hotel.getAverageFamilyScore()*10))
-                .brandReviewList(reviews.stream().map(HotelReviewResponse::new).toList())
+                .brandReviewMap(this.getBrandReviewMap(reviews))
                 .build();
+    }
+    public Map<ReviewBrand, HotelReviewResponse> getBrandReviewMap(List<HotelReview> reviews) {
+
+        if (reviews.isEmpty()) return Collections.emptyMap();
+        return reviews.stream()
+                .map(HotelReviewResponse::new)
+                .collect(Collectors.toMap(
+                        HotelReviewResponse::getReviewBrand,
+                        Function.identity(),
+                        (r1, r2) -> r1.getAllScore() >= r2.getAllScore() ? r1 : r2 // 충돌 시 점수 높은 것 선택
+                ));
     }
     private List<HotelPriceResponse> buildTop5(boolean weekend, Hotel hotel, HotelCity hotelCity) {
 
@@ -337,7 +339,6 @@ public class HotelService {
 
 
     //other=================================
-
 
     @Transactional
     public void scoreCalculator(){
@@ -399,18 +400,18 @@ public class HotelService {
 
         List<String> result = new ArrayList<>();
         result.add(hotel.getThumbnailImg());
-        result.add(stripParams(hotel.getPhoto2()));
-        result.add(stripParams(hotel.getPhoto3()));
-        result.add(stripParams(hotel.getPhoto4()));
-        result.add(stripParams(hotel.getPhoto5()));
+        result.add((hotel.getPhoto2()));
+        result.add((hotel.getPhoto3()));
+        result.add((hotel.getPhoto4()));
+        result.add((hotel.getPhoto5()));
 
         return result;
     }
-    private String stripParams(String url) {
-        if (url == null) return null;
-        int idx = url.indexOf("?");
-        return (idx >= 0) ? url.substring(0, idx) : url;
-    }
+//    private String stripParams(String url) {
+//        if (url == null) return null;
+//        int idx = url.indexOf("?");
+//        return (idx >= 0) ? url.substring(0, idx) : url;
+//    }
     //OTU === other=================================
     public AgodaPriceResponse.HotelApiInfo getHotelDateSearcher(long id, LocalDate day) {
         AgodaPriceResponse res = hotelPriceService.callApiForDay(day, day.plusDays(2), Collections.singletonList(id)).block();
@@ -419,8 +420,6 @@ public class HotelService {
 
         return res.getResults().get(0);
     }
-
-
 
 //    @Transactional
 //    public void updater() {

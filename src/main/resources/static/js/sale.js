@@ -95,7 +95,7 @@ const topCard = (item, rank) => {
           <div>
             <h2 class="ml top-item-title">${esc(item.koName)}</h2>
             <div style="display:flex; gap:.8rem;">
-              <p class="discount-percent ml">${esc(item.bestSailPrecent)}</p>
+              <p class="discount-percent top ml">${esc(item.bestSailPrecent)}</p>
               <p class="daily-price ml JPY">${fmt.format(item.bestDailyRate)}</p>
             </div>
           </div>

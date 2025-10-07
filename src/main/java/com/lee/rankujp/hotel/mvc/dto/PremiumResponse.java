@@ -19,7 +19,7 @@ public class PremiumResponse {
         this.thumbnailImg = hotel.getThumbnailImg();
         this.koName = hotel.getKoName();
         this.preferenceValue =
-                this.preferenceValueCalculator(hotel.getAverageAllScore(), hotel.getAverageCoupleScore(), hotel.getAverageSoloScore(), hotel.getAverageFamilyScore());
+                this.preferenceValueCalculator(hotel.getAverageBusinessScore(), hotel.getAverageCoupleScore(), hotel.getAverageSoloScore(), hotel.getAverageFamilyScore());
         this.starRating = hotel.getStarRating();
         this.bestCrossedOutRate = (int) hotel.getBestCrossedOutRate();
         this.bestDailyRate = (int) hotel.getBestDailyRate();

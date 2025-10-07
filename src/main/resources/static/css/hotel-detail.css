@@ -242,11 +242,13 @@ main {
 }
 
 #nav-prev-warpper ol li {
+    display: flex;
+    align-items: center;
     padding: 0 .2rem
 }
 
 #nav-prev-warpper ol .nav-prev {
-    color: #919191;
+    color: #585858;
     cursor: pointer;
     white-space: nowrap;
 }
@@ -311,6 +313,47 @@ main {
     justify-content: space-between;
     align-items: center;
 }
+#search-label {
+    display: flex;
+    align-items: center;
+    width: 13rem;
+    height: 100%;
+}
+#search-value {
+    width: 100%;
+    height: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    padding: 1rem 2rem;
+}
+#search-value::-webkit-date-and-time-value,
+#search-value::-webkit-datetime-edit,
+#search-value::-webkit-datetime-edit-text,
+#search-value::-webkit-datetime-edit-month-field,
+#search-value::-webkit-datetime-edit-day-field,
+#search-value::-webkit-datetime-edit-year-field {
+    font-family: 'Noto Sans KR', 'Noto Sans JP', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Apple SD Gothic Neo',
+    'Helvetica Neue', Arial, sans-serif;
+}
+
+#search-value::-webkit-clear-button,
+#search-value::-webkit-inner-spin-button {
+    display: none;
+}
+#search-value::-webkit-calendar-picker-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: 0;
+    cursor: pointer;
+}
+
 
 .calendar-head div {
     display: flex;
@@ -342,6 +385,7 @@ main {
     flex-direction: row;
     justify-content: flex-start;
 }
+
 @media (max-width: 786px) {
     .calendar-warpper {
         flex-direction: column-reverse;
@@ -357,9 +401,12 @@ main {
         flex-direction: row;
         justify-content: space-between;
     }
+    .head-info-row {
+        align-items: flex-start;
+    }
 }
-
 /* ============================ */
+
 
 .item-price-warpper {
     position: relative;

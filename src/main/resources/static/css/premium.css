@@ -1,5 +1,5 @@
 main {
-    padding: 2rem;
+    padding: 6rem 2rem 2rem 2rem;
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
@@ -20,6 +20,7 @@ main {
     width: 18rem;
     height: auto;
     position: relative;
+    display: none;
 }
 .main-r .banner-colum {
     position: fixed;
@@ -196,6 +197,7 @@ main {
 
 @media (max-width: 1080px) {
     main {
+        padding: 3rem 2rem 2rem 2rem;
         justify-content: center;
     }
 
@@ -285,7 +287,7 @@ main {
     display: flex;
     flex-direction: column;
     padding: 0 4rem;
-    justify-content: center;
+    justify-content: space-between;
     gap: 2rem;
     flex: 1;
 }
@@ -321,7 +323,7 @@ main {
     align-items: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .ranking-top-warpper {
         height: 1024px;
     }

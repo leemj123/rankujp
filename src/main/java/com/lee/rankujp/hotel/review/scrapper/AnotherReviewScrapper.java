@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class WebReviewScrapper {
+
+public class AnotherReviewScrapper {
 
     private final TripService tripService;
     private final JalanService jalanService;
