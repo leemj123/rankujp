@@ -148,7 +148,7 @@ public class HotelService {
 
 
     private BooleanExpression filterQueryExpression(int location) {
-        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0);
+        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
 
         if (location == 1) {return predicate;}
 
