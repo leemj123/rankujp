@@ -73,7 +73,8 @@ public class Hotel {
 
     private boolean isShow;
 
-    public void averageScoreUpdate(double v, double v1, double v2, double v3, double v4, double v5) {
+    public void averageScoreUpdate(long count ,double v, double v1, double v2, double v3, double v4, double v5) {
+        this.reviewNum = count;
         this.averageAllScore = v;
         this.averageBusinessScore = v1;
         this.averageCoupleScore = v2;
@@ -107,10 +108,8 @@ public class Hotel {
         this.thumbnailImg = info.getImageUrl();
     }
 
-    public void enNameUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.enName = info.getHotelName();
-    }
-    public void jpNameUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.jpName = info.getHotelName();
+
+    public void jpNameUpdate(String name) {
+        this.jpName = name;
     }
 }
