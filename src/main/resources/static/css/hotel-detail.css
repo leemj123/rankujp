@@ -563,8 +563,8 @@ main {
     background: url('/public/detail/jyaran.png') no-repeat center / contain;
 }
 
-.rakuten {
-    background: url('/public/detail/rakuten.png') no-repeat center / contain;
+.googlePlace {
+    background: url('/public/detail/googlePlace.png') no-repeat center / contain;
 }
 
 .tripadvisor {

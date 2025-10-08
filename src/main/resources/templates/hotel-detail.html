@@ -423,37 +423,51 @@
                              th:text="${review == null ? '?' : review.allScore}"></p>
                           <div style="height:1.6rem"></div>
                       </div>
-                      <button class="btn-st">리뷰 확인해보기</button>
+                      <button class="btn-st" style="padding: .9rem 1.3rem">일본 현지 리뷰보기</button>
                   </div>
               </a>
 
               <!-- TripAdvisor -->
               <a target="_blank" th:href="${'https://www.tripadvisor.co.kr/Search?q=' + content.enName + '&geo=1'}">
-                  <div class="review-item">
+                  <div class="review-item" th:with="review=${content.brandReviewMap['GOOGLE']}">
                       <div class="site-logo tripadvisor"></div>
                       <h4 class="f-14">영미권 사용자 리뷰</h4>
                       <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
                       <div class="ranku-total-score">
-                          <div class="score review normal"></div>
-                          <p class="score-value f-17 f-b">?</p>
+                          <div class="score review"
+                               th:classappend="${review == null ? 'normal' :
+               (review.allScore >= 86 ? 'best' :
+               (review.allScore >= 71 ? 'verygood' :
+               (review.allScore >= 41 ? 'good' : 'normal')))}">
+                          </div>
+                          <p class="score-value f-17 f-b"
+                             th:text="${review == null ? '?' : review.allScore}"></p>
                           <div style="height:1.6rem"></div>
                       </div>
-                      <button class="btn-st">리뷰 확인해보기</button>
+                      <button class="btn-st" style="padding: .9rem 1.1rem">미국･유럽 리뷰보기</button>
                   </div>
               </a>
 
-              <!-- Rakuten -->
+              <!-- GooglePlace -->
               <a>
-                  <div class="review-item" style="cursor:not-allowed">
-                      <div class="site-logo rakuten"></div>
-                      <h4 class="f-14">일본 최대 여행몰</h4>
+                  <div class="review-item" style="cursor: default" th:with="review=${content.brandReviewMap['GOOGLE']}">
+                      <div class="site-logo googlePlace"></div>
+                      <h4 class="f-14">지역별 리뷰 데이터</h4>
                       <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
                       <div class="ranku-total-score">
-                          <div class="score review normal"></div>
-                          <p class="score-value f-17 f-b">?</p>
+                          <div class="score review"
+                               th:classappend="${review == null ? 'normal' :
+               (review.allScore >= 86 ? 'best' :
+               (review.allScore >= 71 ? 'verygood' :
+               (review.allScore >= 41 ? 'good' : 'normal')))}">
+                          </div>
+                          <p class="score-value f-17 f-b"
+                             th:text="${review == null ? '-' : review.allScore }"></p>
                           <div style="height:1.6rem"></div>
                       </div>
-                      <button class="btn-st">업데이트 중..</button>
+                      <button class="btn-st" style="padding: .9rem; width: 14.2rem; cursor: default"
+                              th:text="${'구글 리뷰 ' + ((review == null or review.count == null) ? 0 : review.count) + '개'}">
+                      </button>
                   </div>
               </a>
           </div>

@@ -16,6 +16,9 @@ public class WebClientConfig {
     @Value("${agoda.key}")
     private String AGODA_KEY;
 
+    @Value("${google.place.key}")
+    private String GOOGLE_PLACE_KEY;
+
     @Bean(name = "agodaApiClient")
     public WebClient agodaApiClient(ObjectMapper om) {
         return WebClient.builder()
@@ -67,8 +70,7 @@ public class WebClientConfig {
                 .baseUrl("https://places.googleapis.com/v1/places")
                 .defaultHeaders(headers -> {
                     headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-                    headers.set("X-Goog-Api-Key", MediaType.APPLICATION_JSON_VALUE);
-                    headers.set("X-Goog-FieldMask", "places.id");
+                    headers.set("X-Goog-Api-Key", GOOGLE_PLACE_KEY);
                 })
                 .build();
     }
