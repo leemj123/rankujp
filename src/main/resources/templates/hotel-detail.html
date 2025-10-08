@@ -544,11 +544,19 @@
       </section>
 
     </section>
-    <section class="main-r">
-      <div class="banner-colum">
-        <a><img src="/public/banner/ago-colum-banner.png" style="width: 18rem;"></a>
-      </div>
-    </section>
+      <section class="main-r">
+          <div class="tool-box-right">
+              <div id="upup" style="display: none"></div>
+              <div id="history"></div>
+              <div id="history-box">
+                  <div class="history-header">
+                      <p class="f-b f-17">최근 본 호텔</p>
+                      <div class="history-cancel" onclick="hideHistory()"></div>
+                  </div>
+                  <ul id="history-items"></ul>
+              </div>
+          </div>
+      </section>
   </main>
 
   <section class="bottom-fix-section">
