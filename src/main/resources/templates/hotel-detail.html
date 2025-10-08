@@ -373,8 +373,8 @@
                (review.allScore >= 71 ? 'verygood' :
                (review.allScore >= 41 ? 'good' : 'normal')))}">
                           </div>
-                          <p class="score-value f-17 f-b"
-                             th:text="${review == null ? '?' : review.allScore}"></p>
+                          <p class="score-value f-17 f-b JPY"
+                             th:text="${review == null ? '-' : review.allScore}"></p>
                           <div style="height:1.6rem"></div>
                       </div>
 
@@ -420,7 +420,7 @@
                (review.allScore >= 41 ? 'good' : 'normal')))}">
                           </div>
                           <p class="score-value f-17 f-b"
-                             th:text="${review == null ? '?' : review.allScore}"></p>
+                             th:text="${review == null ? '-' : review.allScore}"></p>
                           <div style="height:1.6rem"></div>
                       </div>
                       <button class="btn-st" style="padding: .9rem 1.3rem">일본 현지 리뷰보기</button>
@@ -441,7 +441,7 @@
                (review.allScore >= 41 ? 'good' : 'normal')))}">
                           </div>
                           <p class="score-value f-17 f-b"
-                             th:text="${review == null ? '?' : review.allScore}"></p>
+                             th:text="${review == null ? '-' : review.allScore}"></p>
                           <div style="height:1.6rem"></div>
                       </div>
                       <button class="btn-st" style="padding: .9rem 1.1rem">미국･유럽 리뷰보기</button>
@@ -466,7 +466,11 @@
                           <div style="height:1.6rem"></div>
                       </div>
                       <button class="btn-st" style="padding: .9rem; width: 14.2rem; cursor: default"
-                              th:text="${'구글 리뷰 ' + ((review == null or review.count == null) ? 0 : review.count) + '개'}">
+                              th:text="${'구글 리뷰 ' +
+                                 ((review == null or review.count == null)
+                                    ? 0
+                                    : (review.count >= 9999 ? '9999+' : review.count))
+                                 + '개'}">
                       </button>
                   </div>
               </a>
@@ -482,20 +486,29 @@
         <section class="group-review">
           <h3>같이가면 좋은 곳? 유형별 랭킹</h3>
           <div class="group-flex-box">
+              <div class="group-flex">
+                  <div class="group full" style="background-color: #ffffff">
+                      <div class="group-name">
+                          <div class="comment-svg"></div>
+                          <p class="f-b">이용 후기</p>
+                      </div>
+                      <div class="f-15 f-b JPY" id="comment-num" th:text="${content.reviewSum}"></div>
+                  </div>
+              </div>
             <div class="group-flex">
               <div class="group">
                 <div class="group-name">
                   <div class="couple-svg"></div>
                   <p><b>커플</b>에게 인기</p>
                 </div>
-                <div class="f-15 f-b" th:text="${content.averageCoupleScore }"></div>
+                <div class="f-15 f-b" th:text="${content.averageCoupleScore +'점'}"></div>
               </div>
               <div class="group">
                 <div class="group-name">
                   <div class="family-svg"></div>
                   <p><b>가족</b>에게 인기</p>
                 </div>
-                <div class="f-15 f-b" th:text="${content.averageFamilyScore }"></div>
+                <div class="f-15 f-b" th:text="${content.averageFamilyScore +'점'}"></div>
               </div>
             </div>
             <div class="group-flex">
@@ -504,14 +517,14 @@
                   <div class="solo-svg"></div>
                   <p><b>솔로</b>에게 인기</p>
                 </div>
-                <div class="f-15 f-b" th:text="${content.averageSoloScore }"></div>
+                <div class="f-15 f-b" th:text="${content.averageSoloScore +'점'}"></div>
               </div>
               <div class="group">
                 <div class="group-name">
                   <div class="business-svg"></div>
                   <p><b>비지니스</b>에게 인기</p>
                 </div>
-                <div class="f-15 f-b" th:text="${content.averageBusinessScore }"></div>
+                <div class="f-15 f-b" th:text="${content.averageBusinessScore +'점'}"></div>
               </div>
             </div>
             <div class="group-flex">
@@ -519,8 +532,11 @@
                 <div class="group-name">
                   <div class="ranku-noback-svg"></div>
                   <p class="f-b" style="color: #ffffff;">Ranku 총점</p>
+                    <div class="today-ranku-detail f-b f-12"
+                        th:if="${top != null and top < 4 and top != 0}" th:text="${'오늘'+ top + '위'}"
+                    ></div>
                 </div>
-                <div class="f-15 f-b" style="color: #ffffff;" th:text="${content.averageAllScore }"></div>
+                <div class="f-15 f-b" style="color: #ffffff;" th:text="${content.averageAllScore +'점'}"></div>
               </div>
             </div>
           </div>
