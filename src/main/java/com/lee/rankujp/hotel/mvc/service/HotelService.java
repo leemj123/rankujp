@@ -229,6 +229,7 @@ public class HotelService {
                 .selectFrom(qHotelReview)
                 .where(qHotelReview.hotel.id.eq(id))
                 .fetch();
+        if ( hotel == null ) {throw new RuntimeException("추가 에러처리 요청");}
 
         double max = hotel.getAverageBusinessScore();
         int maxLabel = 1;
