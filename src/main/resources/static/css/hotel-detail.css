@@ -28,6 +28,7 @@ main {
     height: 13rem;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     gap: 1rem;
     z-index: 200;
 }
