@@ -267,6 +267,7 @@ public class HotelService {
                 .keyword(hotel.getKeyword())
                 .rankuScore(hotel.getRankuScore())
                 .stateName(hotel.getHotelCity().getKoName())
+                .reviewSum(hotel.getReviewNum())
                 .stateId(hotel.getHotelCity().getId())
                 .koName(hotel.getKoName())
                 .jpName(shift_jis)

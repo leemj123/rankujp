@@ -27,6 +27,7 @@ public class HotelDetailResponse {
     private long stateId;
 
     private int rankuScore;
+    private long reviewSum;
 
     private String address;
     private String zipcode;
