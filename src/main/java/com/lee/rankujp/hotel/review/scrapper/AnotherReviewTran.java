@@ -30,6 +30,5 @@ public class AnotherReviewTran {
                 .build();
 
         hotelReviewRepo.saveAndFlush(hr); // 바로 커밋될 트랜잭션이므로 flush OK
-        log.info("200");
     }
 }

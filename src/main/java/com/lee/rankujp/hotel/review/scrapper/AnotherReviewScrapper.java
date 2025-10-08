@@ -11,6 +11,7 @@ public class AnotherReviewScrapper {
 
     private final TripService tripService;
     private final JalanService jalanService;
+    private final GooglePlaceService googlePlaceService;
 
 //    @PostMapping("/odong/scrap/trip")
 //    public void tripReview() {
@@ -20,5 +21,9 @@ public class AnotherReviewScrapper {
     @PostMapping("/odong/scrap/jalan")
     public void jalanReview() {
         jalanService.startReviewScrap();
+    }
+    @PostMapping("/odong/scrap/google")
+    public void googleReview() {
+        googlePlaceService.startReviewScrap();
     }
 }
