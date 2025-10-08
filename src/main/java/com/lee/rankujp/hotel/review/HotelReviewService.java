@@ -82,7 +82,7 @@ public class HotelReviewService {
                     } else {
                         sink.next(ids);
                     }
-                    log.info("idBatches: {}", ids);
+                    log.info("batch cnt: {}", ids.size());
                     return page + 1;
                 }
         ).subscribeOn(Schedulers.boundedElastic()); // 블로킹을 별도 스케줄러로

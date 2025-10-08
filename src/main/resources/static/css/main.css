@@ -492,7 +492,8 @@ header {
 
 @media (max-width: 1020px) {
     .header-warpper .logo-box {
-        width: 4rem;
+        justify-content: flex-end;
+        width: 12rem;
     }
 }
 
@@ -718,7 +719,7 @@ footer .foot-container {
     }
 
     .header-warpper .logo-box {
-        width: 4rem;
+        width: 12rem;
         height: 4.2rem;
     }
 
