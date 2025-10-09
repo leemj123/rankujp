@@ -41,7 +41,7 @@ public class HotelReviewService {
 
     private static final int CONCURRENCY = 8;
     private static final int BATCH = 1000;
-    private static final Duration BASE = Duration.ofMillis(2000);
+    private static final Duration BASE = Duration.ofMillis(500);
 
     private final JPAQueryFactory jpaQueryFactory;
     private final QHotel qHotel = QHotel.hotel;
