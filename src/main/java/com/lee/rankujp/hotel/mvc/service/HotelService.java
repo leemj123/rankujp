@@ -57,7 +57,10 @@ public class HotelService {
 
 
         OrderSpecifier<?> order = this.orderType(sort);
-        if (order != null) orders.add(order);
+        if (order != null) {
+            orders.add(order);
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+        }
         orders.add(qHotel.bestSailPrecent.desc());
         orders.add(qHotel.rankuScore.desc());
 
@@ -87,7 +90,10 @@ public class HotelService {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 
         OrderSpecifier<?> order = this.orderType(sort);
-        if (order != null) orders.add(order);
+        if (order != null) {
+            orders.add(order);
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+        }
         orders.add(qHotel.rankuScore.desc());
         orders.add(qHotel.starRating.desc());
 
@@ -119,7 +125,10 @@ public class HotelService {
 
 
         OrderSpecifier<?> order = this.orderType(sort);
-        if (order != null) orders.add(order);
+        if (order != null) {
+            orders.add(order);
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+        }
         orders.add(qHotel.bestCrossedOutRate.desc());
         orders.add(qHotel.starRating.desc());
 
