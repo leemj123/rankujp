@@ -12,6 +12,7 @@ import com.lee.rankujp.place.infra.*;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.netty.handler.timeout.TimeoutException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -123,8 +124,6 @@ public class RestaurantService {
         }
         return failIdList;
     }
-//.header("X-Goog-FieldMask",
-//                "places.id,places.internationalPhoneNumber,places.formattedAddress,places.location,places.rating,places.googleMapsUri,places.websiteUri,places.userRatingCount,places.displayName,places.primaryTypeDisplayName,places.primaryType,places.photos,places.priceRange,places.reviewSummary")
 
     private Mono<GoogleRestaurantWrapper> googlePlaceFlux(GooglePlaceRequest gpr) {
 
