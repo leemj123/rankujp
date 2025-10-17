@@ -1,11 +1,11 @@
 main {
-    padding: 6rem 2rem 2rem 2rem;
+    padding: 3rem 2rem 2rem 2rem;
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
     overflow: visible;
     max-width: 1080px;
-    margin: 8rem auto;
+    margin: 0 auto;
 }
 
 .main-l {
