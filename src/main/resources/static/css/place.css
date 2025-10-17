@@ -87,6 +87,14 @@
     align-items: center;
     -webkit-overflow-scrolling: touch;
     height: 28rem;
+    cursor: grab;
+}
+.restaurant-slide-wrapper * {
+    user-select: none;
+    -webkit-user-select: none;   /* iOS Safari */
+    -ms-user-select: none;       /* 구형 Edge */
+    -moz-user-select: none;      /* 구형 Firefox (대부분 불필요) */
+    -webkit-touch-callout: none; /* iOS 길게 눌러 선택/메뉴 방지 */
 }
 
 .restaurant-slide-wrapper::-webkit-scrollbar-track {
