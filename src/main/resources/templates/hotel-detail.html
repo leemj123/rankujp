@@ -101,7 +101,7 @@
     <div class="modal-content">
         <div class="modal-close" onclick="closePlaceModal()"></div>
         <img id="placeImage" src="" alt="modal image" decoding="async" data-nimg="fill">
-        <div class="photo-index"><span class="f-14 f-b">ⓒ </span><span class="f-14 f-b">焼肉きんぐ 生田川店</span></div>
+        <a target="_blank" class="photo-index" id="place-photo-author"><span class="f-14 f-b">ⓒ </span><span class="f-14 f-b">焼肉きんぐ 生田川店</span></a>
     </div>
 </div>
 <body>
@@ -559,236 +559,92 @@
               </section>
           </section>
 
-          <section id="place-section" class="content-warpper" style="padding: 6rem 0 0 0">
+          <section th:data-lat="${content.latitude}" th:data-lon="${content.longitude}" id="place-section" class="content-warpper" style="padding: 6rem 0 0 0">
               <h2>호텔 주변 평점 높은 맛집 Ranku</h2>
-              <div class="place-top-wrapper restaurant-wrapper">
-                  <div class="place top-restaurant">
+              <th:block th:if="${!#lists.isEmpty(restaurant)}">
+
+              <div id="place-top-wrapper" class="place-top-wrapper restaurant-wrapper">
+                  <th:block th:each="p, stat : ${restaurant}" th:if="${stat.index < 3}">
+                  <div class="place top-restaurant" th:data-id="${p.id}">
                       <div class="place-photo">
-                        <img src="/public/detail/place-no-img.svg" data-src="https://pix2.agoda.net/hotelimages/706288/423459713/6b217337e75e5ae53fd02065c2f398a1.jpg" onclick="openPlaceModal(this.dataset.src)">
+                        <img src="/public/detail/place-no-img.svg"
+                             th:alt="${'랑쿠jp 음식점-'+p.title +'의 대표이미지'}"
+                             th:data-src="${p.thumbnailUri}"
+                             th:data-author="${p.authorDisplayName}"
+                             th:data-authorlink="${p.authorGoogleMapsUri}"
+                             onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
                       </div>
                       <div class="place-description">
                           <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
+                              <div class="ranku daily"
+                                   th:classappend="${stat.index == 0 ? ' gold' :
+                                                 (stat.index == 1 ? ' sliver' :
+                                                 (stat.index == 2 ? ' bronze' : '') )}">
+                                  <span class="ranku-value" th:text="${stat.index + 1}"></span>
                               </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
+                              <h3 class="f-17 f-b" th:text="${p.title}"></h3>
                           </div>
                           <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
+                              <p class="f-15" th:text="${'호텔에서 ' +p.district+'m'}"></p>
+                              <p class="f-15" th:text="${p.primaryText}"></p>
                           </div>
                       </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
+                      <a class="restaurant-btn btn-st" th:href="${p.googleMapsUri}" target="_blank">
+                          <p class="f-15" th:text="${p.rating +'점'}"></p>
                           <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
+                          <p class="f-15"
+                             th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
+                          </p>
+                      </a>
                   </div>
-                  <div class="place top-restaurant">
-                      <div class="place-photo">
-                          <img src="/public/detail/place-no-img.svg" data-src="https://pix2.agoda.net/hotelimages/706288/423459713/6b217337e75e5ae53fd02065c2f398a1.jpg" onclick="openPlaceModal(this.dataset.src)">
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
-                  <div class="place top-restaurant">
-                      <div class="place-photo">
-                          <img src="/public/detail/place-no-img.svg" data-src="https://pix2.agoda.net/hotelimages/706288/423459713/6b217337e75e5ae53fd02065c2f398a1.jpg" onclick="openPlaceModal(this.dataset.src)">
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
+                  </th:block>
               </div>
-              <div class="restaurant-slide-warpper" id="restaurant-slide-warpper">
+              <div id="restaurant-slide-wrapper" class="restaurant-slide-wrapper" th:if="${#lists.size(restaurant) > 3}">
+                  <th:block th:each="p, stat : ${restaurant}" th:if="${stat.index >= 3}">
                   <div class="place normal-restaurant">
                       <div class="place-photo">
-                          <img src="/public/detail/place-no-img.svg" data-src="https://pix2.agoda.net/hotelimages/706288/423459713/6b217337e75e5ae53fd02065c2f398a1.jpg" onclick="openPlaceModal(this.dataset.src)">
+                          <img src="/public/detail/place-no-img.svg"
+                               th:alt="${'랑쿠jp 음식점-'+p.title +'의 대표이미지'}"
+                               th:data-src="${p.thumbnailUri}"
+                               th:data-author="${p.authorDisplayName}"
+                               th:data-authorlink="${p.authorGoogleMapsUri}"
+                               onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
                       </div>
                       <div class="place-description">
                           <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
+                              <div class="ranku daily normal">
+                                  <span class="ranku-value" th:text="${stat.index + 1}"></span>
                               </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
+                              <h3 class="f-17 f-b" th:text="${p.title}"></h3>
                           </div>
                           <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
+                              <p class="f-15" th:text="${'호텔에서' +p.district+'m'}"></p>
+                              <p class="f-15" th:text="${p.primaryText}"></p>
                           </div>
                       </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
+                      <a class="restaurant-btn btn-st" th:href="${p.googleMapsUri}" target="_blank">
+                          <p class="f-15" th:text="${p.rating +'점'}"></p>
                           <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
+                          <p class="f-15"
+                             th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
+                          </p>
+                      </a>
                   </div>
-                  <div class="place normal-restaurant">
-                      <div class="place-photo">
-
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
-                  <div class="place normal-restaurant">
-                      <div class="place-photo">
-
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
-                  <div class="place normal-restaurant">
-                      <div class="place-photo">
-
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
-                  <div class="place normal-restaurant">
-                      <div class="place-photo">
-
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
-                  <div class="place normal-restaurant">
-                      <div class="place-photo">
-
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
-                  <div class="place normal-restaurant">
-                      <div class="place-photo">
-
-                      </div>
-                      <div class="place-description">
-                          <div class="place-title">
-                              <div class="ranku daily gold">
-                                  <span class="ranku-value">1</span>
-                              </div>
-                              <h3 class="f-17 f-b">멘토안 우동</h3>
-                          </div>
-                          <div class="place-info">
-                              <p class="f-15">호텔에서 500m</p>
-                              <p class="f-15">일본 음식점</p>
-                          </div>
-                      </div>
-                      <div class="restaurant-btn btn-st">
-                          <p class="f-15">5.0점</p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15">리뷰 757개</p>
-                      </div>
-                  </div>
-
-                  <a class="place normal-restaurant more btn-st">
+                  </th:block>
+                  <a class="place normal-restaurant more btn-st" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
                       <div class="more-place-svg"></div>
                   </a>
               </div>
+
+              </th:block>
+              <th:block th:unless="${!#lists.isEmpty(restaurant)}">
+                  <div class="no-restaurant-wrapper">
+                      <div class="no-restaurant-svg"></div>
+                      <a class="f-15 btn-st" style="width: 27rem; height: 4rem" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
+                          주변 음식점 더보기
+                      </a>
+                  </div>
+              </th:block>
           </section>
       </section>
 

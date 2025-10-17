@@ -78,7 +78,7 @@
     border-right: 1px solid #e7e7e7;
 }
 /* =-======================== */
-.restaurant-slide-warpper {
+.restaurant-slide-wrapper {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -89,7 +89,7 @@
     height: 28rem;
 }
 
-.restaurant-slide-warpper::-webkit-scrollbar-track {
+.restaurant-slide-wrapper::-webkit-scrollbar-track {
     background: transparent;
 }
 .place.normal-restaurant {
@@ -116,7 +116,7 @@
 }
 
 @media (max-width: 620px) {
-    .restaurant-slide-warpper {
+    .restaurant-slide-wrapper {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 3rem 1rem;
@@ -134,4 +134,16 @@
         scroll-snap-align: none;
         height: 27rem;
     }
+}
+.no-restaurant-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30rem;
+    gap: 2rem;
+}
+.no-restaurant-svg {
+    content: url('/public/detail/no-restaurant.svg');
 }

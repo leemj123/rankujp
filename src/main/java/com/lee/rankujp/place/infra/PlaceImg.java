@@ -1,6 +1,5 @@
 package com.lee.rankujp.place.infra;
 
-import com.lee.rankujp.place.dto.GoogleRestaurantResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,14 +27,14 @@ public class PlaceImg {
     private String thumbnailUri;
 
 
-    public PlaceImg(GoogleRestaurantResponse.Photo photo) {
-        this.name = photo.getName();
-        this.widthPx = photo.getWidthPx();
-        this.heightPx = photo.getHeightPx();
-        this.authorDisplayName = photo.getAuthorAttributions() != null ?
-                photo.getAuthorAttributions().get(0).getDisplayName() : "none";
-        this.googleMapsUri = photo.getGoogleMapsUri();
-    }
+//    public PlaceImg(GoogleRestaurantResponse.Photo photo) {
+//        this.name = photo.getName();
+//        this.widthPx = photo.getWidthPx();
+//        this.heightPx = photo.getHeightPx();
+//        this.authorDisplayName = photo.getAuthorAttributions() != null ?
+//                photo.getAuthorAttributions().get(0).getDisplayName() : "none";
+//        this.googleMapsUri = photo.getGoogleMapsUri();
+//    }
     void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }

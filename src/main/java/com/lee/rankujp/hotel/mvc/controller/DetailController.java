@@ -3,6 +3,7 @@ package com.lee.rankujp.hotel.mvc.controller;
 import com.lee.rankujp.hotel.mvc.dto.HotelDetailResponse;
 import com.lee.rankujp.hotel.mvc.service.CookieControl;
 import com.lee.rankujp.hotel.mvc.service.HotelService;
+import com.lee.rankujp.place.RestaurantService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class DetailController {
 
     private final HotelService hotelService;
+    private final RestaurantService restaurantService;
 
 
     @GetMapping("/hotel/{id}")
@@ -32,6 +34,8 @@ public class DetailController {
         model.addAttribute("navValue","할인랭킹");
         model.addAttribute("navBack","https://rankujp.com");
         model.addAttribute("isVariant", false);
+        model.addAttribute("restaurant", restaurantService.getRestaurantLocation(h.getLatitude(), h.getLongitude()));
+
         return "hotel-detail";
     }
 
@@ -48,6 +52,7 @@ public class DetailController {
         model.addAttribute("navValue","종합랭킹");
         model.addAttribute("navBack","https://rankujp.com/score");
         model.addAttribute("isVariant", true);
+        model.addAttribute("restaurant", restaurantService.getRestaurantLocation(h.getLatitude(), h.getLongitude()));
         return "hotel-detail";
     }
 
@@ -64,6 +69,7 @@ public class DetailController {
         model.addAttribute("navValue","프리미엄");
         model.addAttribute("navBack","https://rankujp.com/premium");
         model.addAttribute("isVariant", true);
+        model.addAttribute("restaurant", restaurantService.getRestaurantLocation(h.getLatitude(), h.getLongitude()));
         return "hotel-detail";
     }
 

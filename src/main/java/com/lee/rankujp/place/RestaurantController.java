@@ -1,10 +1,9 @@
 package com.lee.rankujp.place;
 
-
+import com.lee.rankujp.place.dto.RestaurantResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -13,13 +12,8 @@ import java.util.List;
 public class RestaurantController {
     private final RestaurantService restaurantService;
 
-    @PostMapping("/{id}")
-    public List<Long> strPlaceBot(@PathVariable Long id) {
-       return restaurantService.addRestaurant(id);
-    }
-
-    @PostMapping("/image")
-    public List<Long> googlePlaceImgGetter() {
-        return restaurantService.fetchAndUpload();
+    @GetMapping("/location")
+    public List<RestaurantResponseDto>  getRestaurantLocation(@RequestParam double lat, @RequestParam double lon) {
+        return restaurantService.getRestaurantLocation(lat, lon);
     }
 }

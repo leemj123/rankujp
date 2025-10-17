@@ -25,8 +25,16 @@ const placeModal = document.getElementById('placeModal');
 const placeImage = document.getElementById('placeImage');
 const placeBackdrop = document.querySelector(".modal-backdrop.place");
 if (placeBackdrop) placeBackdrop.addEventListener("click", closePlaceModal);
-function openPlaceModal(src) {
-        placeModal.classList.remove("hidden");
+
+const photoAuthor = document.getElementById('place-photo-author');
+function openPlaceModal(src,author,authorLink) {
+    photoAuthor.innerHTML = ``
+    photoAuthor.setAttribute("href", authorLink);
+    photoAuthor.innerHTML = `
+        <span class="f-14 f-b">ⓒ </span><span class="f-14 f-b">${author}</span>
+    `
+
+    placeModal.classList.remove("hidden");
     placeImage.classList.add("on-load");
     placeImage.src = src ;
     placeImage.onload = () => {
@@ -54,3 +62,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.getElementById('restaurant-slide-wrapper');
+    if (slider) {
+        let isDown = false;
+        let startX = 0;
+        let startScroll = 0;
+        let moved = false;
+
+        // 드래그 시작
+        slider.addEventListener('pointerdown', (e) => {
+            isDown = true;
+            moved = false;
+            slider.classList.add('dragging');
+            slider.setPointerCapture(e.pointerId);
+            startX = e.clientX;
+            startScroll = slider.scrollLeft;
+        }, { passive: true });
+
+        // 드래그 이동
+        slider.addEventListener('pointermove', (e) => {
+            if (!isDown) return;
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) > 3) moved = true;
+            slider.scrollLeft = startScroll - dx;
+        }, { passive: true });
+
+        // 드래그 종료
+        const endDrag = (e) => {
+            if (!isDown) return;
+            isDown = false;
+            slider.classList.remove('dragging');
+        };
+
+        slider.addEventListener('pointerup', endDrag, { passive: true });
+        slider.addEventListener('pointercancel', endDrag, { passive: true });
+        slider.addEventListener('pointerleave', endDrag, { passive: true });
+
+        // 드래그 중 카드 안의 a 클릭 무효화(의도치 않은 클릭 방지)
+        slider.addEventListener('click', (e) => {
+            if (moved) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
+    }
+})
