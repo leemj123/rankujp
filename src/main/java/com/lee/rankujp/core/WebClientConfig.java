@@ -1,6 +1,7 @@
 package com.lee.rankujp.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,10 +9,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Configuration
+@Slf4j
 public class WebClientConfig {
     @Value("${agoda.key}")
     private String AGODA_KEY;
@@ -66,12 +73,21 @@ public class WebClientConfig {
     }
     @Bean(name = "googleWebClient")
     public WebClient googleWebClient() {
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(cfg -> cfg.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) // 10MB
+                .build();
+
         return WebClient.builder()
-                .baseUrl("https://places.googleapis.com/v1/places")
+                .baseUrl("https://places.googleapis.com/v1/places:searchNearby")
+                .exchangeStrategies(strategies)
                 .defaultHeaders(headers -> {
                     headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
                     headers.set("X-Goog-Api-Key", GOOGLE_PLACE_KEY);
+                    headers.set("X-Goog-FieldMask",
+                            "places.id,places.internationalPhoneNumber,places.formattedAddress,places.location,places.rating,places.googleMapsUri,places.websiteUri,places.userRatingCount,places.displayName,places.primaryTypeDisplayName,places.primaryType,places.photos,places.priceRange,places.reviewSummary"
+                        );
                 })
                 .build();
     }
+
 }

@@ -32,3 +32,10 @@ google:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+aws:
+  s3:
+    region: ENC(Mlzr8TwGGnqI4O1j4O4GGN8Ot9YvYtML)
+    accessKey: ENC(3tm0nuy9RiaHWiyV/kdIU8UP9HazqAf9t01TaPvM4oE=)
+    secretKey: ENC(e4NCzdo/LamGPgghXjQIwEXCkXMQ89LVj7/YuMJSklqNMBER/FwCH1G3wot6iEacaIPA82ZK2j0=)
+    bucket-name: ENC(mgxgi2YUup1ZP3v7XkoqbQ/nv7SZF7rB)

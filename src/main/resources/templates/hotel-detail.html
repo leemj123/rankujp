@@ -50,13 +50,14 @@
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/hotel-detail.css">
+    <link rel="stylesheet" href="/css/place.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <div id="imageModal" class="modal hidden">
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop hotel"></div>
     <div class="modal-content">
         <div class="modal-close" onclick="closeModal()"></div>
         <img id="modalImage" src="" alt="modal image" decoding="async" data-nimg="fill">
@@ -92,7 +93,15 @@
                 </svg>
             </div>
         </button>
-        <div class="photo-index" onclick="openModal()"><span class="f-14 f-b" id="photo-index">1</span><span class="f-14 f-b">/5</span></div>
+        <div class="photo-index"><span class="f-14 f-b" >1</span><span class="f-14 f-b">/5</span></div>
+    </div>
+</div>
+<div id="placeModal" class="modal hidden">
+    <div class="modal-backdrop place"></div>
+    <div class="modal-content">
+        <div class="modal-close" onclick="closePlaceModal()"></div>
+        <img id="placeImage" src="" alt="modal image" decoding="async" data-nimg="fill">
+        <a target="_blank" class="photo-index" id="place-photo-author"><span class="f-14 f-b">ⓒ </span><span class="f-14 f-b">焼肉きんぐ 生田川店</span></a>
     </div>
 </div>
 <body>
@@ -125,8 +134,8 @@
         <div class="photo-more" onclick="openModal()"></div>
       </section>
 
-      <section class="content-warpper">
-        <section class="item-head">
+      <section>
+        <section class="item-head" style="margin-bottom: 6rem;">
           <div id="nav-prev-warpper">
             <ol>
                 <li><a class="f-14 nav-prev" th:href="${navBack}" th:text="${navValue}"></a></li>
@@ -233,314 +242,410 @@
         <a th:href="${content.bestLink}" class="banner-row">
           <div></div>
         </a>
-        <section class="item-price-warpper">
-          <div class="item-price-header">
-            <div style="display: flex; gap: .6rem; align-items: center; position: relative;">
-              <h2>이 날이 가장 저렴해요</h2>
-              <div class="hover-info-svg" id="des-svg"></div>
-              <div class="hover-info-box" id="des-box">
-                금일 기준으로 +45일 동안 가장 저렴한 날의 최저가를 알려드립니다.<br>(*공휴일 미분류)
-              </div>
-            </div>
-            <div style="display: flex; gap: .6rem; align-items: center;">
-              <p style="font-size: 1.4rem; line-height: 1.4; color: #919191;"
-                 th:text="${#temporals.format(content.updateDate, 'yy.MM.dd HH:mm')}"></p>
-              <div class="update-date-svg"></div>
-            </div>
+          <div class="content-navigation-wrapper">
+              <nav class="content-navigation">
+                  <a href="#hotel-section" class="active">호텔 정보</a>
+                  <a href="#place-section">추천 맛집</a>
+              </nav>
           </div>
-          <article class="price-list-warpper">
-            <div class="price-list">
-              <div class="price-list-header">
-                <h3 class="padding-30 f-17 f-b">평일</h3>
-              </div>
-              <div class="price-line-seperator" style="height: 2px; border-top: 2px solid #111111;"></div>
-              <ol>
-                  <li th:each="price, iterStat : ${content.weekdayPriceList}">
-                      <a th:href="${price.link}" target="_blank">
-                          <div class="price-day padding-30">
-                              <div class="price-left">
-                                  <div class="ranku daily"
-                                       th:classappend="${
+          <section id="hotel-section" class="content-warpper" style="padding: 6rem 0 0 0">
+              <section class="item-price-warpper">
+                  <div class="item-price-header">
+                      <div style="display: flex; gap: .6rem; align-items: center; position: relative;">
+                          <h2>이 날이 가장 저렴해요</h2>
+                          <div class="hover-info-svg" id="des-svg"></div>
+                          <div class="hover-info-box" id="des-box">
+                              금일 기준으로 +45일 동안 가장 저렴한 날의 최저가를 알려드립니다.<br>(*공휴일 미분류)
+                          </div>
+                      </div>
+                      <div style="display: flex; gap: .6rem; align-items: center;">
+                          <p style="font-size: 1.4rem; line-height: 1.4; color: #919191;"
+                             th:text="${#temporals.format(content.updateDate, 'yy.MM.dd HH:mm')}"></p>
+                          <div class="update-date-svg"></div>
+                      </div>
+                  </div>
+                  <article class="price-list-warpper">
+                      <div class="price-list">
+                          <div class="price-list-header">
+                              <h3 class="padding-30 f-17 f-b">평일</h3>
+                          </div>
+                          <div class="price-line-seperator" style="height: 2px; border-top: 2px solid #111111;"></div>
+                          <ol>
+                              <li th:each="price, iterStat : ${content.weekdayPriceList}">
+                                  <a th:href="${price.link}" target="_blank">
+                                      <div class="price-day padding-30">
+                                          <div class="price-left">
+                                              <div class="ranku daily"
+                                                   th:classappend="${
                                    iterStat.count == 1 ? ' gold' :
                                    (iterStat.count == 2 ? ' sliver' :
                                    (iterStat.count == 3 ? ' bronze' : ' normal'))
                                  }">
                                       <span class="ranku-value"
                                             th:text="${iterStat.count}">?</span>
-                                  </div>
+                                              </div>
 
-                                  <p class="f-15 f-b"
-                                     th:text="${#temporals.format(price.stayDate, 'M월 d일 EEEE')}">
-                                  </p>
-                              </div>
+                                              <p class="f-15 f-b"
+                                                 th:text="${#temporals.format(price.stayDate, 'M월 d일 EEEE')}">
+                                              </p>
+                                          </div>
 
-                              <div class="price-right">
-                                  <div class="price-value">
-                                      <div style="display: flex; gap: .2rem;">
-                                          <p class="discount-percent f-12"
-                                             th:text="${price.sailPercent}"></p>
-                                          <p class="crossed-out-rate f-12 JPY"
-                                             th:text="${price.crossedOutRate}"></p>
+                                          <div class="price-right">
+                                              <div class="price-value">
+                                                  <div style="display: flex; gap: .2rem;">
+                                                      <p class="discount-percent f-12"
+                                                         th:text="${price.sailPercent}"></p>
+                                                      <p class="crossed-out-rate f-12 JPY"
+                                                         th:text="${price.crossedOutRate}"></p>
+                                                  </div>
+                                                  <p class="daily-price f-15 JPY"
+                                                     th:text="${price.dailyRate}"></p>
+                                              </div>
+                                              <div class="location-right-big"></div>
+                                          </div>
                                       </div>
-                                      <p class="daily-price f-15 JPY"
-                                         th:text="${price.dailyRate}"></p>
-                                  </div>
-                                  <div class="location-right-big"></div>
-                              </div>
+                                  </a>
+                                  <div class="price-line-seperator"></div>
+                              </li>
+                              <li class="no-price" th:if="${#lists.isEmpty(content.weekdayPriceList)}">
+                                  <div class="no-price-svg"></div>
+                                  <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
+                              </li>
+                          </ol>
+                          <button th:if="${#lists.size(content.weekdayPriceList) >= 3}"
+                                  class="btn-st more-price" type="button">
+                              더보기
+                          </button>
+                      </div>
+                      <div class="price-list">
+                          <div class="price-list-header">
+                              <h3 class="padding-30 f-17 f-b">주말</h3>
                           </div>
-                      </a>
-                      <div class="price-line-seperator"></div>
-                  </li>
-                  <li class="no-price" th:if="${#lists.isEmpty(content.weekdayPriceList)}">
-                      <div class="no-price-svg"></div>
-                      <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
-                  </li>
-              </ol>
-                <button th:if="${#lists.size(content.weekdayPriceList) >= 3}"
-                        class="btn-st more-price" type="button">
-                    더보기
-                </button>
-            </div>
-            <div class="price-list">
-              <div class="price-list-header">
-                <h3 class="padding-30 f-17 f-b">주말</h3>
-              </div>
-              <div class="price-line-seperator" style="height: 2px; border-top: 2px solid #111111;"></div>
-              <ol>
-                  <li th:each="price, iterStat : ${content.weekendPriceList}">
-                      <a th:href="${price.link}" target="_blank">
-                          <div class="price-day padding-30">
-                              <div class="price-left">
-                                  <div class="ranku daily"
-                                       th:classappend="${
+                          <div class="price-line-seperator" style="height: 2px; border-top: 2px solid #111111;"></div>
+                          <ol>
+                              <li th:each="price, iterStat : ${content.weekendPriceList}">
+                                  <a th:href="${price.link}" target="_blank">
+                                      <div class="price-day padding-30">
+                                          <div class="price-left">
+                                              <div class="ranku daily"
+                                                   th:classappend="${
                                iterStat.count == 1 ? ' gold' :
                                (iterStat.count == 2 ? ' sliver' :
                                (iterStat.count == 3 ? ' bronze' : ' normal'))
                              }">
                       <span class="ranku-value"
                             th:text="${iterStat.count}">?</span>
-                                  </div>
+                                              </div>
 
-                                  <p class="f-15 f-b"
-                                     th:text="${#temporals.format(price.stayDate, 'M월 d일 EEEE')}">
-                                  </p>
-                              </div>
+                                              <p class="f-15 f-b"
+                                                 th:text="${#temporals.format(price.stayDate, 'M월 d일 EEEE')}">
+                                              </p>
+                                          </div>
 
-                              <div class="price-right">
-                                  <div class="price-value">
-                                      <div style="display: flex; gap: .2rem;">
-                                          <p class="discount-percent f-12"
-                                             th:text="${price.sailPercent}"></p>
-                                          <p class="crossed-out-rate f-12 JPY"
-                                             th:text="${price.crossedOutRate}"></p>
+                                          <div class="price-right">
+                                              <div class="price-value">
+                                                  <div style="display: flex; gap: .2rem;">
+                                                      <p class="discount-percent f-12"
+                                                         th:text="${price.sailPercent}"></p>
+                                                      <p class="crossed-out-rate f-12 JPY"
+                                                         th:text="${price.crossedOutRate}"></p>
+                                                  </div>
+                                                  <p class="daily-price f-15 JPY"
+                                                     th:text="${price.dailyRate}"></p>
+                                              </div>
+                                              <div class="location-right-big"></div>
+                                          </div>
                                       </div>
-                                      <p class="daily-price f-15 JPY"
-                                         th:text="${price.dailyRate}"></p>
+                                  </a>
+                                  <div class="price-line-seperator"></div>
+                              </li>
+                              <li class="no-price" th:if="${#lists.isEmpty(content.weekendPriceList)}">
+                                  <div class="no-price-svg"></div>
+                                  <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
+                              </li>
+                          </ol>
+                          <button th:if="${#lists.size(content.weekendPriceList) >= 3}"
+                                  class="btn-st more-price" type="button">
+                              더보기
+                          </button>
+                      </div>
+                  </article>
+              </section>
+
+              <section class="review-section">
+                  <h3>사이트 평점 한눈에 확인해보세요!</h3>
+                  <div class="review-flex">
+                      <!-- AGODA -->
+                      <a th:href="${content.bestLink}" target="_blank">
+                          <div class="review-item" th:with="review=${content.brandReviewMap['AGODA']}">
+                              <div class="site-logo agoda"></div>
+                              <h4 class="f-14">전세계 숙박 최저가</h4>
+                              <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
+
+                              <div class="ranku-total-score">
+                                  <div class="score review"
+                                       th:classappend="${review == null ? 'normal' :
+               (review.allScore >= 86 ? 'best' :
+               (review.allScore >= 71 ? 'verygood' :
+               (review.allScore >= 41 ? 'good' : 'normal')))}">
                                   </div>
-                                  <div class="location-right-big"></div>
+                                  <p class="score-value f-17 f-b JPY"
+                                     th:text="${review == null ? '-' : review.allScore}"></p>
+                                  <div style="height:1.6rem"></div>
                               </div>
+
+                              <button class="btn-st">리뷰 확인해보기</button>
                           </div>
                       </a>
-                      <div class="price-line-seperator"></div>
-                  </li>
-                  <li class="no-price" th:if="${#lists.isEmpty(content.weekendPriceList)}">
-                      <div class="no-price-svg"></div>
-                      <p class="f-14 f-b" style="color: #959595;">현재 예약 가능한 객실이 없어요 (;-;)</p>
-                  </li>
-              </ol>
-                <button th:if="${#lists.size(content.weekendPriceList) >= 3}"
-                        class="btn-st more-price" type="button">
-                    더보기
-                </button>
-            </div>
-          </article>
-        </section>
 
-        <section class="review-section">
-          <h3>사이트 평점 한눈에 확인해보세요!</h3>
-          <div class="review-flex">
-              <!-- AGODA -->
-              <a th:href="${content.bestLink}" target="_blank">
-                  <div class="review-item" th:with="review=${content.brandReviewMap['AGODA']}">
-                      <div class="site-logo agoda"></div>
-                      <h4 class="f-14">전세계 숙박 최저가</h4>
-                      <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
+                      <!-- TRIPDOTCOM -->
+                      <a target="_blank"
+                         th:href="${'https://kr.trip.com/global-search/searchlist/search/?keyword=' + content.enName + '&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D5618272'}">
+                          <div class="review-item" th:with="review=${content.brandReviewMap['TRIPDOTCOM']}">
+                              <div class="site-logo tripcom"></div>
+                              <h4 class="f-14">글로벌 여행 플랫폼</h4>
+                              <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
 
-                      <div class="ranku-total-score">
-                          <div class="score review"
-                               th:classappend="${review == null ? 'normal' :
+                              <div class="ranku-total-score">
+                                  <div class="score review"
+                                       th:classappend="${review == null ? 'normal' :
                (review.allScore >= 86 ? 'best' :
                (review.allScore >= 71 ? 'verygood' :
                (review.allScore >= 41 ? 'good' : 'normal')))}">
+                                  </div>
+                                  <p class="score-value f-17 f-b"
+                                     th:text="${review == null ? '?' : review.allScore}"></p>
+                                  <div style="height:1.6rem"></div>
+                              </div>
+
+                              <button class="btn-st">리뷰 확인해보기</button>
                           </div>
-                          <p class="score-value f-17 f-b JPY"
-                             th:text="${review == null ? '-' : review.allScore}"></p>
-                          <div style="height:1.6rem"></div>
-                      </div>
+                      </a>
 
-                      <button class="btn-st">리뷰 확인해보기</button>
-                  </div>
-              </a>
-
-              <!-- TRIPDOTCOM -->
-              <a target="_blank"
-                 th:href="${'https://kr.trip.com/global-search/searchlist/search/?keyword=' + content.enName + '&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D5618272'}">
-                  <div class="review-item" th:with="review=${content.brandReviewMap['TRIPDOTCOM']}">
-                      <div class="site-logo tripcom"></div>
-                      <h4 class="f-14">글로벌 여행 플랫폼</h4>
-                      <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
-
-                      <div class="ranku-total-score">
-                          <div class="score review"
-                               th:classappend="${review == null ? 'normal' :
+                      <!-- JALAN -->
+                      <a target="_blank" th:href="${'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=' + content.jpName}">
+                          <div class="review-item" th:with="review=${content.brandReviewMap['JALAN']}">
+                              <div class="site-logo jyaran"></div>
+                              <h4 class="f-14">일본 현지 예약 1위</h4>
+                              <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
+                              <div class="ranku-total-score">
+                                  <div class="score review"
+                                       th:classappend="${review == null ? 'normal' :
                (review.allScore >= 86 ? 'best' :
                (review.allScore >= 71 ? 'verygood' :
                (review.allScore >= 41 ? 'good' : 'normal')))}">
+                                  </div>
+                                  <p class="score-value f-17 f-b"
+                                     th:text="${review == null ? '-' : review.allScore}"></p>
+                                  <div style="height:1.6rem"></div>
+                              </div>
+                              <button class="btn-st" style="padding: .9rem 1.3rem">일본 현지 리뷰보기</button>
                           </div>
-                          <p class="score-value f-17 f-b"
-                             th:text="${review == null ? '?' : review.allScore}"></p>
-                          <div style="height:1.6rem"></div>
-                      </div>
+                      </a>
 
-                      <button class="btn-st">리뷰 확인해보기</button>
-                  </div>
-              </a>
-
-              <!-- JALAN -->
-              <a target="_blank" th:href="${'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=' + content.jpName}">
-                  <div class="review-item" th:with="review=${content.brandReviewMap['JALAN']}">
-                      <div class="site-logo jyaran"></div>
-                      <h4 class="f-14">일본 현지 예약 1위</h4>
-                      <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
-                      <div class="ranku-total-score">
-                          <div class="score review"
-                               th:classappend="${review == null ? 'normal' :
+                      <!-- TripAdvisor -->
+                      <a target="_blank" th:href="${'https://www.tripadvisor.co.kr/Search?q=' + content.enName + '&geo=1'}">
+                          <div class="review-item" th:with="review=${content.brandReviewMap['GOOGLE']}">
+                              <div class="site-logo tripadvisor"></div>
+                              <h4 class="f-14">영미권 사용자 리뷰</h4>
+                              <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
+                              <div class="ranku-total-score">
+                                  <div class="score review"
+                                       th:classappend="${review == null ? 'normal' :
                (review.allScore >= 86 ? 'best' :
                (review.allScore >= 71 ? 'verygood' :
                (review.allScore >= 41 ? 'good' : 'normal')))}">
+                                  </div>
+                                  <p class="score-value f-17 f-b"
+                                     th:text="${review == null ? '-' : review.allScore}"></p>
+                                  <div style="height:1.6rem"></div>
+                              </div>
+                              <button class="btn-st" style="padding: .9rem 1.1rem">미국･유럽 리뷰보기</button>
                           </div>
-                          <p class="score-value f-17 f-b"
-                             th:text="${review == null ? '-' : review.allScore}"></p>
-                          <div style="height:1.6rem"></div>
-                      </div>
-                      <button class="btn-st" style="padding: .9rem 1.3rem">일본 현지 리뷰보기</button>
-                  </div>
-              </a>
+                      </a>
 
-              <!-- TripAdvisor -->
-              <a target="_blank" th:href="${'https://www.tripadvisor.co.kr/Search?q=' + content.enName + '&geo=1'}">
-                  <div class="review-item" th:with="review=${content.brandReviewMap['GOOGLE']}">
-                      <div class="site-logo tripadvisor"></div>
-                      <h4 class="f-14">영미권 사용자 리뷰</h4>
-                      <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
-                      <div class="ranku-total-score">
-                          <div class="score review"
-                               th:classappend="${review == null ? 'normal' :
+                      <!-- GooglePlace -->
+                      <a>
+                          <div class="review-item" style="cursor: default" th:with="review=${content.brandReviewMap['GOOGLE']}">
+                              <div class="site-logo googlePlace"></div>
+                              <h4 class="f-14">지역별 리뷰 데이터</h4>
+                              <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
+                              <div class="ranku-total-score">
+                                  <div class="score review"
+                                       th:classappend="${review == null ? 'normal' :
                (review.allScore >= 86 ? 'best' :
                (review.allScore >= 71 ? 'verygood' :
                (review.allScore >= 41 ? 'good' : 'normal')))}">
-                          </div>
-                          <p class="score-value f-17 f-b"
-                             th:text="${review == null ? '-' : review.allScore}"></p>
-                          <div style="height:1.6rem"></div>
-                      </div>
-                      <button class="btn-st" style="padding: .9rem 1.1rem">미국･유럽 리뷰보기</button>
-                  </div>
-              </a>
-
-              <!-- GooglePlace -->
-              <a>
-                  <div class="review-item" style="cursor: default" th:with="review=${content.brandReviewMap['GOOGLE']}">
-                      <div class="site-logo googlePlace"></div>
-                      <h4 class="f-14">지역별 리뷰 데이터</h4>
-                      <div style="width:100%;height:1px;border-top:1px solid #d9d9d9;"></div>
-                      <div class="ranku-total-score">
-                          <div class="score review"
-                               th:classappend="${review == null ? 'normal' :
-               (review.allScore >= 86 ? 'best' :
-               (review.allScore >= 71 ? 'verygood' :
-               (review.allScore >= 41 ? 'good' : 'normal')))}">
-                          </div>
-                          <p class="score-value f-17 f-b"
-                             th:text="${review == null ? '-' : review.allScore }"></p>
-                          <div style="height:1.6rem"></div>
-                      </div>
-                      <button class="btn-st" style="padding: .9rem; width: 14.2rem; cursor: default"
-                              th:text="${'구글 리뷰 ' +
+                                  </div>
+                                  <p class="score-value f-17 f-b"
+                                     th:text="${review == null ? '-' : review.allScore }"></p>
+                                  <div style="height:1.6rem"></div>
+                              </div>
+                              <button class="btn-st" style="padding: .9rem; width: 14.2rem; cursor: default"
+                                      th:text="${'구글 리뷰 ' +
                                  ((review == null or review.count == null)
                                     ? 0
                                     : (review.count >= 9999 ? '9999+' : review.count))
                                  + '개'}">
-                      </button>
+                              </button>
+                          </div>
+                      </a>
                   </div>
-              </a>
-          </div>
-        </section>
+              </section>
 
-        <section class="description-section">
-          <h3>세부내용</h3>
-          <p class="hotel-description f-15" th:text="${content.description}"></p>
-          <a target="_blank" th:href ="${content.bestLink}"><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
-        </section>
+              <section class="description-section">
+                  <h3>세부내용</h3>
+                  <p class="hotel-description f-15" th:text="${content.description}"></p>
+                  <a target="_blank" th:href ="${content.bestLink}"><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
+              </section>
 
-        <section class="group-review">
-          <h3>같이가면 좋은 곳? 유형별 랭킹</h3>
-          <div class="group-flex-box">
-              <div class="group-flex">
-                  <div class="group full" style="background-color: #ffffff">
-                      <div class="group-name">
-                          <div class="comment-svg"></div>
-                          <p class="f-b">이용 후기</p>
+              <section class="group-review">
+                  <h3>같이가면 좋은 곳? 유형별 랭킹</h3>
+                  <div class="group-flex-box">
+                      <div class="group-flex">
+                          <div class="group full" style="background-color: #ffffff">
+                              <div class="group-name">
+                                  <div class="comment-svg"></div>
+                                  <p class="f-b">이용 후기</p>
+                              </div>
+                              <div class="f-15 f-b JPY" id="comment-num" th:text="${content.reviewSum}"></div>
+                          </div>
                       </div>
-                      <div class="f-15 f-b JPY" id="comment-num" th:text="${content.reviewSum}"></div>
+                      <div class="group-flex">
+                          <div class="group">
+                              <div class="group-name">
+                                  <div class="couple-svg"></div>
+                                  <p><b>커플</b>에게 인기</p>
+                              </div>
+                              <div class="f-15 f-b" th:text="${content.averageCoupleScore +'점'}"></div>
+                          </div>
+                          <div class="group">
+                              <div class="group-name">
+                                  <div class="family-svg"></div>
+                                  <p><b>가족</b>에게 인기</p>
+                              </div>
+                              <div class="f-15 f-b" th:text="${content.averageFamilyScore +'점'}"></div>
+                          </div>
+                      </div>
+                      <div class="group-flex">
+                          <div class="group">
+                              <div class="group-name">
+                                  <div class="solo-svg"></div>
+                                  <p><b>솔로</b>에게 인기</p>
+                              </div>
+                              <div class="f-15 f-b" th:text="${content.averageSoloScore +'점'}"></div>
+                          </div>
+                          <div class="group">
+                              <div class="group-name">
+                                  <div class="business-svg"></div>
+                                  <p><b>비지니스</b>에게 인기</p>
+                              </div>
+                              <div class="f-15 f-b" th:text="${content.averageBusinessScore +'점'}"></div>
+                          </div>
+                      </div>
+                      <div class="group-flex">
+                          <div class="group full">
+                              <div class="group-name">
+                                  <div class="ranku-noback-svg"></div>
+                                  <p class="f-b" style="color: #ffffff;">Ranku 총점</p>
+                                  <div class="today-ranku-detail f-b f-12"
+                                       th:if="${top != null and top < 4 and top != 0}" th:text="${'오늘'+ top + '위'}"
+                                  ></div>
+                              </div>
+                              <div class="f-15 f-b" style="color: #ffffff;" th:text="${content.averageAllScore +'점'}"></div>
+                          </div>
+                      </div>
                   </div>
+              </section>
+          </section>
+
+          <section th:data-lat="${content.latitude}" th:data-lon="${content.longitude}" id="place-section" class="content-warpper" style="padding: 6rem 0 0 0">
+              <h2>호텔 주변 평점 높은 맛집 Ranku</h2>
+              <th:block th:if="${!#lists.isEmpty(restaurant)}">
+
+              <div id="place-top-wrapper" class="place-top-wrapper restaurant-wrapper">
+                  <th:block th:each="p, stat : ${restaurant}" th:if="${stat.index < 3}">
+                  <div class="place top-restaurant" th:data-id="${p.id}">
+                      <div class="place-photo">
+                        <img src="/public/detail/place-no-img.svg"
+                             th:alt="${'랑쿠jp 음식점-'+p.title +'의 대표이미지'}"
+                             th:data-src="${p.thumbnailUri}"
+                             th:data-author="${p.authorDisplayName}"
+                             th:data-authorlink="${p.authorGoogleMapsUri}"
+                             onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
+                      </div>
+                      <div class="place-description">
+                          <div class="place-title">
+                              <div class="ranku daily"
+                                   th:classappend="${stat.index == 0 ? ' gold' :
+                                                 (stat.index == 1 ? ' sliver' :
+                                                 (stat.index == 2 ? ' bronze' : '') )}">
+                                  <span class="ranku-value" th:text="${stat.index + 1}"></span>
+                              </div>
+                              <h3 class="f-17 f-b" th:text="${p.title}"></h3>
+                          </div>
+                          <div class="place-info">
+                              <p class="f-15" th:text="${'호텔에서 ' +p.district+'m'}"></p>
+                              <p class="f-15" th:text="${p.primaryText}"></p>
+                          </div>
+                      </div>
+                      <a class="restaurant-btn btn-st" th:href="${p.googleMapsUri}" target="_blank">
+                          <p class="f-15" th:text="${p.rating +'점'}"></p>
+                          <div class="restaurant-btn-line"></div>
+                          <p class="f-15"
+                             th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
+                          </p>
+                      </a>
+                  </div>
+                  </th:block>
               </div>
-            <div class="group-flex">
-              <div class="group">
-                <div class="group-name">
-                  <div class="couple-svg"></div>
-                  <p><b>커플</b>에게 인기</p>
-                </div>
-                <div class="f-15 f-b" th:text="${content.averageCoupleScore +'점'}"></div>
+              <div id="restaurant-slide-wrapper" class="restaurant-slide-wrapper" th:if="${#lists.size(restaurant) > 3}">
+                  <th:block th:each="p, stat : ${restaurant}" th:if="${stat.index >= 3}">
+                  <div class="place normal-restaurant">
+                      <div class="place-photo">
+                          <img src="/public/detail/place-no-img.svg"
+                               th:alt="${'랑쿠jp 음식점-'+p.title +'의 대표이미지'}"
+                               th:data-src="${p.thumbnailUri}"
+                               th:data-author="${p.authorDisplayName}"
+                               th:data-authorlink="${p.authorGoogleMapsUri}"
+                               onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
+                      </div>
+                      <div class="place-description">
+                          <div class="place-title">
+                              <div class="ranku daily normal">
+                                  <span class="ranku-value" th:text="${stat.index + 1}"></span>
+                              </div>
+                              <h3 class="f-17 f-b" th:text="${p.title}"></h3>
+                          </div>
+                          <div class="place-info">
+                              <p class="f-15" th:text="${'호텔에서' +p.district+'m'}"></p>
+                              <p class="f-15" th:text="${p.primaryText}"></p>
+                          </div>
+                      </div>
+                      <a class="restaurant-btn btn-st" th:href="${p.googleMapsUri}" target="_blank">
+                          <p class="f-15" th:text="${p.rating +'점'}"></p>
+                          <div class="restaurant-btn-line"></div>
+                          <p class="f-15"
+                             th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
+                          </p>
+                      </a>
+                  </div>
+                  </th:block>
+                  <a class="place normal-restaurant more btn-st" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
+                      <div class="more-place-svg"></div>
+                  </a>
               </div>
-              <div class="group">
-                <div class="group-name">
-                  <div class="family-svg"></div>
-                  <p><b>가족</b>에게 인기</p>
-                </div>
-                <div class="f-15 f-b" th:text="${content.averageFamilyScore +'점'}"></div>
-              </div>
-            </div>
-            <div class="group-flex">
-              <div class="group">
-                <div class="group-name">
-                  <div class="solo-svg"></div>
-                  <p><b>솔로</b>에게 인기</p>
-                </div>
-                <div class="f-15 f-b" th:text="${content.averageSoloScore +'점'}"></div>
-              </div>
-              <div class="group">
-                <div class="group-name">
-                  <div class="business-svg"></div>
-                  <p><b>비지니스</b>에게 인기</p>
-                </div>
-                <div class="f-15 f-b" th:text="${content.averageBusinessScore +'점'}"></div>
-              </div>
-            </div>
-            <div class="group-flex">
-              <div class="group full">
-                <div class="group-name">
-                  <div class="ranku-noback-svg"></div>
-                  <p class="f-b" style="color: #ffffff;">Ranku 총점</p>
-                    <div class="today-ranku-detail f-b f-12"
-                        th:if="${top != null and top < 4 and top != 0}" th:text="${'오늘'+ top + '위'}"
-                    ></div>
-                </div>
-                <div class="f-15 f-b" style="color: #ffffff;" th:text="${content.averageAllScore +'점'}"></div>
-              </div>
-            </div>
-          </div>
-        </section>
+
+              </th:block>
+              <th:block th:unless="${!#lists.isEmpty(restaurant)}">
+                  <div class="no-restaurant-wrapper">
+                      <div class="no-restaurant-svg"></div>
+                      <a class="f-15 btn-st" style="width: 27rem; height: 4rem" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
+                          주변 음식점 더보기
+                      </a>
+                  </div>
+              </th:block>
+          </section>
       </section>
 
     </section>
@@ -572,12 +677,14 @@
       <div class="foot-container">
           <div class="f-meta">
               <div class="f-meta-row">
-                  <p class="f-14 f-b" style="color: #585858;">ADERS</p>
+                  <p class="f-14 f-b" style="color: #585858;">Rankujp</p>
                   <div style="width: 1px; height: 11px; border-left: 1px solid #585858;"></div>
-                  <p class="f-12" style="color: #585858; font-family:'Noto Sans JP', sans-serif;">〒550-0004 大阪市西区靱本町1-7-17 7F</p>
+                  <p class="f-12" style="color: #585858; font-family:'Noto Sans JP', sans-serif;">일본의 모든 랭킹 - Rankujp</p>
               </div>
               <div class="f-meta">
-                  <p class="f-12" style="color: #585858; letter-spacing: -.3px;">RANKUJP는 <span class="f-12" lang="ja" style="color: #585858; letter-spacing: -.3px; font-family:'Noto Sans JP', sans-serif;">株式会社エイダス</span>가 운영하는 호텔 할인 정보 제공 서비스로 실제 예약·결제는 각 예약사이트에서 직접 이루어지며, 당사는 정보 제공만을 담당합니다.</p>
+                  <p class="f-12" style="color: #585858; letter-spacing: -.3px;">RANKUJP는
+                      호텔 할인 정보 제공 서비스로 실제 예약·결제는 각 예약사이트에서 직접 이루어지며, 당사는 정보 제공만을 담당합니다.
+                  </p>
               </div>
           </div>
           <div class="f-meta right">
@@ -588,25 +695,7 @@
                       및 고객지원</a>
                   <div style="width: 1px; height: 11px; border-left: 1px solid #585858;"></div>
                   <div class="foot-svg-list">
-                      <a href="https://www.aders-international.com/" target="_blank" aria-label="ADERS International 공식 사이트 바로가기">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
-                               fill="none">
-                              <g clip-path="url(#clip0_2443_5096)">
-                                  <path
-                                          d="M2 6C2.43935 6.4044 6.98423 9.65082 9.69164 11.5715C10.0514 11.8266 10.5344 11.8146 10.8824 11.5435L18 6"
-                                          stroke="#585858" stroke-width="1.5" />
-                              </g>
-                              <path
-                                      d="M4 3.75H16C17.2426 3.75 18.25 4.75736 18.25 6V14C18.25 15.2426 17.2426 16.25 16 16.25H4C2.75736 16.25 1.75 15.2426 1.75 14V6C1.75 4.75736 2.75736 3.75 4 3.75Z"
-                                      stroke="#585858" stroke-width="1.5" />
-                              <defs>
-                                  <clipPath id="clip0_2443_5096">
-                                      <rect width="16" height="16" fill="white" transform="translate(2.00061 2)" />
-                                  </clipPath>
-                              </defs>
-                          </svg>
-                      </a>
-                      <a href="https://www.instagram.com/rankujp_official/" target="_blank" aria-label="Rankujp 인스타그램 바로가기">
+                      <a href="https://www.instagram.com/rankujp/" target="_blank" aria-label="Rankujp 인스타그램 바로가기">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                fill="none">
                               <path
@@ -620,7 +709,7 @@
                                       fill="#585858" />
                           </svg>
                       </a>
-                      <a href="https://www.youtube.com/@rankujp_official" target="_blank" aria-label="Rankujp 유튜브 바로가기">
+                      <a href="https://www.youtube.com/@rankujp" target="_blank" aria-label="Rankujp 유튜브 바로가기">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                fill="none">
                               <path
@@ -637,4 +726,5 @@
 </body>
 <script src="/js/main.js"></script>
 <script src="/js/hotel-detail.js"></script>
+<script src="/js/place.js"></script>
 </html>

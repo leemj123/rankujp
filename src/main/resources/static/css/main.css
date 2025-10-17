@@ -9,6 +9,7 @@
 
 html {
     font-size: 10px;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -357,6 +358,8 @@ input:focus {
 .ranku.daily {
     width: 2.2rem;
     height: 2.3rem;
+    min-width: 2.2rem;
+    min-height: 2.3rem;
 }
 
 .ranku.daily .ranku-value {

@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // 4) 모달 관련 바인딩
-    const backdrop = document.querySelector(".modal-backdrop");
+    const backdrop = document.querySelector(".modal-backdrop.hotel");
     if (backdrop) backdrop.addEventListener("click", closeModal);
 
     const prevBtn = document.getElementById("prevBtn");
@@ -140,7 +140,11 @@ function closeModal() {
 function updateModalImage() {
     if (!imgList.length) return;
     const modalImage = document.getElementById("modalImage");
+    modalImage.classList.add("on-load");
     if (modalImage) modalImage.src = imgList[currentIndex];
+    modalImage.onload = () => {
+        modalImage.classList.remove("on-load");
+    }
 }
 
 function goPrev() {
@@ -274,3 +278,49 @@ async function shareHotel() {
         alert("이 브라우저는 공유하기를 지원하지 않습니다.");
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.getElementById('restaurant-slide-warpper');
+
+    let isDown = false;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+
+    // 드래그 시작
+    slider.addEventListener('pointerdown', (e) => {
+        isDown = true;
+        moved = false;
+        slider.classList.add('dragging');
+        slider.setPointerCapture(e.pointerId);
+        startX = e.clientX;
+        startScroll = slider.scrollLeft;
+    }, { passive: true });
+
+    // 드래그 이동
+    slider.addEventListener('pointermove', (e) => {
+        if (!isDown) return;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 3) moved = true;
+        slider.scrollLeft = startScroll - dx;
+    }, { passive: true });
+
+    // 드래그 종료
+    const endDrag = (e) => {
+        if (!isDown) return;
+        isDown = false;
+        slider.classList.remove('dragging');
+    };
+
+    slider.addEventListener('pointerup', endDrag, { passive: true });
+    slider.addEventListener('pointercancel', endDrag, { passive: true });
+    slider.addEventListener('pointerleave', endDrag, { passive: true });
+
+    // 드래그 중 카드 안의 a 클릭 무효화(의도치 않은 클릭 방지)
+    slider.addEventListener('click', (e) => {
+        if (moved) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, true);
+})
