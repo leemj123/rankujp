@@ -350,4 +350,15 @@ public class RestaurantService {
         );
         return map.get(ct);
     }
+
+    @Transactional
+    public void testst() {
+        List<Restaurant> s = jpaQueryFactory
+                .selectFrom(qRestaurant)
+                .where(qRestaurant.title.like("%수키야%"))
+                .fetch();
+
+        restaurantRepo.deleteAll(s);
+
+    }
 }

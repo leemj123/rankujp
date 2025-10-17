@@ -22,4 +22,9 @@ public class RestaurantController {
     public List<Long> googlePlaceImgGetter() {
         return restaurantService.fetchAndUpload();
     }
+
+    @DeleteMapping()
+    public void fd() {
+        restaurantService.testst();
+    }
 }
