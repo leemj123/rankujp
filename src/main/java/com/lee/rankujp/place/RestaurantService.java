@@ -1,9 +1,7 @@
 package com.lee.rankujp.place;
 
-import com.lee.rankujp.hotel.infra.QHotel;
 import com.lee.rankujp.place.dto.RestaurantResponseDto;
 import com.lee.rankujp.place.infra.*;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,6 +21,7 @@ public class RestaurantService {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final QRestaurant qRestaurant = QRestaurant.restaurant;
+    private final RestaurantRepo restaurantRepo;
 
     @Transactional
     public List<RestaurantResponseDto> getRestaurantLocation(double lat, double lon) {
@@ -35,7 +34,11 @@ public class RestaurantService {
         List<Restaurant> restaurantList = jpaQueryFactory
                 .selectFrom(qRestaurant)
                 .where(distance.loe(radius))
-                .orderBy(distance.asc())
+                .orderBy(
+                        qRestaurant.rating.desc(),
+                        qRestaurant.userRatingCount.desc(),
+                        distance.asc()
+                )
                 .limit(10)
                 .fetch();
 

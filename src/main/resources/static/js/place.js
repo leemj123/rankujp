@@ -64,47 +64,63 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 document.addEventListener("DOMContentLoaded", () => {
     const slider = document.getElementById('restaurant-slide-wrapper');
-    if (slider) {
-        let isDown = false;
-        let startX = 0;
-        let startScroll = 0;
-        let moved = false;
+    if (!slider) return;
 
-        // 드래그 시작
-        slider.addEventListener('pointerdown', (e) => {
-            isDown = true;
-            moved = false;
-            slider.classList.add('dragging');
+    const DRAG_THRESHOLD = 12;     // 픽셀: 미세 흔들림 무시
+    const HORIZONTAL_BIAS = 1.5;   // 수평 이동이 수직보다 충분히 커야 드래그로 인정
+    let isDown = false;
+    let dragging = false;
+    let startX = 0, startY = 0;
+    let startScroll = 0;
+
+    // CSS로 두는 게 베스트: .restaurant-slide-wrapper { touch-action: pan-y; }
+    slider.style.touchAction = 'pan-y';
+
+    slider.addEventListener('pointerdown', (e) => {
+        isDown = true;
+        dragging = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        startScroll = slider.scrollLeft;
+        slider.classList.add('dragging');
+        // 캡처는 진짜 드래그로 확정된 뒤에 설정 (클릭 오인 방지)
+    }, { passive: true });
+
+    slider.addEventListener('pointermove', (e) => {
+        if (!isDown) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        // 수평 이동이 충분히 크고, 수직 대비 수평성이 뚜렷할 때만 드래그 인지
+        if (!dragging && Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy) * HORIZONTAL_BIAS) {
+            dragging = true;
+            // 이 시점에만 캡처 (클릭만 했을 땐 캡처 안 걸림)
             slider.setPointerCapture(e.pointerId);
-            startX = e.clientX;
-            startScroll = slider.scrollLeft;
-        }, { passive: true });
+        }
 
-        // 드래그 이동
-        slider.addEventListener('pointermove', (e) => {
-            if (!isDown) return;
-            const dx = e.clientX - startX;
-            if (Math.abs(dx) > 3) moved = true;
+        if (dragging) {
             slider.scrollLeft = startScroll - dx;
-        }, { passive: true });
+        }
+    }, { passive: true });
 
-        // 드래그 종료
-        const endDrag = (e) => {
-            if (!isDown) return;
-            isDown = false;
-            slider.classList.remove('dragging');
-        };
+    const endDrag = (e) => {
+        if (!isDown) return;
+        isDown = false;
+        slider.classList.remove('dragging');
 
-        slider.addEventListener('pointerup', endDrag, { passive: true });
-        slider.addEventListener('pointercancel', endDrag, { passive: true });
-        slider.addEventListener('pointerleave', endDrag, { passive: true });
+        if (dragging) {
+            // 드래그가 있었으면 '이번 한 번의 클릭'만 무효 (링크 오작동 방지)
+            const cancelOnce = (ev) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+            };
+            slider.addEventListener('click', cancelOnce, { once: true, capture: true });
+        }
+        dragging = false;
+    };
 
-        // 드래그 중 카드 안의 a 클릭 무효화(의도치 않은 클릭 방지)
-        slider.addEventListener('click', (e) => {
-            if (moved) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        }, true);
-    }
-})
+    slider.addEventListener('pointerup', endDrag, { passive: true });
+    slider.addEventListener('pointercancel', endDrag, { passive: true });
+    slider.addEventListener('pointerleave', endDrag, { passive: true });
+});
