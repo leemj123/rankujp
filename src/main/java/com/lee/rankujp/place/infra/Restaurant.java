@@ -32,6 +32,7 @@ public class Restaurant {
     private String title;
     private String titleLanguageCode;
 
+
     //PrimaryTypeDisplayName
     private String primaryText;
     private String primaryLanguageCode;

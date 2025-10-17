@@ -25,6 +25,9 @@ public class PlaceImg {
     private String authorDisplayName;
     private String googleMapsUri;
 
+    private String thumbnailUri;
+
+
     public PlaceImg(GoogleRestaurantResponse.Photo photo) {
         this.name = photo.getName();
         this.widthPx = photo.getWidthPx();
@@ -35,5 +38,9 @@ public class PlaceImg {
     }
     void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public void thumbnailUpdate(String s3Url) {
+        this.thumbnailUri = s3Url;
     }
 }

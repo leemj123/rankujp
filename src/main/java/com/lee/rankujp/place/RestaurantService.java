@@ -1,9 +1,9 @@
 package com.lee.rankujp.place;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lee.rankujp.hotel.infra.Hotel;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.lee.rankujp.hotel.infra.QHotel;
-import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.lee.rankujp.place.dto.GooglePlaceRequest;
 import com.lee.rankujp.place.dto.GoogleRestaurantResponse;
 import com.lee.rankujp.place.dto.GoogleRestaurantWrapper;
@@ -15,6 +15,7 @@ import io.netty.handler.timeout.TimeoutException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,14 @@ import org.springframework.web.reactive.function.client.WebClientRequestExceptio
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +39,22 @@ import java.util.Set;
 public class RestaurantService {
 
     private final WebClient googleWebClient;
-    private final HotelRepo hotelRepo;
     private final RestaurantRepo restaurantRepo;
     private final PlaceImgRepo placeImgRepo;
 
     private final JPAQueryFactory jpaQueryFactory;
     private final QHotel qHotel = QHotel.hotel;
     private final QRestaurant qRestaurant = QRestaurant.restaurant;
+    private final QPlaceImg qPlaceImg = QPlaceImg.placeImg;
 
+    @Value("${google.place.key}")
+    String googlePlaceKey;
+    @Value("${aws.s3.bucket-name}")
+    String bucketName;
 
+    private final AmazonS3 amazonS3;
+
+//    private final AmazonS3 amazonS3;
 
     public List<Long> addRestaurant(long lastId) {
 
@@ -183,4 +193,161 @@ public class RestaurantService {
                 .timeout(Duration.ofSeconds(10));
     }
 
+    public List<Long> fetchAndUpload() {
+        List<Restaurant> restaurantList = jpaQueryFactory
+                .selectFrom(qRestaurant)
+                .where(qRestaurant.id.gt(14))
+                .fetch();
+        List<Long> failId = new ArrayList<>();
+
+        for( Restaurant restaurant : restaurantList ) {
+            List<PlaceImg> placeImgList = jpaQueryFactory
+                    .selectFrom(qPlaceImg)
+                    .where(qPlaceImg.restaurant.id.eq(restaurant.getId()))
+                    .fetch();
+
+            if (placeImgList == null || placeImgList.isEmpty()) {continue;}
+
+            PlaceImg placeImg;
+
+            if (placeImgList.size() < 2) {
+                placeImg = placeImgList.get(0);
+            } else {
+                placeImg = placeImgList.get(1);
+            }
+
+            String url = "https://places.googleapis.com/v1/"
+                    +placeImg.getName()
+                    +"/media?"
+                    +"&maxHeightPx="+placeImg.getHeightPx()
+                    +"&maxWidthPx="+placeImg.getWidthPx()
+                    +"&key="+googlePlaceKey;
+
+
+            Path temp = null;
+            try {
+                // 1) HTTP 요청
+                HttpClient http = HttpClient.newBuilder()
+                        .connectTimeout(Duration.ofSeconds(10))
+                        .followRedirects(HttpClient.Redirect.NORMAL)
+                        .build();
+
+                HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                        .header("User-Agent", "RankuJP/1.0 (+https://rankujp.com)")
+                        .timeout(Duration.ofSeconds(30))
+                        .GET()
+                        .build();
+
+                // 2) 임시파일로 스트리밍 다운로드
+                temp = Files.createTempFile("img-", ".bin");
+                HttpResponse<Path> resp = http.send(request, HttpResponse.BodyHandlers.ofFile(temp));
+
+                if (resp.statusCode() / 100 != 2) {
+                    log.warn("non 200: {}", restaurant.getId());
+                    failId.add(restaurant.getId());
+                    Files.deleteIfExists(temp);
+                    continue;
+                }
+
+                // 3) Content-Type 추출 (없으면 octet-stream)
+                String contentType = resp.headers()
+                        .firstValue("content-type")
+                        .map(v -> v.split(";")[0].trim())
+                        .orElse("application/octet-stream");
+
+                // 3-1) 화이트리스트(선택): 이미지 외 차단
+                if (!isAllowedContentType(contentType)) {
+                    log.warn("Unsupported content-type: {}, {}", contentType, restaurant.getId());
+                    failId.add(restaurant.getId());
+                    Files.deleteIfExists(temp);
+                    continue;
+                }
+
+                // 3-2) 파일 크기 확인
+                long size = Files.size(temp);
+                if (size <= 0L) {
+                    log.warn("Empty body, {}", restaurant.getId());
+                    failId.add(restaurant.getId());
+                    Files.deleteIfExists(temp);
+                    continue;
+                }
+
+                // 3-3) 확장자 결정 (URL 우선, 없으면 content-type 기반)
+                String ext = guessExtensionFromUrl(url);
+                if (ext == null) ext = guessExtensionFromContentType(contentType);
+                if (ext == null) ext = ".bin";
+
+                // 4) S3 키 생성
+                String fileName = UUID.randomUUID() + restaurant.getTitle() + "." + ext;
+                String nameKey = "restaurants/osaka/" + fileName;
+
+                // 5) 메타데이터 설정 후 업로드 (스트리밍)
+                try (var in = Files.newInputStream(temp)) {
+                    ObjectMetadata meta = new ObjectMetadata();
+                    meta.setContentLength(size);
+                    meta.setContentType(contentType);
+                    meta.setCacheControl("public, max-age=31536000, immutable");
+
+                    PutObjectRequest req = new PutObjectRequest(bucketName, nameKey, in, meta);
+
+                    amazonS3.putObject(req);
+                }
+
+                // 6) 업로드된 S3 URL 반환
+
+                placeImg.thumbnailUpdate(amazonS3.getUrl(bucketName, nameKey).toString());
+                log.info("success: {}", restaurant.getId());
+                placeImgRepo.save(placeImg);
+
+            } catch (InterruptedException ie) {
+                log.warn("Interrupted while fetching image, {}", restaurant.getId());
+                failId.add(restaurant.getId());
+
+            } catch (Exception e) {
+                log.warn("Failed to proxy & upload image, {}", restaurant.getId());
+                failId.add(restaurant.getId());
+            } finally {
+                // 7) 임시파일 정리
+                if (temp != null) {
+                    try { Files.deleteIfExists(temp); } catch (Exception ignore) {}
+                }
+            }
+        }
+        return failId;
+
+    }
+
+    private static boolean isAllowedContentType(String ct) {
+        if (ct == null) return false;
+        return ct.startsWith("image/");
+    }
+
+    private static String guessExtensionFromUrl(String url) {
+        try {
+            String p = URI.create(url).getPath();
+            int dot = p.lastIndexOf('.');
+            if (dot >= 0 && dot > p.lastIndexOf('/')) {
+                String ext = p.substring(dot).toLowerCase();
+                // 쿼리스트링 제거
+                int q = ext.indexOf('?');
+                if (q >= 0) ext = ext.substring(0, q);
+                // 이미지 확장자만 허용
+                if (ext.matches("\\.(jpg|jpeg|png|webp|gif|bmp|svg|avif)")) return ext;
+            }
+        } catch (Exception ignore) {}
+        return null;
+    }
+
+    private static String guessExtensionFromContentType(String ct) {
+        Map<String, String> map = Map.of(
+                "image/jpeg", ".jpg",
+                "image/png",  ".png",
+                "image/webp", ".webp",
+                "image/gif",  ".gif",
+                "image/bmp",  ".bmp",
+                "image/svg+xml", ".svg",
+                "image/avif", ".avif"
+        );
+        return map.get(ct);
+    }
 }

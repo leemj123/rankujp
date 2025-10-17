@@ -4,6 +4,7 @@ package com.lee.rankujp.place;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -17,4 +18,8 @@ public class RestaurantController {
        return restaurantService.addRestaurant(id);
     }
 
+    @PostMapping("/image")
+    public List<Long> googlePlaceImgGetter() {
+        return restaurantService.fetchAndUpload();
+    }
 }
