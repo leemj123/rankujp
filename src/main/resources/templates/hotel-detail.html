@@ -601,7 +601,7 @@
               </div>
               <div id="restaurant-slide-wrapper" class="restaurant-slide-wrapper" th:if="${#lists.size(restaurant) > 3}">
                   <th:block th:each="p, stat : ${restaurant}" th:if="${stat.index >= 3}">
-                  <div class="place normal-restaurant">
+                  <div class="place normal-restaurant" th:data-id="${p.id}">
                       <div class="place-photo">
                           <img src="/public/detail/place-no-img.svg"
                                th:alt="${'랑쿠jp 음식점-'+p.title +'의 대표이미지'}"
