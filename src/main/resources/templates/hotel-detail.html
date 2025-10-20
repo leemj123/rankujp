@@ -121,7 +121,7 @@
     <section class="main-l">
       <section class="photo-section">
         <div class="photo-card thumbnail">
-          <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
+          <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
         </div>
         <div class="photo-mini-section">
           <div class="photo-card sub">
@@ -226,7 +226,7 @@
 
             <div class="detail-price-warpper" id="top-on-price">
               <div style="display: flex; gap: 1rem; justify-content: flex-end; align-items: center;">
-                <p class="f-15" style="color: #959595;">1박당 요금</p>
+                <p class="f-15" style="color: #585858;">1박당 요금</p>
               </div>
               <div style="display: flex; gap: .8rem;">
                 <p id="daily-percent" class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
@@ -259,7 +259,7 @@
                           </div>
                       </div>
                       <div style="display: flex; gap: .6rem; align-items: center;">
-                          <p style="font-size: 1.4rem; line-height: 1.4; color: #919191;"
+                          <p style="font-size: 1.4rem; line-height: 1.4; color: #585858;"
                              th:text="${#temporals.format(content.updateDate, 'yy.MM.dd HH:mm')}"></p>
                           <div class="update-date-svg"></div>
                       </div>
@@ -568,6 +568,7 @@
                   <div class="place top-restaurant" th:data-id="${p.id}">
                       <div class="place-photo">
                         <img src="/public/detail/place-no-img.svg"
+                             decoding="async" data-nimg="fill" loading="lazy"
                              th:alt="${'랑쿠jp 음식점-'+p.title +'의 대표이미지'}"
                              th:data-src="${p.thumbnailUri}"
                              th:data-author="${p.authorDisplayName}"
@@ -604,6 +605,7 @@
                   <div class="place normal-restaurant" th:data-id="${p.id}">
                       <div class="place-photo">
                           <img src="/public/detail/place-no-img.svg"
+                               decoding="async" data-nimg="fill" loading="lazy"
                                th:alt="${'랑쿠jp 음식점-'+p.title +'의 대표이미지'}"
                                th:data-src="${p.thumbnailUri}"
                                th:data-author="${p.authorDisplayName}"
@@ -640,7 +642,9 @@
               <th:block th:unless="${!#lists.isEmpty(restaurant)}">
                   <div class="no-restaurant-wrapper">
                       <div class="no-restaurant-svg"></div>
-                      <a class="f-15 btn-st" style="width: 27rem; height: 4rem" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
+                      <a class="f-15 btn-st" style="width: 27rem; height: 4rem"
+                         aria-label="find more restaurant in google map"
+                         th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
                           주변 음식점 더보기
                       </a>
                   </div>

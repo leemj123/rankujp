@@ -260,7 +260,7 @@ main {
     margin: auto 6rem;
     display: flex;
     align-items: center;
-    background-color: #919191;
+    background-color: #585858;
     overflow: hidden;
     border-radius: 20px;
 }
@@ -417,7 +417,7 @@ main {
 }
 
 .head-info-row>div {
-    color: #919191;
+    color: #585858;
 }
 .no-price {
     width: 100%;
