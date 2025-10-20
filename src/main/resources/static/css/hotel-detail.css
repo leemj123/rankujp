@@ -507,7 +507,7 @@ main {
     opacity: 0.3;
 }
 .on-load::after {
-    content: url("/public/favi");
+    content: url("/public/detail/loading.svg");
     position: absolute;
     display: block;
     top: 50%;
