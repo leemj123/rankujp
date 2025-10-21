@@ -1,5 +1,7 @@
 package com.lee.rankujp.place.infra;
 
+import com.lee.rankujp.hotel.cumtom.PointLocation;
+import com.lee.rankujp.hotel.infra.HotelCity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +20,10 @@ public class Restaurant {
     private String googlePlaceId;
     private String internationalPhoneNumber;
     private String formattedAddress;
+
+    @ManyToOne
+    @JoinColumn(name = "hotel_city_id")
+    private HotelCity hotelCity;
     //Location
     private double latitude;
     private double longitude;
@@ -50,6 +56,8 @@ public class Restaurant {
     //reviewSummary
     private String reviewText;
     private String reviewLanguageCode;
+
+    private PointLocation pointLocation;
 
 //    public Restaurant(GoogleRestaurantResponse grr) {
 //        this.googlePlaceId = grr.getId();
