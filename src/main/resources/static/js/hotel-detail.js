@@ -18,13 +18,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 1) 이미지 먼저 로드 & 인덱스 부여
     await onDetailImgLoad();
 
-    // 2) 포토 카드 클릭 바인딩
+    // 2) 포토 카드 클릭 바인딩 - 클릭에만 반응
     document.querySelectorAll(".photo-card").forEach((item, index) => {
-        item.addEventListener("click", () => {
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+
+        // 마우스(또는 터치) 눌렀을 때 시작 좌표 저장
+        item.addEventListener("pointerdown", (e) => {
+            isDragging = false;
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        // 움직임 감지 — 일정 거리 이상이면 드래그로 판단
+        item.addEventListener("pointermove", (e) => {
+            const diffX = Math.abs(e.clientX - startX);
+            const diffY = Math.abs(e.clientY - startY);
+            if (diffX > 5 || diffY > 5) {  // 감도 조정 가능 (5px~10px 정도)
+                isDragging = true;
+            }
+        });
+
+        // 클릭 해제 시
+        item.addEventListener("pointerup", (e) => {
+            if (isDragging) return; // 드래그로 판정되면 클릭 무시
+
             const attr = item.getAttribute("data-index");
             currentIndex = Number.isInteger(+attr) ? parseInt(attr, 10) : index;
             openModal();
         });
+
+        // 선택 방지 (텍스트 블루 강조 방지)
+        item.addEventListener("dragstart", (e) => e.preventDefault());
     });
 
     // 3) 더보기/접기
@@ -279,3 +305,18 @@ async function shareHotel() {
     }
 }
 
+const mediaQuery = window.matchMedia("(max-width: 768px)");
+handleMediaChange(mediaQuery);
+mediaQuery.addEventListener("change", handleMediaChange);
+
+function handleMediaChange(e) {
+    if (e.matches) {
+        console.log("모바일 전용 로직 실행");
+
+        const mobileSlider = document.getElementById("mobile-slider");
+        if (mobileSlider) {
+            mobileSlider.style.touchAction = 'pan-y';        // 세로 스크롤 유지, 가로만 우리가 처리
+            bindSwipe(mobileSlider);
+        }
+    }
+}

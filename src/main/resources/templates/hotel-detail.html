@@ -109,11 +109,11 @@
     <div class="header-warpper">
       <div class="logo-box"><a href="/"><img class="logo" src="/public/logo.svg" alt="랭쿠jp 로고"></a></div>
       <nav class="header-nav">
-        <ul>
-            <li><a href="/">할인랭킹</a></li>
-            <li><a href="/score">종합랭킹</a></li>
-            <li><a href="/premium">프리미엄</a></li>
-        </ul>
+          <ul role="list">
+              <li role="listitem"><a href="/">할인랭킹</a></li>
+              <li role="listitem"><a href="/score">종합랭킹</a></li>
+              <li role="listitem"><a href="/restaurant">맛집랭킹</a></li>
+          </ul>
       </nav>
     </div>
   </header>
@@ -121,7 +121,7 @@
     <section class="main-l">
       <section class="photo-section">
         <div class="photo-card thumbnail">
-          <img th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
+          <img id="mobile-slider" th:src="${content.thumbnailImg + '?s=850x&ca=6'}" th:alt="${content.koName + '대표사진'}" decoding="async" data-nimg="fill" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
         </div>
         <div class="photo-mini-section">
           <div class="photo-card sub">
@@ -575,7 +575,7 @@
                              th:data-authorlink="${p.authorGoogleMapsUri}"
                              onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
                       </div>
-                      <div class="place-description">
+                      <a class="place-description" th:href="${p.googleMapsUri}" target="_blank">
                           <div class="place-title">
                               <div class="ranku daily"
                                    th:classappend="${stat.index == 0 ? ' gold' :
@@ -589,14 +589,15 @@
                               <p class="f-15" th:text="${'호텔에서 ' +p.district+'m'}"></p>
                               <p class="f-15" th:text="${p.primaryText}"></p>
                           </div>
-                      </div>
-                      <a class="restaurant-btn btn-st" th:href="${p.googleMapsUri}" target="_blank">
-                          <p class="f-15" th:text="${p.rating +'점'}"></p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15"
-                             th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
-                          </p>
+                          <div class="restaurant-btn btn-st">
+                              <p class="f-15" th:text="${p.rating +'점'}"></p>
+                              <div class="restaurant-btn-line"></div>
+                              <p class="f-15"
+                                 th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
+                              </p>
+                          </div>
                       </a>
+
                   </div>
                   </th:block>
               </div>
@@ -612,7 +613,7 @@
                                th:data-authorlink="${p.authorGoogleMapsUri}"
                                onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
                       </div>
-                      <div class="place-description">
+                      <a class="place-description" th:href="${p.googleMapsUri}" target="_blank">
                           <div class="place-title">
                               <div class="ranku daily normal">
                                   <span class="ranku-value" th:text="${stat.index + 1}"></span>
@@ -623,14 +624,15 @@
                               <p class="f-15" th:text="${'호텔에서 ' +p.district+'m'}"></p>
                               <p class="f-15" th:text="${p.primaryText}"></p>
                           </div>
-                      </div>
-                      <a class="restaurant-btn btn-st" th:href="${p.googleMapsUri}" target="_blank">
-                          <p class="f-15" th:text="${p.rating +'점'}"></p>
-                          <div class="restaurant-btn-line"></div>
-                          <p class="f-15"
-                             th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
-                          </p>
+                          <div class="restaurant-btn btn-st">
+                              <p class="f-15" th:text="${p.rating +'점'}"></p>
+                              <div class="restaurant-btn-line"></div>
+                              <p class="f-15"
+                                 th:text="${'리뷰 ' + (p.userRatingCount > 999 ? '999+' : p.userRatingCount) + '개'}">
+                              </p>
+                          </div>
                       </a>
+
                   </div>
                   </th:block>
                   <a class="place normal-restaurant more btn-st" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">

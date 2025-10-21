@@ -40,7 +40,6 @@ main {
 #upup {content: url('/public/upup.svg');}
 #history {content: url('/public/history.svg');}
 
-
 #history-box {
     display: none;
     flex-direction: column;
@@ -144,7 +143,7 @@ main {
 @media (max-width: 850px) {
     main {
         width: 100%;
-        margin: 0 auto;
+        margin: 8rem auto;
     }
 
     .main-l {
@@ -198,7 +197,6 @@ main {
 }
 
 /* =============================================== */
-
 .ranking-top-warpper {
     width: 100%;
     display: flex;
@@ -210,69 +208,49 @@ main {
 
 .top-item {
     cursor: pointer;
-
+    padding: 0.8rem 2.4rem 2.4rem 2.4rem;
+    border-radius: 20px;
     flex: 1;
+    background-color: #DCDCDC;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    height: 32.8rem;
-    gap: 2rem;
-
-}
-.top-item-img-box {
-    width: 100%;
-    overflow: hidden;
-    padding: 0.8rem 2.4rem 0 2.4rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
     text-align: left;
-    border-radius: 20px 20px 20px 80px;
-    height: 32.8rem;
-    background-color: #DCDCDC;
+
+}
+.top-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1; /* 이미지 위 */
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, black 100%);
 }
 
-.top-item-img-box img{
+.top-item img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    background-color: #E1E3EB;
     object-fit: cover;
     object-position: center;
     display: block;
-    transition: filter 0.3s ease;
+    transition:
+        filter 0.3s ease;
+    z-index: 0;
+}
+
+
+
+.top-item-title {
+    color: white;
 }
 .top-item-description {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 9.2rem;
+    z-index: 2;
 }
-@media (min-width: 768px) {
-
-    .ranking-top-warpper {
-        height: 49rem;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 20px;
-    }
-
-    .top-item {
-        height: 49rem;
-    }
-    .top-item img {
-        height: 33rem;
-    }
-    .top-item-description {
-        flex-direction: column;
-    }
-
-}
-
 .top-item-description.up {
     visibility: 1;
     transition: visiblity .2s ease;
@@ -281,10 +259,11 @@ main {
 .top-item-description.down {
     display: none;
     visibility: 0;
-    
+    flex-direction: column;
 }
 
-.top-item-img-box .head-line {
+
+.top-item .head-line {
     position: absolute;
     top: 0;
     left: 0;
@@ -309,15 +288,15 @@ main {
     /* 브라우저 호환성 보강 (선택사항) */
 }
 
-.top-item.top-1 .top-item-img-box .head-line {
+.top-item.top-1 .head-line {
     background-color: #ffb900;
 }
 
-.top-item.top-2 .top-item-img-box .head-line {
+.top-item.top-2 .head-line {
     background-color: #aeaeae;
 }
 
-.top-item.top-3 .top-item-img-box .head-line {
+.top-item.top-3 .head-line {
     background-color: #cd8a4b;
 }
 
@@ -331,6 +310,33 @@ main {
     }
 }
 
+@media (min-width: 768px) {
+
+    .ranking-top-warpper {
+        height: 36.7rem;
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 20px;
+    }
+
+    .top-item {
+        height: 32.6rem;
+    }
+
+    .top-2 {
+        order: 1;
+    }
+
+    .top-1 {
+        order: 2;
+        transform: translateY(-4rem);
+    }
+
+    .top-3 {
+        order: 3;
+    }
+}
+
 
 /* =normal-item============================================== */
 
@@ -339,17 +345,14 @@ main {
     flex-direction: column;
     gap: 2rem;
 }
-.premium-seperator {
-    width: 100%;
-    height: 1px;
-    border-top: 1px solid #dcdcdc;
-    margin-bottom: 2rem;
-}
+
 .ranku-item {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 23rem;
+    height: 17rem;
+
+    border: 1px solid #dcdcdc;
     border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
@@ -361,11 +364,8 @@ main {
 }
 
 .ranku-img-box {
-    width: 42rem;
+    width: 35rem;
     height: 100%;
-    border-radius: 20px;
-    overflow: hidden;
-    background-color: #E1E3EB;
 }
 
 .ranku-img-box img {
@@ -375,75 +375,74 @@ main {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    background-color: #E1E3EB;
 }
-
 .ranku-img-box .ranku {
     position: absolute;
     top: 0;
-    left: 2.4rem;
+    left: 2rem;
 }
-
 .ranku-item .description-warpper {
     display: flex;
-    flex-direction: column;
     padding: 0 4rem;
-    justify-content: space-between;
-    gap: 2rem;
-    flex: 1;
-}
-.price-left {
-    display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 1.4rem;
+    width: calc(100% - 35rem);
 }
 
-.price-left section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.price-left-content {
-    display: flex;
-    gap: .6rem;
-    align-items: center;
-}
-
-.price-right {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 3rem;
-}
-
-.price-right .price-value {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-@media (max-width: 767px) {
-    .ranking-top-warpper {
-        height: 1024px;
-    }
+@media (max-width: 768px) {
     .ranku-item .description-warpper {
         flex-direction: column;
         justify-content: center;
-        gap: 0;
+        gap: 2.2rem;
         padding: 1.6rem;
         min-width: 22.8rem;
     }
     .ranku-img-box {
-        width: clamp(13rem, 50vw, 25rem);
+        width: clamp(15rem, 50vw, 35rem);
     }
-    .price-left {
-        gap: 1rem;
+}
+.restaurant-info-div{
+    display: flex;
+    gap: .8rem;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.restaurant-info-item {
+    display: flex;
+    gap: 1rem;
+    justify-content: left;
+    align-items: center;
+}
+.restaurant-info-line {
+    width: 2px;
+    height: 1.6rem;
+    border-right: 1px solid #DCDCDC;
+}
+.restaurant-info-line.normal-line {
+    background-color: #585858
+}
+@media (max-width: 768px) {
+    .restaurant-info-line.normal-line {
+        display: none;
     }
-    .price-left section {
-        gap: .6rem;
+    .restaurant-info-div.normal{
+        display: flex;
+        flex-direction: column;
+        gap: .8rem;
+        justify-content: right;
+        align-items: flex-end;
     }
-    .price-right {
-        justify-content: flex-end;
-    }
+}
+.restaurant-star-svg {
+    content: url('/public/restaurant/restaurant-star.svg');
+    min-width: 2.6rem;
+    min-height: 2.6rem;
+}
+.restaurant-comment-svg {
+    content: url('/public/restaurant/restaurant-comment.svg');
+    min-width: 2.6rem;
+    min-height: 2.6rem;
 }
