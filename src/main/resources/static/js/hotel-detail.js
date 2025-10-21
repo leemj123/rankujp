@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 5) 스와이프 제스처 바인딩 (모달 큰 이미지 영역)
     const modalImage = document.getElementById("modalImage");
     if (modalImage) {
-        modalImage.setAttribute('draggable', 'false'); // 드래그 고스트 방지
-        modalImage.style.touchAction = 'pan-y';        // 세로 스크롤 유지, 가로만 우리가 처리
+        modalImage.setAttribute('draggable', 'false');
+        modalImage.style.touchAction = 'pan-y';
         bindSwipe(modalImage);
     }
 
