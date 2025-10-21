@@ -49,7 +49,7 @@ public class Hotel {
     private String photo5;
 
     //price
-    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE)
     private List<HotelPrice> priceList;
 
     private LocalDate bestStayDate;
