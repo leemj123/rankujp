@@ -1,17 +1,26 @@
 package com.lee.rankujp.place;
 
+import com.lee.rankujp.hotel.cumtom.PointLocation;
 import com.lee.rankujp.place.dto.RestaurantResponseDto;
 import com.lee.rankujp.place.infra.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import jakarta.persistence.PersistenceContext;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.EntityManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -21,7 +30,6 @@ public class RestaurantService {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final QRestaurant qRestaurant = QRestaurant.restaurant;
-    private final RestaurantRepo restaurantRepo;
 
     @Transactional
     public List<RestaurantResponseDto> getRestaurantLocation(double lat, double lon) {
@@ -80,4 +88,97 @@ public class RestaurantService {
         double meters = 6_371_000.0 * dRad;
         return (int) (Math.round(meters / 10.0) * 10.0);
     }
+
+    //=====REST=FUL========================
+
+    @Transactional
+    public Page<RestaurantResponseDto> restaurantPage(int location, int sort, int page) {
+        Pageable pageable = PageRequest.of(page-1, 20);
+
+        BooleanExpression predicate = this.filterQueryExpression(location);
+
+        List<Restaurant> restaurantList = jpaQueryFactory
+                .selectFrom(qRestaurant)
+                .orderBy(
+                        qRestaurant.rating.desc(),
+                        qRestaurant.userRatingCount.desc()
+                )
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = Optional.ofNullable(
+                jpaQueryFactory
+                        .select(qRestaurant.id.count())
+                        .from(qRestaurant)
+                        .where(predicate)
+                        .fetchOne()
+        ).orElse(0L);
+
+        List<RestaurantResponseDto> rRDL = new ArrayList<>();
+        for (Restaurant restaurant : restaurantList) {
+            List<PlaceImg> imgList = restaurant.getPlaceImgList();
+            if (imgList == null || imgList.isEmpty()) {continue;}
+            PlaceImg place = imgList.get(0);
+
+            rRDL.add(
+                    RestaurantResponseDto.builder()
+                            .id(restaurant.getId())
+                            .thumbnailUri(place.getThumbnailUri())
+                            .title(restaurant.getTitle())
+                            .rating(restaurant.getRating())
+                            .userRatingCount(restaurant.getUserRatingCount())
+                            .googleMapsUri(restaurant.getGoogleMapsUri())
+                            .build()
+            );
+        }
+
+        return new PageImpl<>(rRDL, pageable, total);
+    }
+
+    private BooleanExpression filterQueryExpression(int location) {
+        BooleanExpression predicate = null;
+
+        if (location == 1) {return predicate;}
+
+        if (location < 7) {
+            switch (location) {
+                case 2: {
+                    predicate = qRestaurant.pointLocation.eq(PointLocation.NAMBA); break;
+                }
+                case 3: {
+                    predicate = qRestaurant.pointLocation.eq(PointLocation.UMEDA); break;
+                }
+                case 4: {
+                    predicate = qRestaurant.pointLocation.eq(PointLocation.SHINSAIBASHI); break;
+                }
+                case 5: {
+                    predicate = qRestaurant.pointLocation.eq(PointLocation.TENOJI); break;
+                }
+                case 6: {
+                    predicate = qRestaurant.pointLocation.eq(PointLocation.USJ); break;
+                }
+            }
+        } else {
+            switch (location) {
+                case 7: {
+                    predicate = qRestaurant.hotelCity.id.eq(9590L); break;
+                }
+                case 8: {
+                    predicate = qRestaurant.hotelCity.id.eq(1784L); break;
+                }
+                case 9: {
+                    predicate = qRestaurant.hotelCity.id.eq(5235L); break;
+                }
+                case 10: {
+                    predicate = qRestaurant.hotelCity.id.eq(13313L); break;
+                }
+            }
+        }
+
+        return predicate;
+    }
+
+
 }

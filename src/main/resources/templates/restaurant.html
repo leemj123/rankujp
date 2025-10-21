@@ -1,23 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<!doctype html>
+<html lang="ko">
 
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}"></title>
+    <meta name="description" th:content="${description}">
+    <meta name="keywords" th:content="${keywords}">
+    <meta name="robots" content="index,follow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="thumbnail" content="https://rankujp.com/public/ranku_sns.png">
+
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta property="og:site_name" content="rankujp.com">
+    <meta property="og:type" content="website">
+    <meta property="og:title" th:content="${title}">
+    <meta property="og:url" content="https://rankujp.com/">
+    <meta property="og:description" th:content="${description}">
+    <meta property="og:image" content="https://rankujp.com/public/ranku_sns.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" th:content="${title}">
+    <meta property="twitter:description" th:content="${description}">
+    <meta property="twitter:image" content="https://rankujp.com/public/ranku_sns.png">
+    <meta name="twitter:creator" content="@rankujp_official">
+
+    <link rel="preload" href="/css/main.css" as="style">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="canonical" th:href="${canonical}">
+
+    <meta name="agd-partner-manual-verification" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ECZDFLQJ5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-9ECZDFLQJ5');
+    </script>
 
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/list.css">
+    <link rel="stylesheet" href="/css/restaurantList.css">
+    <link rel="stylesheet" href="/css/place.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 <header>
     <div class="header-warpper">
         <div class="logo-box"><a href="/"><img class="logo" src="/public/logo.svg" alt="랭쿠jp 로고"></a></div>
         <nav class="header-nav">
             <ul role="list">
-                <li role="listitem"><a class="active" href="/">할인랭킹</a></li>
+                <li role="listitem"><a href="/">할인랭킹</a></li>
                 <li role="listitem"><a href="/score">종합랭킹</a></li>
-                <li role="listitem"><a href="/premium">프리미엄</a></li>
+                <li role="listitem"><a class="active" href="/restaurant" >맛집랭킹</a></li>
             </ul>
         </nav>
     </div>
@@ -42,9 +82,9 @@
 <main id="main">
     <section class="main-l">
         <div style="display: flex; align-items: center; gap: 1rem">
-            <h1>오늘의 할인 랭킹</h1>
+            <h1>Ranku 추천 맛집</h1>
             <div style="display: flex; align-items: center; gap: .6rem">
-                <p id="page-update-time" class="f-14" style="color: #585858" role="note" th:text="${#dates.format(#dates.createNow(), 'yy.MM.dd')}"></p>
+                <p id="page-update-time" class="f-14" style="color: #585858" role="note">25.10.21</p>
                 <div class="update-date-svg"></div>
             </div>
         </div>
@@ -62,8 +102,7 @@
                 <button class="f-15 chip" data-value="9">고베</button>
                 <button class="f-15 chip" data-value="10">나라</button>
             </div>
-
-            <div class="full-container chip-row" aria-label="타입" data-group="type">
+            <div class="full-container chip-row" style="display: none" aria-label="타입" data-group="type">
                 <button class="f-15 chip on" data-value="1">전체</button>
                 <button class="f-15 chip" data-value="2">가족</button>
                 <button class="f-15 chip" data-value="3">비지니스</button>
@@ -72,14 +111,14 @@
             </div>
         </section>
 
-        <th:block th:if="${salePage != null}"
-                  th:with="list=${salePage.content}">
+        <th:block th:if="${restaurantPage != null}"
+                  th:with="list=${restaurantPage.content}">
             <!-- Top 3 -->
             <section class="ranking-top-warpper" id="top-item-section" th:if="${list != null and !#lists.isEmpty(list)}">
                 <th:block th:each="p, stat : ${list}" th:if="${stat.index < 3}">
-                    <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}" class="top-item" th:classappend="' top-' + ${stat.index + 1}">
+                    <a th:href="${p.googleMapsUri}" class="top-item" th:classappend="' top-' + ${stat.index + 1}" target="_blank">
                         <div class="head-line"></div>
-                        <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표 이미지'}" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
+                        <img th:src="${p.thumbnailUri}" th:alt="${p.title + '의 대표 이미지'}" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
                         <div class="ranku list"
                              th:classappend="${stat.index == 0 ? ' gold' :
                                                  (stat.index == 1 ? ' sliver' :
@@ -87,33 +126,11 @@
                             <span class="ranku-value" th:text="${stat.index + 1}"></span>
                         </div>
                         <div class="top-item-description up">
-                            <div>
-                                <h2 class="ml top-item-title" th:text="${p.koName}"></h2>
-                                <div style="display: flex; gap: .8rem;">
-                                    <p class="discount-percent top ml" th:text="${p.bestSailPrecent}"></p>
-                                    <p class="daily-price ml JPY" th:text="${p.bestDailyRate}"></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="top-item-description down">
-                            <div style="display: flex; gap: .6rem;">
-                                <div th:switch="${p.preferenceValue}">
-                                    <div th:case="1" class="business-svg"></div>
-                                    <div th:case="2" class="couple-svg"></div>
-                                    <div th:case="3" class="solo-svg"></div>
-                                    <div th:case="4" class="family-svg"></div>
-                                </div>
-                                <p class="f-17 f-b" style="color: #fff;">
-                                    <b class="f-17 f-b" style="color: #fff;"
-                                       th:text="${p.preferenceValue == 1 ? '비지니스' :
-                                  (p.preferenceValue == 2 ? '커플' :
-                                  (p.preferenceValue == 3 ? '혼자' : '가족'))}">
-                                    </b>에게 가장인기!
-                                </p>
-                            </div>
-                            <div style="display: flex; gap: .6rem;">
-                                <div class="hotel-star-svg"></div>
-                                <p class="f-17 f-b" style="color: #fff;" th:text="${p.starRating + '성'}"></p>
+                            <h2 class="ml top-item-title" th:text="${p.title}"></h2>
+                            <div class="restaurant-info-div">
+                                <p class="f-17 f-b" style="color: #fff" th:text="${p.rating +'점'}"></p>
+                                <div class="restaurant-info-line"></div>
+                                <p class="f-17 f-b" style="color: #fff">리뷰 <span class="f-17 f-b JPY" style="color: #fff" th:text="${p.userRatingCount}"></span></p>
                             </div>
                         </div>
                     </a>
@@ -122,46 +139,25 @@
             <section class="ranking-noraml-warpper" id="ranking-normal-warpper" th:if="${list != null and #lists.size(list) > 3}">
                 <ol id="normal-item-section">
                     <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
-                        <a th:href="${'/hotel/' + p.id + '?top=' + (stat.index+1)}">
+                        <a th:href="${p.googleMapsUri}" target="_blank">
                             <article class="ranku-item">
                                 <div class="ranku-img-box">
-                                    <img th:src="${p.thumbnailImg}" th:alt="${p.koName + '의 대표사진'}" loading="lazy"  onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
+                                    <img th:src="${p.thumbnailUri}" th:alt="${p.title + '의 대표사진'}" loading="lazy"  onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
                                     <div class="ranku list normal">
                                         <span class="ranku-value" th:text="${stat.index + 1}">4</span>
                                     </div>
                                 </div>
                                 <div class="description-warpper">
-                                    <div class="price-left">
-                                        <h2 class="skip-2" th:text="${p.koName}"></h2>
-                                        <section>
-                                            <div class="price-left-content">
-                                                <div th:switch="${p.preferenceValue}">
-                                                    <div th:case="1" class="business-svg"></div>
-                                                    <div th:case="2" class="couple-svg"></div>
-                                                    <div th:case="3" class="solo-svg"></div>
-                                                    <div th:case="4" class="family-svg"></div>
-                                                </div>
-                                                <p class="f-17">
-                                                    <b class="f-b"
-                                                       th:text="${p.preferenceValue == 1 ? '비지니스' :
-                                                              (p.preferenceValue == 2 ? '커플' :
-                                                              (p.preferenceValue == 3 ? '혼자' : '가족'))}">
-                                                    </b>에게 가장인기!
-                                                </p>
-                                            </div>
-                                            <div class="price-left-content">
-                                                <div class="hotel-star-svg"></div>
-                                                <p class="f-17" th:text="${p.starRating + '성'}"></p>
-                                            </div>
-                                        </section>
-                                    </div>
-                                    <div class="price-right">
-                                        <div class="price-value">
-                                            <div style="display: flex; gap: .2rem;">
-                                                <p class="discount-percent f-20" th:text="${p.bestSailPrecent}"></p>
-                                                <p class="crossed-out-rate f-20 JPY" th:text="${p.bestCrossedOutRate}"></p>
-                                            </div>
-                                            <p class="daily-price xl JPY" th:text="${p.bestDailyRate}"></p>
+                                    <h2 class="skip-2" th:text="${p.title}"></h2>
+                                    <div class="restaurant-info-div normal">
+                                        <div class="restaurant-info-item">
+                                            <div class="restaurant-star-svg"></div>
+                                            <p class="ml" th:text="${p.rating}"></p>
+                                        </div>
+                                        <div class="restaurant-info-line normal-line"></div>
+                                        <div class="restaurant-info-item">
+                                            <div class="restaurant-comment-svg"></div>
+                                            <p class="ml JPY" th:text="${p.userRatingCount}"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -174,9 +170,9 @@
         </th:block>
 
         <nav id="pager" aria-label="pageNation">
-            <a th:if="${salePage.pageable.pageNumber !=0}" th:href="@{/(page=${salePage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
-            <span class="page-info" th:text="${salePage.pageable.pageNumber+1 } + ' / ' + ${salePage.totalPages+1}"></span>
-            <a th:if="${salePage.pageable.pageNumber < salePage.totalPages}" th:href="@{/(page=${salePage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
+            <a th:if="${restaurantPage.pageable.pageNumber !=0}" th:href="@{/(page=${restaurantPage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
+            <span class="page-info" th:text="${restaurantPage.pageable.pageNumber+1 } + ' / ' + ${restaurantPage.totalPages+1}"></span>
+            <a th:if="${restaurantPage.pageable.pageNumber < restaurantPage.totalPages}" th:href="@{/(page=${restaurantPage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
         </nav>
     </section>
     <section class="main-r">
@@ -246,4 +242,5 @@
 </footer>
 </body>
 <script src="/js/main.js"></script>
+<script src="/js/restaurant.js"></script>
 </html>
