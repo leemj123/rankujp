@@ -6,7 +6,6 @@ import com.lee.rankujp.place.infra.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
-import jakarta.persistence.PersistenceContext;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.EntityManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +37,33 @@ public class RestaurantService {
                 "({0} * acos(cos(radians({1})) * cos(radians({2}.latitude)) * cos(radians({2}.longitude) - radians({3})) + sin(radians({1})) * sin(radians({2}.latitude))))",
                 earthRadius, lat, qRestaurant, lon);
 
+        Double C = jpaQueryFactory
+                .select(qRestaurant.rating.avg())
+                .from(qRestaurant)
+                .fetchOne();
+        if (C == null) C = 0.0;
+
+        double m = 80.0;
+
+        NumberExpression<Double> R = qRestaurant.rating.coalesce(0.0);
+        NumberExpression<Double> v = qRestaurant.userRatingCount.coalesce(0L).doubleValue();
+
+        // 상수들도 NumberExpression으로 명시
+        NumberExpression<Double> mConst = Expressions.numberTemplate(Double.class, "{0}", m);
+        NumberExpression<Double> cConst = Expressions.numberTemplate(Double.class, "{0}", C);
+
+        // (v / (v + m)) * R + (m / (v + m)) * C
+        NumberExpression<Double> score =
+                v.divide(v.add(mConst)).multiply(R)
+                        .add(
+                                mConst.divide(v.add(mConst)).multiply(cConst)
+                        );
+
         List<Restaurant> restaurantList = jpaQueryFactory
                 .selectFrom(qRestaurant)
                 .where(distance.loe(radius))
                 .orderBy(
-                        qRestaurant.rating.desc(),
-                        qRestaurant.userRatingCount.desc(),
-                        distance.asc()
+                        score.desc(), v.desc(), distance.asc()
                 )
                 .limit(10)
                 .fetch();
@@ -97,13 +115,32 @@ public class RestaurantService {
 
         BooleanExpression predicate = this.filterQueryExpression(location);
 
+        Double C = jpaQueryFactory
+                .select(qRestaurant.rating.avg())
+                .from(qRestaurant)
+                .fetchOne();
+        if (C == null) C = 0.0;
+
+        double m = 80.0;
+
+        NumberExpression<Double> R = qRestaurant.rating.coalesce(0.0);
+        NumberExpression<Double> v = qRestaurant.userRatingCount.coalesce(0L).doubleValue();
+
+        // 상수들도 NumberExpression으로 명시
+        NumberExpression<Double> mConst = Expressions.numberTemplate(Double.class, "{0}", m);
+        NumberExpression<Double> cConst = Expressions.numberTemplate(Double.class, "{0}", C);
+
+        // (v / (v + m)) * R + (m / (v + m)) * C
+        NumberExpression<Double> score =
+                v.divide(v.add(mConst)).multiply(R)
+                        .add(
+                                mConst.divide(v.add(mConst)).multiply(cConst)
+                        );
+
         List<Restaurant> restaurantList = jpaQueryFactory
                 .selectFrom(qRestaurant)
-                .orderBy(
-                        qRestaurant.rating.desc(),
-                        qRestaurant.userRatingCount.desc()
-                )
                 .where(predicate)
+                .orderBy( score.desc(), v.desc() )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
