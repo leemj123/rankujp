@@ -8,8 +8,20 @@ spring:
     username: ENC(hy2RQj/en0H+sZebqYHfrg==)
     password: ENC(GfPTCPid6UXGjG4G1pH4xusGFGHiB7sK)
     hikari:
-      idle-timeout: 60000
-      minimum-idle: 0
+      # 커넥션 대기: 길게 두지 말고 빠르게 실패
+      connection-timeout: 30000          # 30s
+
+      # 유휴/수명/핑: 네트워크/DB보다 조금 더 공격적으로
+      idle-timeout: 300000               # 5m
+      max-lifetime: 840000               # 14m (LB/프록시 idle보다 짧게)
+      keepalive-time: 240000             # 4m (유휴 커넥션 주기 ping)
+
+      # 최소 유지 커넥션: 0 금지 (버스트 대비)
+      minimum-idle: 2                    # 코어·트래픽에 맞춰 2~min(최대풀/4)
+      maximum-pool-size: 10              # DB 최대 연결/코어/동시성에 맞게 조정
+
+      # 문제 추적용 (임시 켜서 원인 찾기)
+      leak-detection-threshold: 30000    # 30s 이상 잡고 있으면 스택 로그
 
   thymeleaf:
     prefix: classpath:/templates/
@@ -19,7 +31,7 @@ spring:
 
   mvc:
     async:
-      request-timeout: -1
+      request-timeout: 30000
   jpa:
     hibernate:
       ddl-auto: update
