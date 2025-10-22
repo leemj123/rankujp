@@ -9,9 +9,11 @@ public class HotelReviewResponse {
 
     private final ReviewBrand reviewBrand;
     private final int allScore;
+    private final long count;
 
     public HotelReviewResponse(HotelReview hr) {
         this.reviewBrand = hr.getReviewBrand();
         this.allScore =  (int) (hr.getAllScore() * 10);
+        this.count = hr.getReviewCount();
     }
 }

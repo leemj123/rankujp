@@ -60,7 +60,23 @@
             </nav>
         </div>
     </header>
-
+    <a href="https://stump-krill-dcc.notion.site/28f0644a06f980b4ac50c9782ad39c18" target="_blank"
+       style="margin-top:9.5rem; width: 100%; height: 6rem; background-color: #111111; display: flex; justify-content: center;" >
+        <div style="width: 100%; max-width: 108rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100vw; max-width: 89rem; padding: 0 2rem;">
+                <div style="display: flex; gap: 2rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <path d="M12.8212 32.634V22.3962C11.7443 22.1351 10.8767 21.6037 10.2186 20.8018C9.56051 19.9999 9.23145 19.0955 9.23145 18.0885V10.2563H11.6246V16.9696H12.8212V10.2563H15.2144V16.9696H16.4109V10.2563H18.8041V18.0885C18.8041 19.0955 18.475 19.9999 17.8169 20.8018C17.1588 21.6037 16.2913 22.1351 15.2144 22.3962V32.634H12.8212ZM25.8126 32.634V21.9766C24.7357 21.641 23.8682 20.937 23.2101 19.8647C22.552 18.7925 22.2229 17.5757 22.2229 16.2144C22.2229 14.5547 22.6916 13.1468 23.6289 11.9906C24.5662 10.8344 25.693 10.2563 27.0092 10.2563C28.3255 10.2563 29.4522 10.8391 30.3896 12.0046C31.3269 13.1701 31.7955 14.5827 31.7955 16.2424C31.7955 17.6037 31.4665 18.8158 30.8084 19.8787C30.1502 20.9417 29.2827 21.641 28.2058 21.9766V32.634H25.8126Z" fill="white"/>
+                        <path d="M13.8311 1.05957H35.7607C37.5167 1.0596 38.9404 2.48332 38.9404 4.23926V35.7607C38.9404 37.5167 37.5167 38.9404 35.7607 38.9404H4.23926C2.48332 38.9404 1.0596 37.5167 1.05957 35.7607V13.6045C1.05957 12.748 1.40571 11.9274 2.01855 11.3291L11.6104 1.96387C12.2041 1.38423 13.0013 1.05969 13.8311 1.05957Z" stroke="white" stroke-width="2.11966"/>
+                    </svg>
+                    <p class="f-15" style="color: #fff;">랑쿠재팬 선정! <span class="f-15 f-b" style="color: #fff;">오사카 찐 맛집 PDF</span></p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                    <path d="M15 20L8.75 13.75L10.5 11.9375L13.75 15.1875V5H16.25V15.1875L19.5 11.9375L21.25 13.75L15 20ZM7.5 25C6.8125 25 6.22396 24.7552 5.73438 24.2656C5.24479 23.776 5 23.1875 5 22.5V18.75H7.5V22.5H22.5V18.75H25V22.5C25 23.1875 24.7552 23.776 24.2656 24.2656C23.776 24.7552 23.1875 25 22.5 25H7.5Z" fill="white"/>
+                </svg>
+            </div>
+        </div>
+    </a>
     <main id="main">
         <section class="main-l">
             <div style="display: flex; align-items: center; gap: 1rem">
@@ -203,8 +219,16 @@
             </nav>
         </section>
         <section class="main-r">
-            <div class="banner-colum">
-                <a><img src="/public/banner/ago-colum-banner.png" style="width: 18rem;"></a>
+            <div class="tool-box-right">
+                <div id="upup"></div>
+                <div id="history"></div>
+                <div id="history-box">
+                    <div class="history-header">
+                        <p class="f-b f-17">최근 본 호텔</p>
+                        <div class="history-cancel" onclick="hideHistory()"></div>
+                    </div>
+                    <ul id="history-items"></ul>
+                </div>
             </div>
         </section>
     </main>
@@ -213,12 +237,14 @@
         <div class="foot-container">
             <div class="f-meta">
                 <div class="f-meta-row">
-                    <p class="f-14 f-b" style="color: #585858;">ADERS</p>
+                    <p class="f-14 f-b" style="color: #585858;">Rankujp</p>
                     <div style="width: 1px; height: 11px; border-left: 1px solid #585858;"></div>
-                    <p class="f-12" style="color: #585858; font-family:'Noto Sans JP', sans-serif;">〒550-0004 大阪市西区靱本町1-7-17 7F</p>
+                    <p class="f-12" style="color: #585858; font-family:'Noto Sans JP', sans-serif;">일본의 모든 랭킹 - Rankujp</p>
                 </div>
                 <div class="f-meta">
-                    <p class="f-12" style="color: #585858; letter-spacing: -.3px;">RANKUJP는 <span class="f-12" lang="ja" style="color: #585858; letter-spacing: -.3px; font-family:'Noto Sans JP', sans-serif;">株式会社エイダス</span>가 운영하는 호텔 할인 정보 제공 서비스로 실제 예약·결제는 각 예약사이트에서 직접 이루어지며, 당사는 정보 제공만을 담당합니다.</p>
+                    <p class="f-12" style="color: #585858; letter-spacing: -.3px;">RANKUJP는
+                        호텔 할인 정보 제공 서비스로 실제 예약·결제는 각 예약사이트에서 직접 이루어지며, 당사는 정보 제공만을 담당합니다.
+                    </p>
                 </div>
             </div>
             <div class="f-meta right">
@@ -229,25 +255,7 @@
                         및 고객지원</a>
                     <div style="width: 1px; height: 11px; border-left: 1px solid #585858;"></div>
                     <div class="foot-svg-list">
-                        <a href="https://www.aders-international.com/" target="_blank" aria-label="ADERS International 공식 사이트 바로가기">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
-                                 fill="none">
-                                <g clip-path="url(#clip0_2443_5096)">
-                                    <path
-                                            d="M2 6C2.43935 6.4044 6.98423 9.65082 9.69164 11.5715C10.0514 11.8266 10.5344 11.8146 10.8824 11.5435L18 6"
-                                            stroke="#585858" stroke-width="1.5" />
-                                </g>
-                                <path
-                                        d="M4 3.75H16C17.2426 3.75 18.25 4.75736 18.25 6V14C18.25 15.2426 17.2426 16.25 16 16.25H4C2.75736 16.25 1.75 15.2426 1.75 14V6C1.75 4.75736 2.75736 3.75 4 3.75Z"
-                                        stroke="#585858" stroke-width="1.5" />
-                                <defs>
-                                    <clipPath id="clip0_2443_5096">
-                                        <rect width="16" height="16" fill="white" transform="translate(2.00061 2)" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                        </a>
-                        <a href="https://www.instagram.com/rankujp_official/" target="_blank" aria-label="Rankujp 인스타그램 바로가기">
+                        <a href="https://www.instagram.com/rankujp/" target="_blank" aria-label="Rankujp 인스타그램 바로가기">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                  fill="none">
                                 <path
@@ -261,7 +269,7 @@
                                         fill="#585858" />
                             </svg>
                         </a>
-                        <a href="https://www.youtube.com/@rankujp_official" target="_blank" aria-label="Rankujp 유튜브 바로가기">
+                        <a href="https://www.youtube.com/@rankujp" target="_blank" aria-label="Rankujp 유튜브 바로가기">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                  fill="none">
                                 <path

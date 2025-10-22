@@ -1,6 +1,7 @@
 package com.lee.rankujp.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,12 +9,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Configuration
+@Slf4j
 public class WebClientConfig {
     @Value("${agoda.key}")
     private String AGODA_KEY;
+
+    @Value("${google.place.key}")
+    private String GOOGLE_PLACE_KEY;
 
     @Bean(name = "agodaApiClient")
     public WebClient agodaApiClient(ObjectMapper om) {
@@ -45,4 +56,38 @@ public class WebClientConfig {
                 .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .build();
     }
+    @Bean(name = "jalanWebClient")
+    public WebClient jalanWebClient() {
+        DefaultUriBuilderFactory f =
+                new DefaultUriBuilderFactory("https://www.jalan.net/uw/uwp2011/uww2011init.do");
+        // ★ 이미 인코딩된 쿼리스트링을 다시 인코딩하지 않도록
+        f.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+
+        return WebClient.builder()
+                .uriBuilderFactory(f)
+                .defaultHeaders(h -> {
+                    h.remove(HttpHeaders.CONTENT_TYPE);
+                    h.set(HttpHeaders.ACCEPT_LANGUAGE, "ja-JP,ja;q=0.9");
+                })
+                .build();
+    }
+    @Bean(name = "googleWebClient")
+    public WebClient googleWebClient() {
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(cfg -> cfg.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) // 10MB
+                .build();
+
+        return WebClient.builder()
+                .baseUrl("https://places.googleapis.com/v1/places:searchNearby")
+                .exchangeStrategies(strategies)
+                .defaultHeaders(headers -> {
+                    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+                    headers.set("X-Goog-Api-Key", GOOGLE_PLACE_KEY);
+                    headers.set("X-Goog-FieldMask",
+                            "places.id,places.internationalPhoneNumber,places.formattedAddress,places.location,places.rating,places.googleMapsUri,places.websiteUri,places.userRatingCount,places.displayName,places.primaryTypeDisplayName,places.primaryType,places.photos,places.priceRange,places.reviewSummary"
+                        );
+                })
+                .build();
+    }
+
 }

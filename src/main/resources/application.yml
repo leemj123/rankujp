@@ -7,9 +7,6 @@ spring:
     url: ENC(jwl+isoveIDH7Lkq65odEDnQ3bhZiqhhvsAOKEqwLL0r3+9L8Xc2//2Wv7DvGIGEd/ZNAmnYerw6wlarB3GusYYAqwBfcBqkSCXMDJTraGV4JAf/+7UQci3hsk5wZJI7x6wn8WSDR1UXwTXAOJEzjSriVifjhzHh)
     username: ENC(hy2RQj/en0H+sZebqYHfrg==)
     password: ENC(GfPTCPid6UXGjG4G1pH4xusGFGHiB7sK)
-    hikari:
-      idle-timeout: 60000
-      minimum-idle: 0
 
   thymeleaf:
     prefix: classpath:/templates/
@@ -19,13 +16,23 @@ spring:
 
   mvc:
     async:
-      request-timeout: -1
+      request-timeout: 30000
   jpa:
     hibernate:
       ddl-auto: update
 agoda:
   key: ENC(IaqGs3hpll/ldG01Z/m/WLCX4uCUh9qgPijf4aEMlgbp5GuujOx3pJjqVZduiT1qDGzSv5PGkT4=)
+google:
+  place:
+    key: ENC(v7v4rrkogSR9xp8qyzaHro0CacaEEzfMChAZho0kvQMA8w3lEiqoMqgLd8FovV5u)
 
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+aws:
+  s3:
+    region: ENC(Mlzr8TwGGnqI4O1j4O4GGN8Ot9YvYtML)
+    accessKey: ENC(3tm0nuy9RiaHWiyV/kdIU8UP9HazqAf9t01TaPvM4oE=)
+    secretKey: ENC(e4NCzdo/LamGPgghXjQIwEXCkXMQ89LVj7/YuMJSklqNMBER/FwCH1G3wot6iEacaIPA82ZK2j0=)
+    bucket-name: ENC(mgxgi2YUup1ZP3v7XkoqbQ/nv7SZF7rB)

@@ -8,4 +8,5 @@ public enum ReviewBrand {
     TRIPDOTCOM,
     BOOKINGDOTCOM,
     JALAN,
+    GOOGLE
 }

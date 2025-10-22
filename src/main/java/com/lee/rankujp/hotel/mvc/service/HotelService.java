@@ -1,5 +1,6 @@
 package com.lee.rankujp.hotel.mvc.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lee.rankujp.hotel.cumtom.PointLocation;
 import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import com.lee.rankujp.hotel.infra.*;
@@ -12,8 +13,12 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +26,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -29,6 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HotelService {
     private final JPAQueryFactory jpaQueryFactory;
     private final HotelRepo hotelRepo;
@@ -49,7 +57,10 @@ public class HotelService {
 
 
         OrderSpecifier<?> order = this.orderType(sort);
-        if (order != null) orders.add(order);
+        if (order != null) {
+            orders.add(order);
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+        }
         orders.add(qHotel.bestSailPrecent.desc());
         orders.add(qHotel.rankuScore.desc());
 
@@ -79,7 +90,10 @@ public class HotelService {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 
         OrderSpecifier<?> order = this.orderType(sort);
-        if (order != null) orders.add(order);
+        if (order != null) {
+            orders.add(order);
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+        }
         orders.add(qHotel.rankuScore.desc());
         orders.add(qHotel.starRating.desc());
 
@@ -111,7 +125,10 @@ public class HotelService {
 
 
         OrderSpecifier<?> order = this.orderType(sort);
-        if (order != null) orders.add(order);
+        if (order != null) {
+            orders.add(order);
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+        }
         orders.add(qHotel.bestCrossedOutRate.desc());
         orders.add(qHotel.starRating.desc());
 
@@ -148,7 +165,7 @@ public class HotelService {
 
 
     private BooleanExpression filterQueryExpression(int location) {
-        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0);
+        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
 
         if (location == 1) {return predicate;}
 
@@ -229,6 +246,7 @@ public class HotelService {
                 .selectFrom(qHotelReview)
                 .where(qHotelReview.hotel.id.eq(id))
                 .fetch();
+        if ( hotel == null ) {throw new RuntimeException("추가 에러처리 요청");}
 
         double max = hotel.getAverageBusinessScore();
         int maxLabel = 1;
@@ -261,12 +279,13 @@ public class HotelService {
 
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
-                .updateDate(hotel.getUpdateDateTime().toLocalDate())
+                .updateDate(hotel.getUpdateDateTime())
                 .title(hotel.getTitle())
                 .description(hotel.getDescription())
                 .keyword(hotel.getKeyword())
                 .rankuScore(hotel.getRankuScore())
                 .stateName(hotel.getHotelCity().getKoName())
+                .reviewSum(hotel.getReviewNum())
                 .stateId(hotel.getHotelCity().getId())
                 .koName(hotel.getKoName())
                 .jpName(shift_jis)
@@ -305,7 +324,6 @@ public class HotelService {
                 .brandReviewMap(this.getBrandReviewMap(reviews))
                 .build();
     }
-
     public Map<ReviewBrand, HotelReviewResponse> getBrandReviewMap(List<HotelReview> reviews) {
 
         if (reviews.isEmpty()) return Collections.emptyMap();
