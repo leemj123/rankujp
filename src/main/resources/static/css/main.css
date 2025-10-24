@@ -468,7 +468,7 @@ header {
     align-items: center;
     width: 100vw;
     min-width: 375px;
-    height: 9.5rem;
+    height: 7rem;
     border-bottom: 2px solid #d9d9d9;
     box-shadow: 0 4px 14px rgba(0, 0, 0, .1);
     z-index: 10;
@@ -499,7 +499,7 @@ header {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    height: 9.5rem;
+    height: 7rem;
 
 }
 
@@ -674,6 +674,18 @@ footer .foot-container {
 .shine-btn:hover::after {
     animation: shine 0.7s ease forwards;
 }
+.header-banner {
+    margin-top: 6.9rem;
+    width: 100%;
+    height: 6rem;
+    background-color: #111111;
+    display: flex;
+    justify-content: center;
+}
+.header-banner .header-banner-wrapper {
+    width: 100%;
+    max-width: 108rem;
+}
 
 @keyframes shine {
     0% {
@@ -706,6 +718,10 @@ footer .foot-container {
     }
 }
 @media (max-width: 768px) {
+    header {
+        height: 9.5rem;
+    }
+
     .header-warpper {
         flex-direction: column;
         justify-content: center;
