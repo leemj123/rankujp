@@ -1,6 +1,5 @@
 package com.lee.rankujp.hotel.mvc.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lee.rankujp.hotel.cumtom.PointLocation;
 import com.lee.rankujp.hotel.cumtom.ReviewBrand;
 import com.lee.rankujp.hotel.infra.*;
@@ -8,15 +7,10 @@ import com.lee.rankujp.hotel.mvc.dto.*;
 import com.lee.rankujp.hotel.price.HotelPriceService;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
 import com.lee.rankujp.hotel.repo.HotelRepo;
-import com.lee.rankujp.hotel.review.RankuScoreCalculator;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,9 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -41,6 +33,7 @@ public class HotelService {
     private final JPAQueryFactory jpaQueryFactory;
     private final HotelRepo hotelRepo;
     private final QHotel qHotel = QHotel.hotel;
+    private final QHotelPrice qHotelPrice = QHotelPrice.hotelPrice;
     private final QHotelCity qHotelCity = QHotelCity.hotelCity;
     private final QHotelReview qHotelReview = QHotelReview.hotelReview;
     private final HotelPriceService hotelPriceService;
@@ -59,9 +52,9 @@ public class HotelService {
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) {
             orders.add(order);
-            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
         }
-        orders.add(qHotel.bestSailPrecent.desc());
+        orders.add(qHotel.bestSalePrecent.desc());
         orders.add(qHotel.rankuScore.desc());
 
         List<Hotel> results = jpaQueryFactory
@@ -92,7 +85,7 @@ public class HotelService {
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) {
             orders.add(order);
-            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
         }
         orders.add(qHotel.rankuScore.desc());
         orders.add(qHotel.starRating.desc());
@@ -127,7 +120,7 @@ public class HotelService {
         OrderSpecifier<?> order = this.orderType(sort);
         if (order != null) {
             orders.add(order);
-            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSailPrecent.ne(0.0)));
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
         }
         orders.add(qHotel.bestCrossedOutRate.desc());
         orders.add(qHotel.starRating.desc());
@@ -231,9 +224,6 @@ public class HotelService {
 
 
     public HotelDetailResponse HotelDetail(Long id) {
-//        Hotel hotel = hotelRepo.findById(id).orElseThrow();
-//        HotelCity hotelCity = hotel.getHotelCity();
-//        List<HotelReview> hotelReviewList = hotel.getHotelReviewList();
 
         Hotel hotel = jpaQueryFactory
                 .selectFrom(qHotel)
@@ -303,7 +293,7 @@ public class HotelService {
                 .bestCrossedOutRate((int)hotel.getBestCrossedOutRate())
                 .bestStayDate(hotel.getBestStayDate())
                 .bestDailyRate((int)hotel.getBestDailyRate())
-                .bestSailPrecent((int)hotel.getBestSailPrecent())
+                .bestSalePrecent((int)hotel.getBestSalePrecent())
                 .bestLink("https://www.agoda.com/partners/partnersearch.aspx" +
                         "?pcs=1" +
                         "&cid=1950715" +
@@ -335,20 +325,26 @@ public class HotelService {
                         (r1, r2) -> r1.getAllScore() >= r2.getAllScore() ? r1 : r2 // 충돌 시 점수 높은 것 선택
                 ));
     }
+
     private List<HotelPriceResponse> buildTop5(boolean weekend, Hotel hotel, HotelCity hotelCity) {
 
         Comparator<HotelPriceResponse> DEAL_DESC =
-                Comparator.comparingDouble(HotelPriceResponse::getSailPercent)
+                Comparator.comparingDouble(HotelPriceResponse::getSalePercent)
                         .reversed()
                         .thenComparingDouble(r -> r.getCrossedOutRate() - r.getDailyRate())
                         .reversed()
                         .thenComparing(HotelPriceResponse::getStayDate)
                         .reversed();
 
-        return hotel.getPriceList().stream()
+        List<HotelPrice> priceList = jpaQueryFactory
+                .selectFrom(qHotelPrice)
+                .where(qHotelPrice.id.hotelId.eq(hotel.getId()))
+                .fetch();
+
+        return priceList.stream()
                 .filter(Objects::nonNull)
-                .filter(p -> !Double.isNaN(p.getSailPercent()))
-                .filter(p -> p.getSailPercent() >= 0)
+                .filter(p -> !Double.isNaN(p.getSalePercent()))
+                .filter(p -> p.getSalePercent() >= 0)
                 .filter(p -> p.isWeekend() == weekend)
                 .map(p -> new HotelPriceResponse(p, hotel.getId(), hotelCity.getAsq()))
                 .sorted(DEAL_DESC)
@@ -356,63 +352,7 @@ public class HotelService {
                 .toList();
     }
 
-
     //other=================================
-
-    @Transactional
-    public void scoreCalculator(){
-        List<Hotel> hotels = jpaQueryFactory
-                .selectFrom(qHotel)
-                .fetch();
-
-        hotels.stream().forEach(hotel -> hotel.rankuScoreUpdater(RankuScoreCalculator.hotelScore(hotel)) );
-    }
-
-    @Transactional
-    public void choiceBeatScore() {
-        // N+1 방지를 위해 가능하면 fetch join 쿼리를 미리 준비하세요.
-        // 예: hotelRepo.findAllWithPrices()
-        List<Hotel> hotels = hotelRepo.findAll();
-
-        for (Hotel h : hotels) {
-            List<HotelPrice> prices = h.getPriceList();
-            if (prices == null || prices.isEmpty()) {
-                // 데이터가 없으면 초기화(원하는 기본값으로 조정 가능)
-                h.beatScoreUpdate(null,0d, 0d, 0d);
-                continue;
-            }
-
-            // 동률일 때 "더 싼 일일가" 우선이 명확하도록 커스텀 비교자 예시:
-
-            HotelPrice best = prices.stream()
-                    .filter(Objects::nonNull)
-                    .filter(p -> !Double.isNaN(p.getSailPercent())) // primitive double NaN 체크
-                    .filter(p -> p.getSailPercent() >= 0)
-                    .max((a, b) -> {
-                        int byPercent = Double.compare(a.getSailPercent(), b.getSailPercent());
-                        if (byPercent != 0) return byPercent;
-                        Double ad = a.getDailyRate(), bd = b.getDailyRate();
-                        return Double.compare(bd, ad);
-                    })
-                    .orElse(null);
-
-
-            if (best != null) {
-                h.beatScoreUpdate(best.getStayDate(), nz(best.getCrossedOutRate()), nz(best.getDailyRate()), nz(best.getSailPercent()));
-
-            } else {
-                h.beatScoreUpdate(null,0d, 0d, 0d);
-            }
-        }
-
-        hotelRepo.saveAll(hotels);
-    }
-
-    // null-safe double
-    private static double nz(Double v) {
-        return (v == null || v.isNaN() || v.isInfinite()) ? 0d : v;
-    }
-
 
     public List<String> getImageList(Long id) {
         Hotel hotel = hotelRepo.findById(id).orElse(null);
@@ -426,11 +366,7 @@ public class HotelService {
 
         return result;
     }
-//    private String stripParams(String url) {
-//        if (url == null) return null;
-//        int idx = url.indexOf("?");
-//        return (idx >= 0) ? url.substring(0, idx) : url;
-//    }
+
     //OTU === other=================================
     public AgodaPriceResponse.HotelApiInfo getHotelDateSearcher(long id, LocalDate day) {
         AgodaPriceResponse res = hotelPriceService.callApiForDay(day, day.plusDays(2), Collections.singletonList(id)).block();

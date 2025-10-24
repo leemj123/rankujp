@@ -11,7 +11,7 @@ public class HotelPriceResponse {
     private final LocalDate stayDate;
     private final int crossedOutRate;
     private final int dailyRate;
-    private final int sailPercent;
+    private final int salePercent;
     private final LocalDateTime updatedAt;
     private final boolean isWeekend;
     private final String link;
@@ -20,7 +20,7 @@ public class HotelPriceResponse {
         this.stayDate = hp.getStayDate();
         this.crossedOutRate = (int) hp.getCrossedOutRate();
         this.dailyRate = (int) hp.getDailyRate();
-        this.sailPercent = (int) hp.getSailPercent();
+        this.salePercent = (int) hp.getSalePercent();
         this.updatedAt = hp.getUpdatedAt();
         this.isWeekend = hp.isWeekend();
         this.link = "https://www.agoda.com/partners/partnersearch.aspx" +

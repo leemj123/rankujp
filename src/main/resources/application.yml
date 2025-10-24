@@ -19,7 +19,7 @@ spring:
       request-timeout: 30000
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 agoda:
   key: ENC(IaqGs3hpll/ldG01Z/m/WLCX4uCUh9qgPijf4aEMlgbp5GuujOx3pJjqVZduiT1qDGzSv5PGkT4=)
 google:

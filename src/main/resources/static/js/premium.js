@@ -186,7 +186,7 @@ const noneRankCard = (item, rank) => `
             <div class="price-right">
               <div class="price-value">
                 <div style="display:flex; gap:.2rem;">
-                  <p class="discount-percent f-20">${esc(item.bestSailPrecent)}</p>
+                  <p class="discount-percent f-20">${esc(item.bestSalePrecent)}</p>
                   <p class="crossed-out-rate f-20 JPY">${esc(item.bestCrossedOutRate)}</p>
                 </div>
                 <p class="daily-price xl JPY">${esc(item.bestDailyRate)}</p>

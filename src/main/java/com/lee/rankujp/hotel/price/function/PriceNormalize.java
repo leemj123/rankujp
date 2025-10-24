@@ -4,35 +4,72 @@ import com.lee.rankujp.hotel.price.dto.HotelPriceRow;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
 
 import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public final class PriceNormalize {
     private PriceNormalize() {}
 
-    public static HotelPriceRow normalize(LocalDate day, AgodaPriceResponse.HotelApiInfo info) {
-        double daily = safePos(info.getDailyRate());
+    public static List<HotelPriceRow> normalizeHotelPrice(List<Long> ids, AgodaPriceResponse resp, LocalDate date) {
+        final List<AgodaPriceResponse.HotelApiInfo> results =
+                (resp != null && resp.getResults() != null) ? resp.getResults() : Collections.emptyList();
+
+        // 응답에 있는 것들
+        final Map<Long, HotelPriceRow> byId = results.stream()
+                .collect(Collectors.toMap(
+                        AgodaPriceResponse.HotelApiInfo::getHotelId,
+                        r -> PriceNormalize.priceNormalizeBuilder(r, date),
+                        (a, b) -> a, // 중복 키 병합 규칙
+                        LinkedHashMap::new
+                ));
+        // ids에만 있고 응답엔 없는 것들
+        for (Long id : ids) {
+            if (!byId.containsKey(id)) {
+                byId.put(id, new HotelPriceRow(
+                        id,
+                        date,
+                        0.0,
+                        0.0,
+                        0.0
+                ));
+            }
+        }
+
+        return new ArrayList<>(byId.values());
+    }
+
+    private static HotelPriceRow priceNormalizeBuilder(AgodaPriceResponse.HotelApiInfo info, LocalDate date) {
+        double dailyRate = safePos(info.getDailyRate());
         Double corIn = toNullable(info.getCrossedOutRate());
         Double dpIn  = toNullable(info.getDiscountPercentage());
 
-        double cor, dp;
+        double crossedOutRate, salePercent;
         if (corIn != null && corIn > 0) {
-            if (corIn <= daily) { cor = daily; dp = 0.0; }
-            else { cor = corIn; dp = clampPercent(((cor - daily) / cor) * 100.0); }
+            if (corIn <= dailyRate) {crossedOutRate= dailyRate; salePercent = 0.0; }
+            else {crossedOutRate = corIn; salePercent = clampPercent(((crossedOutRate - dailyRate) / crossedOutRate) * 100.0); }
         } else if (dpIn != null) {
             double dpc = clampPercent(dpIn);
-            if (dpc <= 0.0 || dpc >= 100.0) { cor = daily; dp = 0.0; }
+            if (dpc <= 0.0 || dpc >= 100.0) {crossedOutRate= dailyRate; salePercent = 0.0; }
             else {
-                cor = daily / (1.0 - dpc / 100.0);
-                if (!(cor > 0) || cor <= daily || Double.isInfinite(cor) ) {
-                    cor = daily; dp = 0.0;
+               crossedOutRate= dailyRate / (1.0 - dpc / 100.0);
+                if (!(crossedOutRate > 0) ||crossedOutRate<= dailyRate || Double.isInfinite(crossedOutRate) ) {
+                   crossedOutRate= dailyRate; salePercent = 0.0;
                 } else {
-                    dp = clampPercent(((cor - daily) / cor) * 100.0);
+                    salePercent = clampPercent(((crossedOutRate - dailyRate) / crossedOutRate) * 100.0);
                 }
             }
-        } else { cor = daily; dp = 0.0; }
+        } else {crossedOutRate= dailyRate; salePercent = 0.0; }
 
-        cor = round2(cor);
-        dp  = round2(dp);
-        return new HotelPriceRow(day, daily, cor, dp);
+        crossedOutRate = round2(crossedOutRate);
+        salePercent  = round2(salePercent);
+
+        return new HotelPriceRow(
+                info.getHotelId(),
+                date,
+                dailyRate,
+                crossedOutRate,
+                salePercent
+        );
     }
 
     private static Double toNullable(double v) { return Double.isNaN(v) ? null : v; }

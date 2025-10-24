@@ -8,17 +8,19 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class HotelPriceRow {
+    private Long hotelId;
     private LocalDate stayDate;
     private double dailyRate;
     private double crossedOutRate;
-    private double sailPercent;
+    private double salePercent;
     private boolean isWeekend;
 
-    public HotelPriceRow(LocalDate stayDate, double dailyRate, double crossedOutRate, double sailPercent) {
+    public HotelPriceRow(Long hotelId, LocalDate stayDate, double dailyRate, double crossedOutRate, double salePercent) {
+        this.hotelId = hotelId;
         this.stayDate = stayDate;
         this.dailyRate = dailyRate;
         this.crossedOutRate = crossedOutRate;
-        this.sailPercent = sailPercent;
+        this.salePercent = salePercent;
         this.isWeekend = judgeWeekend(stayDate);
     }
     private static boolean judgeWeekend(LocalDate day) {

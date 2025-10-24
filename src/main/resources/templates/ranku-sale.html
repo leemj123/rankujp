@@ -146,7 +146,7 @@
                     <div>
                         <h2 class="ml top-item-title" th:text="${p.koName}"></h2>
                       <div style="display: flex; gap: .8rem;">
-                        <p class="discount-percent top ml" th:text="${p.bestSailPrecent}"></p>
+                        <p class="discount-percent top ml" th:text="${p.bestSalePrecent}"></p>
                         <p class="daily-price ml JPY" th:text="${p.bestDailyRate}"></p>
                       </div>
                     </div>
@@ -214,7 +214,7 @@
                           <div class="price-right">
                             <div class="price-value">
                               <div style="display: flex; gap: .2rem;">
-                                <p class="discount-percent f-20" th:text="${p.bestSailPrecent}"></p>
+                                <p class="discount-percent f-20" th:text="${p.bestSalePrecent}"></p>
                                 <p class="crossed-out-rate f-20 JPY" th:text="${p.bestCrossedOutRate}"></p>
                               </div>
                               <p class="daily-price xl JPY" th:text="${p.bestDailyRate}"></p>

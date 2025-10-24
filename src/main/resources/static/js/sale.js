@@ -95,7 +95,7 @@ const topCard = (item, rank) => {
           <div>
             <h2 class="ml top-item-title">${esc(item.koName)}</h2>
             <div style="display:flex; gap:.8rem;">
-              <p class="discount-percent top ml">${esc(item.bestSailPrecent)}</p>
+              <p class="discount-percent top ml">${esc(item.bestSalePrecent)}</p>
               <p class="daily-price ml JPY">${fmt.format(item.bestDailyRate)}</p>
             </div>
           </div>
@@ -147,7 +147,7 @@ const normalCard = (item, rank) => {
                 <div class="price-right">
                   <div class="price-value">
                     <div style="display:flex;gap:.2rem;">
-                      <p class="discount-percent f-20">${esc(item.bestSailPrecent)}</p>
+                      <p class="discount-percent f-20">${esc(item.bestSalePrecent)}</p>
                       <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
                     </div>
                     <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
@@ -187,7 +187,7 @@ const noneRankCard = (item, rank) => {
                 <div class="price-right">
                   <div class="price-value">
                     <div style="display:flex;gap:.2rem;">
-                      <p class="discount-percent f-20">${esc(item.bestSailPrecent)}</p>
+                      <p class="discount-percent f-20">${esc(item.bestSalePrecent)}</p>
                       <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
                     </div>
                     <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
