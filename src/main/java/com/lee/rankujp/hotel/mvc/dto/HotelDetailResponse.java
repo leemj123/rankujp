@@ -45,7 +45,7 @@ public class HotelDetailResponse {
     private LocalDate bestStayDate;
     private int bestCrossedOutRate;
     private int bestDailyRate;
-    private int bestSailPrecent;
+    private int bestSalePrecent;
 
     private String bestLink;
 

@@ -239,7 +239,7 @@
                 <p class="f-15" style="color: #585858;">1박당 요금</p>
               </div>
               <div style="display: flex; gap: .8rem;">
-                <p id="daily-percent" class="discount-percent xl" th:text="${content.bestSailPrecent}"></p>
+                <p id="daily-percent" class="discount-percent xl" th:text="${content.bestSalePrecent}"></p>
                 <p id="daily-price" class="daily-price xl JPY" th:text="${content.bestDailyRate}"></p>
               </div>
             </div>
@@ -304,7 +304,7 @@
                                               <div class="price-value">
                                                   <div style="display: flex; gap: .2rem;">
                                                       <p class="discount-percent f-12"
-                                                         th:text="${price.sailPercent}"></p>
+                                                         th:text="${price.salePercent}"></p>
                                                       <p class="crossed-out-rate f-12 JPY"
                                                          th:text="${price.crossedOutRate}"></p>
                                                   </div>
@@ -356,7 +356,7 @@
                                               <div class="price-value">
                                                   <div style="display: flex; gap: .2rem;">
                                                       <p class="discount-percent f-12"
-                                                         th:text="${price.sailPercent}"></p>
+                                                         th:text="${price.salePercent}"></p>
                                                       <p class="crossed-out-rate f-12 JPY"
                                                          th:text="${price.crossedOutRate}"></p>
                                                   </div>

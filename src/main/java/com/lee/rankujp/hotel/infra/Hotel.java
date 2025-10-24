@@ -1,7 +1,6 @@
 package com.lee.rankujp.hotel.infra;
 
 import com.lee.rankujp.hotel.cumtom.PointLocation;
-import com.lee.rankujp.hotel.price.dto.ImgStarResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -48,14 +47,14 @@ public class Hotel {
     private String photo4;
     private String photo5;
 
-    //price
-    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE)
-    private List<HotelPrice> priceList;
+//    //price
+//    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE)
+//    private List<HotelPrice> priceList;
 
     private LocalDate bestStayDate;
     private double bestCrossedOutRate;
     private double bestDailyRate;
-    private double bestSailPrecent;
+    private double bestSalePrecent;
 
     //review
     @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -86,13 +85,6 @@ public class Hotel {
     public void rankuScoreUpdater (int r) {
         this.updateDateTime = LocalDateTime.now();
         this.rankuScore = r;
-    }
-
-    public void beatScoreUpdate(LocalDate bsd, double bco, double bdr, double bsp) {
-        this.bestStayDate = bsd;
-        this.bestCrossedOutRate = bco;
-        this.bestDailyRate = bdr;
-        this.bestSailPrecent = bsp;
     }
 
     public void faUp() {
