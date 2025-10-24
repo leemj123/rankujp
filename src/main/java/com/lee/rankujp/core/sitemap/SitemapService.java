@@ -144,7 +144,28 @@ public String makeSiteMap() {
             <loc>https://rankujp.com/premium?page=5</loc>
             <lastmod>%s</lastmod>
         </url>
+        <url>
+            <loc>https://rankujp.com/restaurant</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
     """,
+            today, today, today, today, today,
             today, today, today, today, today,
             today, today, today, today, today,
             today, today, today, today, today
