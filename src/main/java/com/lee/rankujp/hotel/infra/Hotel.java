@@ -47,9 +47,6 @@ public class Hotel {
     private String photo4;
     private String photo5;
 
-//    //price
-//    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE)
-//    private List<HotelPrice> priceList;
 
     private LocalDate bestStayDate;
     private double bestCrossedOutRate;
