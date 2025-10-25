@@ -1,6 +1,5 @@
 package com.lee.rankujp.core;
 
-import com.lee.rankujp.hotel.mvc.service.HotelService;
 import com.lee.rankujp.hotel.price.HotelPriceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
