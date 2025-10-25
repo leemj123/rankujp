@@ -28,13 +28,13 @@ public class HotelDataSyncScheduler {
             return;
         }
         try {
-            log.info("롤링 파티셔닝 시작: {}",LocalDateTime.now());
+            log.info("롤링 파티셔닝 시작: {}",LocalDateTime.now().plusHours(1));
 
             String sql = "CALL maintain_hotel_price_partitions(?, ?, DATE(?))";
             jdbcTemplate.update(sql, "ranku", "hotel_price", java.time.LocalDate.now().plusDays(1));
 
             log.info("[PartitionMaintenance] hotel_price 파티션 유지 작업 완료: {}", java.time.LocalDate.now().plusDays(1));
-            log.info("롤링 파티셔닝 완료: {}",LocalDateTime.now());
+            log.info("롤링 파티셔닝 완료: {}",LocalDateTime.now().plusHours(1));
         } catch (Exception e) {
             log.error("파티션 작업 오류: {}", e.getMessage());
         } finally {
