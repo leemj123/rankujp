@@ -750,6 +750,9 @@ footer .foot-container {
         align-items: center;
         gap: 0;
     }
+    .header-banner {
+        margin-top: 9.5rem
+    }
 
     footer {
         height: 18.2rem;
