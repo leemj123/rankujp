@@ -40,7 +40,7 @@ public class HotelService {
 
     //list==================================
 
-    public Page<PremiumResponse> salePage(int location, int sort, int page) {
+    public Page<PremiumResponse> salePage(int location, int sort, int page, LocalDate searchDate, boolean price) {
         Pageable pageable = PageRequest.of(page-1, 20);
         //
         BooleanExpression predicate = this.filterQueryExpression(location);
