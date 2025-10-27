@@ -113,6 +113,7 @@ public class HotelService {
                     jpaQueryFactory
                             .select(qHotelPrice.id.count())
                             .from(qHotelPrice)
+                            .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
                             .where(predicate)
                             .fetchOne()
             ).orElse(0L);
@@ -197,6 +198,7 @@ public class HotelService {
                             ))
                     .from(qHotelPrice)
                     .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                    .join(qHotel.hotelCity, qHotelCity)
                     .where(predicate)
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
@@ -207,6 +209,8 @@ public class HotelService {
                     jpaQueryFactory
                             .select(qHotelPrice.id.count())
                             .from(qHotelPrice)
+                            .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                            .join(qHotel.hotelCity, qHotelCity)
                             .where(predicate)
                             .fetchOne()
             ).orElse(0L);

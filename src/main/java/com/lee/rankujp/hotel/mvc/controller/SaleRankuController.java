@@ -15,10 +15,10 @@ public class SaleRankuController {
 
     @GetMapping("/")
     public String sale(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
-        model.addAttribute("title", "일본 호텔 할인 랭킹｜호텔 가격・평점 비교로 저렴하게 호텔 찾는 법과 일본 호텔 예약 사이트 추천");
+        model.addAttribute("title", "랑쿠재팬 | 일본 호텔 할인 랭킹 | 호텔 가격・평점 비교로 저렴하게 호텔 찾는 법");
         model.addAttribute("thumbnail", "/public/logo");
-        model.addAttribute("description", "일본 저렴한 호텔 추천 & 가격 비교｜예약 사이트 랭킹과 할인 정보 총정리 | 일본 호텔을 가장 합리적으로 예약하려면 언제가 가장 저렴할까? 인기 예약 사이트의 가격・평점・할인 정보까지 한눈에 비교하고, 최저가 예약 꿀팁까지 확인해보세요");
-        model.addAttribute("keywords","일본호텔 순위, 호텔 가격 비교, 호텔 할인, 예약사이트, 호텔 예약 꿀팁, 일본호텔추천, 일본호텔순위, 일본호텔랭킹, 일본호텔정보, 일본호텔예약,일본호텔비교");
+        model.addAttribute("description", "일본 저렴한 호텔 추천 & 가격 비교 | 랑쿠재팬이 준비한 할인 정보 총정리 | 일본 호텔을 가장 합리적으로 예약하려면 언제가 가장 저렴할까? 인기 예약 사이트의 가격・평점・할인 정보까지 한눈에 비교");
+        model.addAttribute("keywords","일본호텔 순위, 호텔 가격 비교, 호텔 할인, 랑쿠재팬, 예약사이트, 호텔 예약 꿀팁, 일본호텔추천, 일본호텔순위, 일본호텔랭킹, 일본호텔정보, 일본호텔예약, 일본호텔비교");
         model.addAttribute("salePage", hotelService.salePage(location, type, page, null, false));
 
         if (page == 1)
