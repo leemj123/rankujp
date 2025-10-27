@@ -184,7 +184,7 @@
         </section>
 
         <div style="display: flex; justify-content: space-between; border-bottom: solid 1px #D9D9D9; padding-bottom: .5rem;">
-            <p class="f-15" style="color: #585858;">할인율 보단 순수 가격이 궁금하신가요?</p>
+            <p class="f-15" style="color: #585858;">가장 저렴한 랭킹이 궁금하신가요?</p>
             <div id="order-price" class="order-price f-15" style="color: #585858;" onclick="orderPrice()">가격순 <span></span></div>
         </div>
 
@@ -374,10 +374,10 @@
         // 화면에 보이는 표시용 입력창 생성 + 포맷
         altInput: true,
         altFormat: "Y년 m월 d일",
-        minDate: new Date(),   // 2025년 1월 1일부터 선택 가능
-        maxDate: new Date().fp_incr(45),
+        minDate: new Date(),
+        maxDate: new Date().fp_incr(44),
 
-        // 초기값(Thymeleaf가 yyyy-MM-dd로 넣어준 값 사용)
+        // 초기값(Thymeleaf가 yyyy-MM-dd로 넣어준 값 사용
         defaultDate: undefined,
 
         // 달력 아이콘 없이 입력창 클릭 시 달력 열기
