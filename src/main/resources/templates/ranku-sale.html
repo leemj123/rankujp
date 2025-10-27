@@ -140,7 +140,7 @@
                 <div class="search-label-wrapper" style="gap: 1rem;">
                     <label id="search-label" for="search-value">
                         <input id="search-value"
-                               type="date"
+                               type="text"
                                required
                                autocomplete="off"
                                class="f-14 search-value"
@@ -379,6 +379,7 @@
 
         // 초기값(Thymeleaf가 yyyy-MM-dd로 넣어준 값 사용
         defaultDate: undefined,
+        disableMobile: true,
 
         // 달력 아이콘 없이 입력창 클릭 시 달력 열기
         clickOpens: true,

@@ -138,7 +138,7 @@
                 <div class="search-label-wrapper" style="gap: 1rem;">
                     <label id="search-label" for="search-value">
                         <input id="search-value"
-                               type="date"
+                               type="text"
                                required
                                autocomplete="off"
                                class="f-14 search-value"
@@ -382,7 +382,7 @@
         maxDate: new Date().fp_incr(44),
 
         defaultDate: undefined,
-
+        disableMobile: true,
         clickOpens: true,
         onReady(selectedDates, dateStr, instance) {
             // placeholder 예시

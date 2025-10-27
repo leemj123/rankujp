@@ -70,14 +70,19 @@ public class HotelService {
             predicate = qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0));
             predicate = this.filterQueryExpression(predicate, location);
 
-            if (order != null) {
-                orders.add(order);
-                predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotelPrice.salePercent.ne(0.0)));
-            }
             if (price) {
                 orders.add(qHotelPrice.dailyRate.asc());
                 orders.add(qHotelPrice.salePercent.desc());
+                if (order != null) {
+                    orders.add(order);
+                    predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotelPrice.salePercent.ne(0.0)));
+                }
+
             } else {
+                if (order != null) {
+                    orders.add(order);
+                    predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotelPrice.salePercent.ne(0.0)));
+                }
                 orders.add(qHotelPrice.salePercent.desc());
                 orders.add(qHotel.rankuScore.desc());
             }
@@ -479,7 +484,9 @@ public class HotelService {
 
         List<HotelPrice> priceList = jpaQueryFactory
                 .selectFrom(qHotelPrice)
-                .where(qHotelPrice.id.hotelId.eq(hotel.getId()))
+                .where(qHotelPrice.id.hotelId.eq(hotel.getId()).and(
+                        qHotelPrice.dailyRate.ne(0.0)
+                ))
                 .fetch();
 
         return priceList.stream()
