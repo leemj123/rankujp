@@ -30,7 +30,7 @@
 //            log.info("롤링 파티셔닝 시작: {}",LocalDateTime.now().plusDays(1));
 //
 //            String sql = "CALL maintain_hotel_price_partitions(?, ?, DATE(?))";
-//            jdbcTemplate.update(sql, "ranku", "hotel_price", java.time.LocalDate.now());
+//            jdbcTemplate.update(sql, "ranku", "hotel_price", java.time.LocalDate.now().plusDays(1));
 //
 //            log.info("[PartitionMaintenance] hotel_price 파티션 유지 작업 완료: {}", java.time.LocalDate.now().plusDays(1));
 //            log.info("롤링 파티셔닝 완료: {}",LocalDateTime.now().plusDays(1));

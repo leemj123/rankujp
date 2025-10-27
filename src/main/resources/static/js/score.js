@@ -5,6 +5,19 @@ const normalSection = document.getElementById('normal-item-section');
 let page = 2;
 let paramLocation = 1;
 let paramType = 1;
+let searchDate;
+
+// --- 공통 유틸: YYYY-MM-DD 포맷터 (로컬 타임존 기준, 제로패딩) ---
+function toYMD(date) {
+    if (date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    } else {
+        return '';
+    }
+}
 
 wrapper.addEventListener('click', (e) => {
     const btn = e.target.closest('button.chip');
@@ -28,24 +41,10 @@ wrapper.addEventListener('click', (e) => {
 
     const [firstValue, secondValue] = Array.from(onButtons).map(b => b.dataset.value);
 
-
-    const url = new URL('/rest/score', location.origin);
-    url.searchParams.set('location', firstValue);
-    url.searchParams.set('type', secondValue);
-
-    page = 2;
     paramLocation = firstValue;
     paramType = secondValue;
-    fetch(url, { headers: { 'Accept': 'application/json' } })
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-            renderRanking(data);
 
-        })
-        .catch(console.error);
+    initRender();
 
 });
 // ------------------------------------------------------------------
@@ -97,7 +96,6 @@ const rankuScoreClass = (rank) => {
 };
 
 
-// TOP 3 카드
 const topCard = (item, rank) => {
     return `
       <a href="/hotel/${item.id}?top=${rank}" class="top-item top-${rank}">
@@ -132,8 +130,6 @@ const topCard = (item, rank) => {
       </a>
     `.trim();
 };
-
-// 일반 랭킹 카드 (4위~)
 const normalCard = (item, rank) => {
     return `
       <li>
@@ -174,7 +170,6 @@ const normalCard = (item, rank) => {
       </li>
     `.trim();
 };
-
 const noneRankCard = (item, rank) => {
     return `
       <li>
@@ -212,7 +207,7 @@ const noneRankCard = (item, rank) => {
       </li>
     `.trim();
 };
-// 렌더 함수: content 배열을 받아 두 섹션에 배치
+
 function renderRanking(data){
     const top3 = data.content.slice(0, 3);
     const rest = data.content.slice(3);
@@ -261,12 +256,34 @@ window.addEventListener('scroll', () => {
     });
 }, { passive: true });
 
-function renderInfinityPageNation() {
-
+function initRender() {
+    page = 1;
     const url = new URL('/rest/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
     url.searchParams.set('type', paramType);
+    url.searchParams.set('searchDate',toYMD(searchDate))
+
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            renderRanking(data);
+        })
+        .catch(console.error);
+
+}
+
+
+function renderInfinityPageNation() {
+    page = page + 1;
+    const url = new URL('/rest/score', location.origin);
+    url.searchParams.set('page', page);
+    url.searchParams.set('location', paramLocation);
+    url.searchParams.set('type', paramType);
+    url.searchParams.set('searchDate',toYMD(searchDate))
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
@@ -275,7 +292,6 @@ function renderInfinityPageNation() {
         })
         .then(data => {
             renderNormal(data.content);
-            page++;
         })
         .catch(console.error);
 
@@ -301,4 +317,18 @@ function renderNormal(data) {
 
 
     normalSection.appendChild(normalFrag);
+}
+
+function resetSearchDate() {
+    if (el && el._flatpickr) {
+        el._flatpickr.clear(); // 값 전체 초기화
+        // placeholder 복구(altInput이 표시되는 입력창)
+        el._flatpickr.altInput.placeholder = "체크인 날짜 선택";
+    } else {
+        // flatpickr 미초기화 대비
+        el.value = "";
+    }
+    // 앱 상태도 초기화
+    searchDate = '';
+    if (typeof initRender === 'function') initRender();
 }
