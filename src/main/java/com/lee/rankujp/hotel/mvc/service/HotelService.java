@@ -8,6 +8,7 @@ import com.lee.rankujp.hotel.price.HotelPriceService;
 import com.lee.rankujp.hotel.price.dto.AgodaPriceResponse;
 import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -40,49 +41,139 @@ public class HotelService {
 
     //list==================================
 
-    public Page<PremiumResponse> salePage(int location, int sort, int page) {
+    public Page<HotelWithPrice> salePage(int location, int sort, int page, LocalDate searchDate, boolean price) {
         Pageable pageable = PageRequest.of(page-1, 20);
         //
-        BooleanExpression predicate = this.filterQueryExpression(location);
+        BooleanExpression predicate;
 
         //정렬 null들어가면 에러나서 커버
         List<OrderSpecifier<?>> orders = new ArrayList<>();
-
-
         OrderSpecifier<?> order = this.orderType(sort);
-        if (order != null) {
-            orders.add(order);
-            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
+
+
+        if (searchDate == null) {
+            predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
+            predicate = this.filterQueryExpression(predicate, location);
+
+            if (order != null) {
+                orders.add(order);
+                predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
+            }
+            if (price) {
+                orders.add(qHotel.bestDailyRate.asc());
+                orders.add(qHotel.bestSalePrecent.desc());
+            } else {
+                orders.add(qHotel.bestSalePrecent.desc());
+                orders.add(qHotel.rankuScore.desc());
+            }
+        } else {
+            predicate = qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0));
+            predicate = this.filterQueryExpression(predicate, location);
+
+            if (order != null) {
+                orders.add(order);
+                predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotelPrice.salePercent.ne(0.0)));
+            }
+            if (price) {
+                orders.add(qHotelPrice.dailyRate.asc());
+                orders.add(qHotelPrice.salePercent.desc());
+            } else {
+                orders.add(qHotelPrice.salePercent.desc());
+                orders.add(qHotel.rankuScore.desc());
+            }
         }
-        orders.add(qHotel.bestSalePrecent.desc());
-        orders.add(qHotel.rankuScore.desc());
 
-        List<Hotel> results = jpaQueryFactory
-                .selectFrom(qHotel)
-                .where(predicate)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(orders.toArray(new OrderSpecifier[0]))
-                .fetch();
 
-        long total = Optional.ofNullable(
-                jpaQueryFactory
-                        .select(qHotel.id.count())
-                        .from(qHotel)
-                        .where(predicate)
-                        .fetchOne()
-        ).orElse(0L);
+        if (searchDate != null) {
 
-        return new PageImpl<>(results.stream().map(PremiumResponse::new).toList(), pageable, total);
+            List<HotelWithPrice> results = jpaQueryFactory
+                    .select(
+                        Projections.constructor(HotelWithPrice.class,
+                                qHotel.id,
+                                qHotel.thumbnailImg,
+                                qHotel.koName,
+                                qHotel.starRating,
+                                qHotelPrice.crossedOutRate,
+                                qHotelPrice.dailyRate,
+                                qHotelPrice.salePercent,
+                                qHotel.averageBusinessScore,
+                                qHotel.averageCoupleScore,
+                                qHotel.averageSoloScore,
+                                qHotel.averageFamilyScore
+                    ))
+                    .from(qHotelPrice)
+                    .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
+
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotelPrice.id.count())
+                            .from(qHotelPrice)
+                            .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+        else {
+            List<HotelWithPrice> results = jpaQueryFactory
+                    .select(
+                            Projections.constructor(HotelWithPrice.class,
+                                    qHotel.id,
+                                    qHotel.thumbnailImg,
+                                    qHotel.koName,
+                                    qHotel.starRating,
+                                    qHotel.bestCrossedOutRate,
+                                    qHotel.bestDailyRate,
+                                    qHotel.bestSalePrecent,
+                                    qHotel.averageBusinessScore,
+                                    qHotel.averageCoupleScore,
+                                    qHotel.averageSoloScore,
+                                    qHotel.averageFamilyScore
+                            ))
+                    .from(qHotel)
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
+
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotel.id.count())
+                            .from(qHotel)
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+
+
     }
 
-    public Page<ScoreResponse> scorePage(int location, int sort, int page) {
+    public Page<HotelWithScore> scorePage(int location, int sort, int page, LocalDate searchDate) {
         Pageable pageable = PageRequest.of(page-1, 20);
+        //
+        BooleanExpression predicate;
 
-        BooleanExpression predicate = this.filterQueryExpression(location);
+        if (searchDate == null) {
+            predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
+            predicate = this.filterQueryExpression(predicate, location);
+        } else {
+            predicate = qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0));
+            predicate = this.filterQueryExpression(predicate, location);
+        }
+
+        //정렬 null들어가면 에러나서 커버
         List<OrderSpecifier<?>> orders = new ArrayList<>();
-
         OrderSpecifier<?> order = this.orderType(sort);
+
         if (order != null) {
             orders.add(order);
             predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
@@ -90,23 +181,74 @@ public class HotelService {
         orders.add(qHotel.rankuScore.desc());
         orders.add(qHotel.starRating.desc());
 
-        List<Hotel> results = jpaQueryFactory
-                .selectFrom(qHotel)
-                .where(predicate)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(orders.toArray(new OrderSpecifier[0]))
-                .fetch();
+        if (searchDate != null) {
 
-        long total = Optional.ofNullable(
-                jpaQueryFactory
-                        .select(qHotel.id.count())
-                        .from(qHotel)
-                        .where(predicate)
-                        .fetchOne()
-        ).orElse(0L);
+            List<HotelWithScore> results = jpaQueryFactory
+                    .select(
+                            Projections.constructor(HotelWithScore.class,
+                                    qHotel.id,
+                                    qHotel.thumbnailImg,
+                                    qHotel.koName,
+                                    qHotel.starRating,
+                                    qHotel.rankuScore,
+                                    qHotel.averageBusinessScore,
+                                    qHotel.averageCoupleScore,
+                                    qHotel.averageSoloScore,
+                                    qHotel.averageFamilyScore
+                            ))
+                    .from(qHotelPrice)
+                    .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                    .join(qHotel.hotelCity, qHotelCity)
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
 
-        return new PageImpl<>(results.stream().map(ScoreResponse::new).toList(), pageable, total);
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotelPrice.id.count())
+                            .from(qHotelPrice)
+                            .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                            .join(qHotel.hotelCity, qHotelCity)
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+        else {
+            List<HotelWithScore> results = jpaQueryFactory
+                    .select(
+                            Projections.constructor(HotelWithScore.class,
+                                    qHotel.id,
+                                    qHotel.thumbnailImg,
+                                    qHotel.koName,
+                                    qHotel.starRating,
+                                    qHotel.rankuScore,
+                                    qHotel.averageBusinessScore,
+                                    qHotel.averageCoupleScore,
+                                    qHotel.averageSoloScore,
+                                    qHotel.averageFamilyScore
+                            ))
+                    .from(qHotel)
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
+
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotel.id.count())
+                            .from(qHotel)
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+
     }
 
     public Page<PremiumResponse> premiumPage(int location, int sort, int page) {
@@ -157,12 +299,11 @@ public class HotelService {
     }
 
 
-    private BooleanExpression filterQueryExpression(int location) {
-        BooleanExpression predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
+    private BooleanExpression filterQueryExpression(BooleanExpression predicate, int location) {
 
-        if (location == 1) {return predicate;}
-
-        if (location < 7) {
+        if (location == 1) {
+            return predicate;
+        } else if (location < 7) {
             switch (location) {
                 case 2: {
                     predicate = predicate.and(qHotel.pointLocation.eq(PointLocation.NAMBA)); break;
