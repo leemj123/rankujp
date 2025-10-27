@@ -153,6 +153,7 @@
     display: none;
 }
 #search-value::-webkit-calendar-picker-indicator {
+    display: none;
     position: absolute;
     left: 0;
     right: 0;
