@@ -376,16 +376,13 @@
     flatpickr(el, {
         locale: flatpickr.l10ns.ko,
         dateFormat: "Y-m-d",
-        // 화면에 보이는 표시용 입력창 생성 + 포맷
         altInput: true,
         altFormat: "Y년 m월 d일",
-        minDate: new Date(),   // 2025년 1월 1일부터 선택 가능
-        maxDate: new Date().fp_incr(45),
+        minDate: new Date(),
+        maxDate: new Date().fp_incr(44),
 
-        // 초기값(Thymeleaf가 yyyy-MM-dd로 넣어준 값 사용)
         defaultDate: undefined,
 
-        // 달력 아이콘 없이 입력창 클릭 시 달력 열기
         clickOpens: true,
         onReady(selectedDates, dateStr, instance) {
             // placeholder 예시
