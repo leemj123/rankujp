@@ -13,8 +13,12 @@ public class BigController {
 
     private final BigService bigService;
 
-    @PostMapping("/big/ja")
-    public List<JaNameDto> test(@RequestBody List<Long> ids) {
-        return bigService.hello(ids);
+//    @PostMapping("/big/ja")
+//    public List<JaNameDto> test(@RequestBody List<Long> ids) {
+//        return bigService.hello(ids);
+//    }
+    @PostMapping("/yujee")
+    public void citySeparate() {
+        bigService.citySeparate();
     }
 }
