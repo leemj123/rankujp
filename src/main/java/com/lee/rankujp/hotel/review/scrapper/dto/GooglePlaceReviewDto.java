@@ -1,4 +1,4 @@
-package com.lee.rankujp.hotel.review.scrapper;
+package com.lee.rankujp.hotel.review.scrapper.dto;
 
 import lombok.Getter;
 import lombok.Setter;

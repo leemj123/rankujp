@@ -145,7 +145,11 @@
       </section>
 
       <section>
-        <section class="item-head" style="margin-bottom: 6rem;">
+          <div class="today-traffic" id="today-traffic">
+<!--              <div class="detail-thunder-svg"></div>-->
+<!--              <p style="color: #fff; white-space: nowrap;" class="f-15 f-b">오늘 이 호텔을 <span class="f-17 f-b" style="color: #ffd700;">20</span>명이 예약했어요</p>-->
+          </div>
+        <section class="item-head" style="margin-bottom: 2rem;">
           <div id="nav-prev-warpper">
             <ol>
                 <li><a class="f-14 nav-prev" th:href="${navBack}" th:text="${navValue}"></a></li>
@@ -249,6 +253,18 @@
               </div>
           </div>
         </section>
+          <a th:href="${content.bestLink}" target="_blank" style="height: 7.6rem; display: flex; justify-content: flex-end; margin-bottom: 2rem;">
+              <div style="width: 24.4rem; height: 100%; display: flex; align-items: flex-end;">
+                  <div class="update-timer shaking" id="update-timer">
+                      <p class="f-15 f-b " style="color: #FFD700;">가격종료까지
+                          <span class="update-timer-fire-svg"></span>
+                          <span class="sand-timer f-15 f-b" style="color: #fff;">00:00:10</span></p>
+                  </div>
+                  <div style="width: 100%; height: 5rem; background-color: #ff6b00; border-radius: 10px; text-align: center;">
+                      <p class="f-17 f-b" style="color: #fff;">이 가격 절대 놓치지 마세요</p>
+                  </div>
+              </div>
+          </a>
         <a th:href="${content.bestLink}" class="banner-row">
           <div></div>
         </a>
@@ -680,14 +696,40 @@
       </section>
   </main>
 
-  <section class="bottom-fix-section">
+<section class="bottom-fix-section">
     <div class="go-agoda-warpper">
-      <div class="go-agoda">
-        <p class="f-15 f-b"><span class="f-15 f-b" style="color: #EB0C00">마지막일 수 있는 방</span>, 확인해보세요!</p>
-        <a th:href="${content.bestLink}" target="_blank"><button class="btn-st f-15 f-b shine-btn">보러가기</button></a>
-      </div>
+        <div class="go-agoda">
+            <div>
+                <p class="f-15 f-b" style="display: flex; align-items: center;">
+                    <span class="detail-thunder-svg" style=" margin-right: 3px;"></span>
+                    <span id="go-agoda-discount" class="discount-percent f-15 f-b"
+                          style="color: #FF6B00;"
+                          th:text="${content.bestSalePrecent}">35%</span>&nbsp;할인 자동적용!
+                </p>
+                <p class="f-15 f-b" style="display: none; align-items: center;" id="bottom-engagement">
+                    <span class="detail-thunder-svg" style=" margin-right: 3px;"></span>
+                    오늘&nbsp;
+                    <span class="f-15 f-b" style="color: #FF6B00;" >00명</span>이 예약완료!
+                </p>
+                <p class="f-15 f-b" style="display: flex; align-items: center;">
+                    <span class="detail-thunder-svg" style=" margin-right: 3px;"></span>
+                    <span class="f-15 f-b" style="color: #FF6B00;">할인가</span>로 바로 예약가능!
+                </p>
+            </div>
+
+            <a th:href="${content.bestLink}" target="_blank">
+                <button class="btn-st shine-btn shining" id="shine-btn">
+                    <span class="shine-btn-front f-17 f-b">할인 자동 적용 페이지로</span>
+                    <span class="shine-btn-back">
+                        <span class="f-17 f-b" style="color: #ffd700;">가격종료까지</span>
+                        <span class="update-timer-fire-svg"></span>
+                        <span class="sand-timer f-17 f-b" style="color: #fff;">00:00:10</span>
+                    </span>
+                </button>
+            </a>
+        </div>
     </div>
-  </section>
+</section>
 
   <footer>
       <div class="foot-container">
@@ -743,4 +785,5 @@
 <script src="/js/main.js"></script>
 <script src="/js/hotel-detail.js"></script>
 <script src="/js/place.js"></script>
+<script src="/js/detail-move.js"></script>
 </html>

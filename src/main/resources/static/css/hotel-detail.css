@@ -488,7 +488,6 @@ main {
     cursor: pointer;
 }
 
-
 .calendar-head div {
     display: flex;
     align-items: center;
@@ -949,4 +948,162 @@ main {
     font-weight: bold;
     color: #000000;
     border-bottom: 2px solid #000000;
+}
+/* $$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+.today-traffic {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 24.6rem;
+    height: 3.6rem;
+    background-color: #e53935;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+    gap: .4rem;
+    border-radius: 10px;
+}
+.update-timer {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 18.8rem;
+    height: 3.4rem;
+    border-radius: 30px;
+    background-color: #111111;
+    text-align: center;
+
+}
+.update-timer.shaking {
+    animation: tilt-shaking 1s forwards;
+}
+.update-timer-fire-svg {
+    content: url('/public/detail/update-timer-fire.svg');
+    min-width: 12px;
+    min-height: 16px;
+}
+.shine-btn {
+    position: relative;
+    width: 30rem;
+    height: 5rem;
+    background: #FF6B00;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+.shine-btn span {
+    color: #fff;
+}
+.shine-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 100%;
+    /* 폭 확 줄이기 */
+    height: 100%;
+    background: linear-gradient(120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+        /* 조금 더 투명하게 */
+    transparent 100%);
+    transform: skewX(-50deg);
+    opacity: 0;
+    pointer-events: none;
+}
+.shine-btn-back {
+    display: none;
+}
+.bottom-fix-section {
+    position: sticky;
+    width: 100vw;
+    bottom: 0;
+    height: 8rem;
+    display: flex;
+    background-color: #ffffff;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+}
+
+.bottom-fix-section .go-agoda-warpper {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.go-agoda {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 850px;
+}
+
+/* hover 시 이동 */
+.shine-btn:hover {
+    background: #111111;
+    .shine-btn-back {
+        display: block;
+    }
+    .shine-btn-front {
+        display: none;
+    }
+}
+
+.shine-btn.shining::after {
+    animation: shine 1s ease forwards;
+}
+
+.detail-thunder-svg {
+    content: url('/public/detail/detail-thunder.svg');
+    min-width: 13px;
+    min-height: 1.9rem;
+    display: flex;
+    align-items: center;
+}
+
+@keyframes tilt-shaking {
+    0%   { transform: translateX(-50%) rotate(0deg); }
+    25%  { transform: translateX(-50%) rotate(2deg); }
+    50%  { transform: translateX(-50%) rotate(0deg); }
+}
+@keyframes shine {
+    0% {
+        left: -40%;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 140%;
+        opacity: 0;
+    }
+}
+@media (max-width: 600px) {
+    .go-agoda div{
+        display: none;
+    }
+    .go-agoda a {
+        flex: 1;
+    }
+    .shine-btn {
+        width: 100%;
+    }
+}
+#go-agoda-discount::before {
+    content: unset !important;
 }
