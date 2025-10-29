@@ -198,7 +198,6 @@ public class HotelReviewService {
                 }
                 case "Families with young children": case "Families with teens" : {
                     if (v4 != 0) {
-                        v4 += d.getScore();
                         double temp = (v4 + d.getScore()) / 2;
                         v4 = Math.floor(temp * 10) / 10.0;
                     } else {

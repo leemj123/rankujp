@@ -33,58 +33,58 @@ public class BigService {
     private final JalanService jalanService;
 
 
-    @Transactional
-    public void citySeparate() {
-        List<AgodaCity> entityList = jpaQueryFactory
-                .selectFrom(qAgodaCity)
-                .fetch();
-
-        for (AgodaCity e : entityList) {
-            Long count = jpaQueryFactory
-                    .select(qAgodaKo.hotel_id.count())
-                    .from(qAgodaKo)
-                    .where(qAgodaKo.city_id.eq(e.getCityId()))
-                    .fetchOne();
-
-            e.setCount(count != null ? count : 0L);
-
-        }
-    }
-
-    public void firstQueue() {
-        List<HotelCity> cityList = jpaQueryFactory
-                .selectFrom(qHotelCity)
-                .where( qHotelCity.id.in(
-                        144,
-                        193,
-                        1568,
-                        6263,
-                        8563,
-                        13561,
-                        16527,
-                        106058,
-                        106491,
-                        107729,
-                        107890,
-                        108162,
-                        108182,
-                        255582
-                ))
-                .fetch();
-        List<Hotel> hotelList = new ArrayList<>();
-
-        for (HotelCity e : cityList) {
-
-            List<AgodaKo> eList = jpaQueryFactory
-                    .selectFrom(qAgodaKo)
-                    .where(qAgodaKo.city_id.eq(e.getId()))
-                    .fetch();
-
-            hotelList.addAll(eList.stream().map(p -> new Hotel(p, e)).toList());
-        }
-
-        hotelRepo.saveAll(hotelList);
-    }
+//    @Transactional
+//    public void citySeparate() {
+//        List<AgodaCity> entityList = jpaQueryFactory
+//                .selectFrom(qAgodaCity)
+//                .fetch();
+//
+//        for (AgodaCity e : entityList) {
+//            Long count = jpaQueryFactory
+//                    .select(qAgodaKo.hotel_id.count())
+//                    .from(qAgodaKo)
+//                    .where(qAgodaKo.city_id.eq(e.getCityId()))
+//                    .fetchOne();
+//
+//            e.setCount(count != null ? count : 0L);
+//
+//        }
+//    }
+//
+//    public void firstQueue() {
+//        List<HotelCity> cityList = jpaQueryFactory
+//                .selectFrom(qHotelCity)
+//                .where( qHotelCity.id.in(
+//                        144,
+//                        193,
+//                        1568,
+//                        6263,
+//                        8563,
+//                        13561,
+//                        16527,
+//                        106058,
+//                        106491,
+//                        107729,
+//                        107890,
+//                        108162,
+//                        108182,
+//                        255582
+//                ))
+//                .fetch();
+//        List<Hotel> hotelList = new ArrayList<>();
+//
+//        for (HotelCity e : cityList) {
+//
+//            List<AgodaKo> eList = jpaQueryFactory
+//                    .selectFrom(qAgodaKo)
+//                    .where(qAgodaKo.city_id.eq(e.getId()))
+//                    .fetch();
+//
+//            hotelList.addAll(eList.stream().map(p -> new Hotel(p, e)).toList());
+//        }
+//
+//        hotelRepo.saveAll(hotelList);
+//    }
 
     public Mono<Void> secondQueue() {
         //아고다
@@ -97,7 +97,7 @@ public class BigService {
         run.subscribe();
 
         tripService.startReviewScrap();
-        jalanService.startReviewScrap();
+//        jalanService.startReviewScrap();
 
         return Mono.just("fin").then();
     }
