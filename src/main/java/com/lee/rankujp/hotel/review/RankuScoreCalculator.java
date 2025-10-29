@@ -36,7 +36,7 @@ public final class RankuScoreCalculator {
         double avg10 = safe(h.getAverageAllScore(), 10.0); // 0~10
         long reviewCount = Math.max(0, h.getReviewNum());
         double star = safe(h.getStarRating(), 5.0);        // 0~5 가정
-        double bestSalePercent = Math.max(0.0, h.getBestSailPrecent()); // 0~∞
+        double bestSalePercent = Math.max(0.0, h.getBestSalePrecent()); // 0~∞
 
         // 1) 리뷰 품질 (0~100)
         // 베이지안 평균 (0~10) -> (0~100)

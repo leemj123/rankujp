@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -72,88 +73,118 @@ public class SitemapService {
 //                .limit(20) // 상위 20개만 선택
 //                .toList();
 //    }
-    public String makeSiteMap () {
-        List<SiteMap> list = siteMapQueryFactory();
-        StringBuilder xml = new StringBuilder();
-        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+public String makeSiteMap() {
+    List<SiteMap> list = siteMapQueryFactory();
+    String today = LocalDate.now().toString(); // ✅ 오늘 날짜 (yyyy-MM-dd)
 
-        xml.append("""
-            <url>
-                <loc>https://rankujp.com/</loc>
-                <lastmod>2025-09-30</lastmod>
-                <priority>1.0</priority>
-            </url>
-           <url>
-                <loc>https://rankujp.com/?page=2</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/?page=3</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/?page=4</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/?page=5</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/score</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/score?page=2</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/score?page=3</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/score?page=4</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/score?page=5</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/premium</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/premium?page=2</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/premium?page=3</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/premium?page=4</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-            <url>
-                <loc>https://rankujp.com/premium?page=5</loc>
-                <lastmod>2025-09-30</lastmod>
-            </url>
-   """);
-        list.stream()
-                .map(s -> """
+    StringBuilder xml = new StringBuilder();
+    xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+
+    // ✅ today 변수를 삽입한 정적 URL 목록
+    xml.append(String.format("""
+        <url>
+            <loc>https://rankujp.com/</loc>
+            <lastmod>%s</lastmod>
+            <priority>1.0</priority>
+        </url>
+        <url>
+            <loc>https://rankujp.com/?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/score</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/score?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/score?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/score?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/score?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/premium</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/premium?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/premium?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/premium?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/premium?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/restaurant?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
+    """,
+            today, today, today, today, today,
+            today, today, today, today, today,
+            today, today, today, today, today,
+            today, today, today, today, today
+    ));
+
+    // ✅ 동적 hotel 리스트 부분 (DB 데이터 기준)
+    list.stream()
+            .map(s -> """
             <url>
                 <loc>https://rankujp.com/hotel/%s</loc>
                 <lastmod>%s</lastmod>
             </url>
-        """.formatted(s.getId(), s.getModifiedTime()))
-                .forEach(xml::append);
+        """.formatted(s.getId(),
+                    s.getModifiedTime() != null ? s.getModifiedTime() : today))
+            .forEach(xml::append);
 
-        xml.append("</urlset>");
-        return xml.toString().trim();
-
-    }
+    xml.append("</urlset>");
+    return xml.toString().trim();
+}
 
 //    public String makeRss() {
 //        List<RssMap> latestPosts = this.RssQueryFactory();

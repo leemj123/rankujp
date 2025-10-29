@@ -1,7 +1,6 @@
 package com.lee.rankujp.hotel.infra;
 
 import com.lee.rankujp.hotel.cumtom.PointLocation;
-import com.lee.rankujp.hotel.price.dto.ImgStarResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -48,14 +47,11 @@ public class Hotel {
     private String photo4;
     private String photo5;
 
-    //price
-    @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<HotelPrice> priceList;
 
     private LocalDate bestStayDate;
     private double bestCrossedOutRate;
     private double bestDailyRate;
-    private double bestSailPrecent;
+    private double bestSalePrecent;
 
     //review
     @OneToMany(mappedBy = "hotel",cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -82,34 +78,15 @@ public class Hotel {
         this.averageFamilyScore = v4;
         this.averageGroupScore = v5;
     }
-    public void titleUpdater (String t) {
-        this.title = t;
-    }
-    public void descriptionUpdater (String d) {
-        this.description = d;
-    }
-    public void keywordUpdater (String k) {
-        this.keyword = k;
-    }
+
     public void rankuScoreUpdater (int r) {
         this.updateDateTime = LocalDateTime.now();
         this.rankuScore = r;
     }
 
-    public void beatScoreUpdate(LocalDate bsd, double bco, double bdr, double bsp) {
-        this.bestStayDate = bsd;
-        this.bestCrossedOutRate = bco;
-        this.bestDailyRate = bdr;
-        this.bestSailPrecent = bsp;
+    public void faUp() {
+        double temp = this.averageFamilyScore / 2;
+        this.averageFamilyScore = Math.floor(temp * 10) / 10.0;
     }
 
-
-    public void imgUpdate(ImgStarResponse.HotelApiInfo info) {
-        this.thumbnailImg = info.getImageUrl();
-    }
-
-
-    public void jpNameUpdate(String name) {
-        this.jpName = name;
-    }
 }

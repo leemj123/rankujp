@@ -12,7 +12,7 @@ public class PremiumResponse {
     private final double starRating;
     private final int bestCrossedOutRate;
     private final int bestDailyRate;
-    private final int bestSailPrecent;
+    private final int bestSalePrecent;
 
     public PremiumResponse(Hotel hotel) {
         this.id = hotel.getId();
@@ -23,7 +23,7 @@ public class PremiumResponse {
         this.starRating = hotel.getStarRating();
         this.bestCrossedOutRate = (int) hotel.getBestCrossedOutRate();
         this.bestDailyRate = (int) hotel.getBestDailyRate();
-        this.bestSailPrecent = (int) hotel.getBestSailPrecent();
+        this.bestSalePrecent = (int) hotel.getBestSalePrecent();
     }
     private int preferenceValueCalculator(double abs, double acs, double ass, double afs) {
         double max = abs;

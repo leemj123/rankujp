@@ -3,7 +3,7 @@ main {
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
-    overflow: hidden;
+    overflow: visible;
     max-width: 1080px;
     margin: 8rem auto;
 }
@@ -17,17 +17,151 @@ main {
 }
 
 .main-r {
-    display: none;
-    width: 18rem;
-    height: auto;
+    display: block;
     position: relative;
 }
 
-.main-r .banner-colum {
-    position: fixed;
-    display: block;
-    top: 10rem;
+.tool-box-right {
+    position: sticky;
+    top: calc(100vh - 13rem - 9rem);
+    width: 6rem;
+    height: 13rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1rem;
+    z-index: 200;
 }
+
+#upup,
+#history {
+    cursor: pointer;
+    filter: drop-shadow(0 3px 12px rgba(0, 0, 0, .1));
+}
+
+#upup {content: url('/public/upup.svg');}
+#history {content: url('/public/history.svg');}
+
+#history-box {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    bottom: 7.2rem;
+    right: 0;
+    width: 17rem;
+    height: 59rem;
+    background-color: #ffffff;
+    z-index: 201;
+    box-shadow: 0 4px 15px #00000020;
+    border-radius: 20px;
+    padding: 2rem;
+    gap: 2rem;
+}
+#history-box.show {
+    display: flex;
+}
+
+#history-box .history-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#history-items {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+#history-items.none {
+    justify-content: center;
+    align-items: center;
+    height: 50.6rem;
+}
+.history-cancel {
+    content: url('/public/history-cancel.svg');
+    padding: 1rem;
+    cursor: pointer;
+}
+@media (max-width: 768px) {
+    #history-box {
+        height: 45rem;
+    }
+    #history-items.none {
+        height: 36.6rem;
+    }
+}
+#history-items li a img {
+    display: block;
+    width: 100%;
+    height: 10rem;
+    border-radius: 20px;
+    overflow: hidden;
+    inset: 0;
+    margin-bottom: 1.4rem;
+    object-fit: cover;
+    object-position: center;
+
+}
+#history-items li a p {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: calc(1.4em * 2);
+    text-align: center;
+}
+
+.separator {
+    width: 100%;
+    height: 1px;
+    border-top: 1px solid #d9d9d9;
+}
+@media (max-width: 960px) {
+    main {
+        display: block;
+        padding: 3rem 2rem 2rem 2rem;
+        justify-content: center;
+    }
+
+    .main-r {
+        position: static;
+        z-index: auto;
+    }
+    .tool-box-right {
+        position: fixed;
+        right: 1.2rem;
+        bottom: 9rem;
+        top: auto;
+        z-index: 500;
+        height: unset;
+    }
+}
+
+@media (max-width: 850px) {
+    main {
+        width: 100%;
+        margin: 9.5rem auto;
+    }
+
+    .main-l {
+        display: flex;
+        gap: 3rem;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+    }
+}
+
+
+
+
+
 
 .photo-section {
     position: relative;
@@ -126,13 +260,13 @@ main {
     margin: auto 6rem;
     display: flex;
     align-items: center;
-    background-color: #919191;
+    background-color: #585858;
     overflow: hidden;
     border-radius: 20px;
 }
 
 
-#modalImage {
+#modalImage,#placeImage {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -283,7 +417,7 @@ main {
 }
 
 .head-info-row>div {
-    color: #919191;
+    color: #585858;
 }
 .no-price {
     width: 100%;
@@ -353,7 +487,6 @@ main {
     outline: 0;
     cursor: pointer;
 }
-
 
 .calendar-head div {
     display: flex;
@@ -563,12 +696,38 @@ main {
     background: url('/public/detail/jyaran.png') no-repeat center / contain;
 }
 
-.rakuten {
-    background: url('/public/detail/rakuten.png') no-repeat center / contain;
+.googlePlace {
+    background: url('/public/detail/googlePlace.png') no-repeat center / contain;
 }
 
 .tripadvisor {
     background: url('/public/detail/tripadvisor.png') no-repeat center / contain;
+}
+.comment-svg {
+    background: url('/public/detail/comment.svg') no-repeat center / contain;
+    width: 2.2rem;
+    height: 2.2rem;
+}
+#comment-num::after {
+    content: '개';
+}
+.today-ranku-detail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 5rem;
+    height: 2.8rem;
+    color: #fff;
+}
+.today-ranku-detail::before {
+    content: url('/public/detail/today-ranku-left.svg');
+    width: 1.2rem;
+    height: 1.9rem;
+}
+.today-ranku-detail::after {
+    content: url('/public/detail/today-ranku-right.svg');
+    width: 1.2rem;
+    height: 1.9rem;
 }
 
 /* ============================ */
@@ -659,35 +818,8 @@ main {
 }
 
 @media (max-width: 1080px) {
-    main {
-        justify-content: center;
-    }
-
-    .main-r {
-        display: none;
-    }
-
-    .banner-row {
-        display: block;
-    }
-
     .photo-section {
         width: 100%;
-    }
-}
-
-@media (max-width: 850px) {
-    main {
-        width: 100%;
-        margin: 8rem auto;
-    }
-
-    .main-l {
-        display: flex;
-        gap: 3rem;
-        flex-direction: column;
-        width: 100%;
-        height: auto;
     }
 }
 
@@ -784,4 +916,194 @@ main {
         background: url('/public/banner/ago-375row.png') no-repeat center / cover;
         ;
     }
+}
+
+/* ============================ */
+.content-navigation-wrapper {
+    position: sticky;
+    z-index: 3;
+    top: 0;
+    scroll-margin-top: 50px;
+    box-shadow: 10px 0 0 0 rgba(255, 255, 255, 1),   /* 오른쪽 */
+    -10px 0 0 0 rgba(255, 255, 255, 1);  /* 왼쪽 */
+}
+.content-navigation {
+    width: 100%;
+    height: 6rem;
+    display: flex;
+    background-color: #ffffff;
+    justify-content: center;
+    display: flex;
+}
+.content-navigation a{
+    flex: 1;
+    text-align: center;
+    color: #585858;
+    border-bottom: 2px solid #d7d7d7;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.content-navigation a.active{
+    font-weight: bold;
+    color: #000000;
+    border-bottom: 2px solid #000000;
+}
+/* $$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+.today-traffic {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 26.6rem;
+    height: 3.6rem;
+    background-color: #e53935;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+    gap: .4rem;
+    border-radius: 10px;
+}
+.update-timer {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 18.8rem;
+    height: 3.4rem;
+    border-radius: 30px;
+    background-color: #111111;
+    text-align: center;
+
+}
+.update-timer.shaking {
+    animation: tilt-shaking 1s forwards;
+}
+.update-timer-fire-svg {
+    content: url('/public/detail/update-timer-fire.svg');
+    min-width: 12px;
+    min-height: 16px;
+}
+.shine-btn {
+    position: relative;
+    width: 30rem;
+    height: 5rem;
+    background: #FF6B00;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+.shine-btn span {
+    color: #fff;
+}
+.shine-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 100%;
+    /* 폭 확 줄이기 */
+    height: 100%;
+    background: linear-gradient(120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+        /* 조금 더 투명하게 */
+    transparent 100%);
+    transform: skewX(-50deg);
+    opacity: 0;
+    pointer-events: none;
+}
+.shine-btn-back {
+    display: none;
+}
+.bottom-fix-section {
+    position: sticky;
+    width: 100vw;
+    bottom: 0;
+    height: 8rem;
+    display: flex;
+    background-color: #ffffff;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+}
+
+.bottom-fix-section .go-agoda-warpper {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.go-agoda {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 850px;
+}
+
+/* hover 시 이동 */
+.shine-btn:hover {
+    background: #111111;
+    .shine-btn-back {
+        display: block;
+    }
+    .shine-btn-front {
+        display: none;
+    }
+}
+
+.shine-btn.shining::after {
+    animation: shine 1s ease forwards;
+}
+
+.detail-thunder-svg {
+    content: url('/public/detail/detail-thunder.svg');
+    min-width: 13px;
+    min-height: 1.9rem;
+    display: flex;
+    align-items: center;
+}
+
+@keyframes tilt-shaking {
+    0%   { transform: translateX(-50%) rotate(0deg); }
+    25%  { transform: translateX(-50%) rotate(2deg); }
+    50%  { transform: translateX(-50%) rotate(0deg); }
+}
+@keyframes shine {
+    0% {
+        left: -40%;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 140%;
+        opacity: 0;
+    }
+}
+@media (max-width: 600px) {
+    .go-agoda div{
+        display: none;
+    }
+    .go-agoda a {
+        flex: 1;
+    }
+    .shine-btn {
+        width: 100%;
+    }
+}
+#go-agoda-discount::before {
+    content: unset !important;
 }

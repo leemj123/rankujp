@@ -1,0 +1,157 @@
+#place-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.place-top-wrapper.restaurant-wrapper{
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+}
+.place.top-restaurant {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    max-width: 27rem;
+}
+@media (max-width: 620px) {
+    .place-top-wrapper.restaurant-wrapper {
+        flex-direction: column;
+    }
+    .place.top-restaurant {
+        max-width: 100%;
+    }
+}
+.place.top-restaurant .place-photo  {
+    height: 18rem;
+}
+.place-photo {
+    border-radius: 10px;
+    overflow: hidden;
+    border: none;
+    outline: none;
+    width: 100%;
+    background-color: #fff;
+    cursor: pointer;
+}
+.place-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+.place-description {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.place-title {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+.place-title h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.place-info {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+.restaurant-btn {
+    display: flex;
+    gap: .4rem;
+    justify-content: center;
+    align-items: center;
+}
+.restaurant-btn-line {
+    width: 1px;
+    height: 1.4rem;
+    border-right: 1px solid #e7e7e7;
+}
+/* =-======================== */
+.restaurant-slide-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+
+    align-items: center;
+    -webkit-overflow-scrolling: touch;
+    height: 28rem;
+    cursor: grab;
+}
+.restaurant-slide-wrapper * {
+    user-select: none;
+    -webkit-user-select: none;   /* iOS Safari */
+    -ms-user-select: none;       /* 구형 Edge */
+    -moz-user-select: none;      /* 구형 Firefox (대부분 불필요) */
+    -webkit-touch-callout: none; /* iOS 길게 눌러 선택/메뉴 방지 */
+}
+
+.restaurant-slide-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+.place.normal-restaurant {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 18rem;
+    width: 18rem;
+    max-width: 18rem;
+    height: 100%;
+}
+.place.normal-restaurant .place-photo  {
+    height: 12rem;
+}
+
+.more-place-svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8.1rem;
+    height: 9.2rem;
+    content: url('/public/detail/more-place.svg');
+}
+
+@media (max-width: 620px) {
+    .restaurant-slide-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3rem 1rem;
+        overflow-x: visible;
+        scroll-snap-type: none;
+        padding: 0;
+        height: unset;
+    }
+
+    .place.normal-restaurant {
+        min-width: 16.2rem;
+        width: unset;
+        max-width: unset;
+        max-width: none;
+        scroll-snap-align: none;
+        height: 27rem;
+    }
+}
+.no-restaurant-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30rem;
+    gap: 2rem;
+}
+.no-restaurant-svg {
+    content: url('/public/detail/no-restaurant.svg');
+}

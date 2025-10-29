@@ -44,12 +44,12 @@
 //
 //        final String SQL = """
 //        INSERT INTO hotel_price
-//          (hotel_id, stay_date, crossed_out_rate, daily_rate, sail_percent, is_weekend, updated_at)
+//          (hotel_id, stay_date, crossed_out_rate, daily_rate, sale_percent, is_weekend, updated_at)
 //        VALUES (?, ?, ?, ?, ?, ?, ?)
 //        ON DUPLICATE KEY UPDATE
 //          crossed_out_rate = VALUES(crossed_out_rate),
 //          daily_rate       = VALUES(daily_rate),
-//          sail_percent     = VALUES(sail_percent),
+//          sale_percent     = VALUES(sale_percent),
 //          is_weekend       = VALUES(is_weekend),
 //          updated_at       = VALUES(updated_at)
 //        """;
@@ -72,7 +72,7 @@
 //                                ps.setDate(2, Date.valueOf(row.getStayDate()));
 //                                ps.setDouble(3, safe(row.getCrossedOutRate()));
 //                                ps.setDouble(4, safe(row.getDailyRate()));
-//                                ps.setDouble(5, safe(row.getSailPercent()));
+//                                ps.setDouble(5, safe(row.getSalePercent()));
 //                                ps.setByte(6, (byte) (row.isWeekend() ? 1 : 0));  // TINYINT(1)
 //                                ps.setTimestamp(7, nowTs);
 //

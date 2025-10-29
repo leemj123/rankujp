@@ -9,10 +9,11 @@
 
 html {
     font-size: 10px;
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
     background-color: #ffffff;
     color: #000000;
     overflow-wrap: break-word;
@@ -357,6 +358,8 @@ input:focus {
 .ranku.daily {
     width: 2.2rem;
     height: 2.3rem;
+    min-width: 2.2rem;
+    min-height: 2.3rem;
 }
 
 .ranku.daily .ranku-value {
@@ -465,7 +468,7 @@ header {
     align-items: center;
     width: 100vw;
     min-width: 375px;
-    height: 8rem;
+    height: 7rem;
     border-bottom: 2px solid #d9d9d9;
     box-shadow: 0 4px 14px rgba(0, 0, 0, .1);
     z-index: 10;
@@ -485,15 +488,8 @@ header {
     align-content: center;
     z-index: 100;
     cursor: pointer;
-    width: 17rem;
-    height: 4.7rem;
-    overflow: hidden;
-}
-
-@media (max-width: 1020px) {
-    .header-warpper .logo-box {
-        width: 4rem;
-    }
+    width: 16.6rem;
+    height: 5rem;
 }
 
 .header-nav {
@@ -503,7 +499,7 @@ header {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    height: 8rem;
+    height: 7rem;
 
 }
 
@@ -612,104 +608,30 @@ footer .foot-container {
     cursor: pointer;
 }
 
-.bottom-fix-section {
-    position: sticky;
-    width: 100vw;
-    bottom: 0;
-    height: 8rem;
-    display: flex;
-    background-color: #ffffff;
-    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.1);
-    z-index: 3;
-}
 
-.bottom-fix-section .go-agoda-warpper {
-    display: flex;
-    justify-content: flex-start;
+
+
+
+
+.header-banner {
+    margin-top: 6.9rem;
     width: 100%;
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-.go-agoda {
+    height: 6rem;
+    background-color: #111111;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+}
+.header-banner .header-banner-wrapper {
     width: 100%;
-    max-width: 850px;
+    max-width: 108rem;
 }
 
 
-
-.shine-btn {
-    position: relative;
-    width: 30rem;
-    height: 5rem;
-    background: #2f2f2f;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.shine-btn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -40%;
-    width: 100%;
-    /* 폭 확 줄이기 */
-    height: 100%;
-    background: linear-gradient(120deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.2) 50%,
-            /* 조금 더 투명하게 */
-            transparent 100%);
-    transform: skewX(-20deg);
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* hover 시 이동 */
-.shine-btn:hover {
-    background: #2f2f2f;
-}
-
-.shine-btn:hover::after {
-    animation: shine 0.7s ease forwards;
-}
-
-@keyframes shine {
-    0% {
-        left: -40%;
-        opacity: 0;
-    }
-
-    20% {
-        opacity: 1;
-    }
-
-    80% {
-        opacity: 1;
-    }
-
-    100% {
-        left: 140%;
-        opacity: 0;
-    }
-}
-@media (max-width: 600px) {
-    .go-agoda p{
-        display: none;
-    }
-    .go-agoda a {
-        flex: 1;
-    }
-    .shine-btn {
-        width: 100%;
-    }
-}
 @media (max-width: 768px) {
+    header {
+        height: 9.5rem;
+    }
+
     .header-warpper {
         flex-direction: column;
         justify-content: center;
@@ -717,22 +639,19 @@ footer .foot-container {
         padding: 0;
     }
 
-    .header-warpper .logo-box {
-        width: 4rem;
-        height: 4.2rem;
-    }
-
     .header-nav {
         position: relative;
         display: block;
         width: 100%;
-        height: 3.8rem;
+        height: 4.5rem;
         transform: none;
         top: unset;
         left: unset;
 
     }
-
+    .header-warpper .logo-box a {
+        align-content: end;
+    }
     .header-nav ul {
         width: 100%;
         display: flex;
@@ -740,6 +659,9 @@ footer .foot-container {
         justify-content: flex-start;
         align-items: center;
         gap: 0;
+    }
+    .header-banner {
+        margin-top: 9.5rem
     }
 
     footer {
