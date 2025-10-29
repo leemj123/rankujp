@@ -59,25 +59,25 @@ public class AgodaPriceRequest {
                 .build();
 
     }
-    public AgodaPriceRequest(LocalDate checkInDate, LocalDate checkOutDate, long hotelId) {
-        this.criteria = PriceWrapper.builder()
-                .additional(
-                        PriceWrapper.PriceOption.builder()
-                                .currency("JPY")
-                                .discountOnly(false)
-                                .language("ko-kr")
-                                .occupancy(
-                                        PriceWrapper.Occupancy.builder()
-                                                .numberOfAdult(2)
-                                                .numberOfChildren(0)
-                                                .build()
-                                )
-                                .build()
-                )
-                .checkInDate(checkInDate)
-                .checkOutDate(checkOutDate)
-                .hotelId(Collections.singletonList(hotelId))
-                .build();
-
-    }
+//    public AgodaPriceRequest(LocalDate checkInDate, LocalDate checkOutDate, long hotelId) {
+//        this.criteria = PriceWrapper.builder()
+//                .additional(
+//                        PriceWrapper.PriceOption.builder()
+//                                .currency("JPY")
+//                                .discountOnly(false)
+//                                .language("ko-kr")
+//                                .occupancy(
+//                                        PriceWrapper.Occupancy.builder()
+//                                                .numberOfAdult(2)
+//                                                .numberOfChildren(0)
+//                                                .build()
+//                                )
+//                                .build()
+//                )
+//                .checkInDate(checkInDate)
+//                .checkOutDate(checkOutDate)
+//                .hotelId(Collections.singletonList(hotelId))
+//                .build();
+//
+//    }
 }

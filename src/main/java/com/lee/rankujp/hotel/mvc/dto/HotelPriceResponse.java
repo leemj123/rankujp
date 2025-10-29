@@ -30,7 +30,7 @@ public class HotelPriceResponse {
                 "&hid="+ id
                 +"&checkin="+ hp.getStayDate()
                 +"&checkout="+ hp.getStayDate().plusDays(2)
-                +"&currency=JPY"
+                +"&currency=KRW"
                 +"&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6";
     }
 }
