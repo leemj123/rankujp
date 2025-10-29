@@ -42,7 +42,7 @@ public class AgodaPriceRequest {
         this.criteria = PriceWrapper.builder()
                 .additional(
                         PriceWrapper.PriceOption.builder()
-                        .currency("JPY")
+                        .currency("KRW")
                         .discountOnly(false)
                         .language("ko-kr")
                         .occupancy(

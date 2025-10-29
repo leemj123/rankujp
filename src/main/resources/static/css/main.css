@@ -156,7 +156,7 @@ input:focus {
 }
 
 .daily-price::before {
-    content: '¥';
+    content: '₩';
     margin-right: 2px;
     font-weight: 500;
 }
