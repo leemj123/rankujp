@@ -94,6 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!res.ok) {console.info("아고다 트래픽 없음"); return;}
 
     const todayBookingNumber = await res.text(); // 백엔드에서 숫자 문자열 리턴
+    if (todayBookingNumber == null || todayBookingNumber === '') {return;}
     console.log("오늘 예약 수:", todayBookingNumber);
 
     // 예: 화면에 표시
