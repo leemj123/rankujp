@@ -33,9 +33,9 @@ public class JalanService {
     public void startReviewScrap() {
         List<Hotel> target =  jpaQueryFactory
                 .selectFrom(qHotel)
-                .leftJoin(qHotel.hotelReviewList, qHotelReview)
-                .on(qHotelReview.reviewBrand.eq(ReviewBrand.JALAN))
-                .where(qHotelReview.id.isNull())
+//                .leftJoin(qHotel.hotelReviewList, qHotelReview)
+//                .on(qHotelReview.reviewBrand.eq(ReviewBrand.JALAN))
+//                .where(qHotelReview.id.isNull())
                 .fetch();
 
         log.info("str item cnt: {}",target.size());

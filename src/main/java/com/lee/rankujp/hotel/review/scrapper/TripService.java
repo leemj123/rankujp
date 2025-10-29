@@ -40,8 +40,6 @@ public class TripService {
     public void startReviewScrap() {
         List<Hotel> target =  jpaQueryFactory
                 .selectFrom(qHotel)
-                .leftJoin(qHotel.hotelReviewList, qHotelReview)
-                .where(qHotelReview.id.isNull())
                 .fetch();
 
 

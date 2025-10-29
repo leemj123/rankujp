@@ -222,17 +222,4 @@ public class HotelReviewService {
         return hr;
     }
 
-    //tkrwp
-    @Transactional
-    public void hotelFReviewRevise() {
-        List<Hotel> hlist = jpaQueryFactory
-                .selectFrom(qHotel)
-                .where(qHotel.averageFamilyScore.gt(10))
-                .fetch();
-        log.info("lenth: {}", hlist.size());
-
-        for (Hotel h : hlist) {
-            h.faUp();
-        }
-    }
 }

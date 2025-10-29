@@ -29,8 +29,4 @@ public class HotelReviewController {
         return ResponseEntity.accepted().body(Map.of("status","started"));
 
     }
-    @PatchMapping
-    public void hotelFReviewRevise() {
-        hotelReviewService.hotelFReviewRevise();
-    }
 }

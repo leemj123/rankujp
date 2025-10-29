@@ -60,6 +60,7 @@ public class WebClientConfig {
                 .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .build();
     }
+
     @Bean(name = "jalanWebClient")
     public WebClient jalanWebClient() {
         DefaultUriBuilderFactory f =
@@ -75,6 +76,7 @@ public class WebClientConfig {
                 })
                 .build();
     }
+
     @Bean(name = "googleWebClient")
     public WebClient googleWebClient() {
         ExchangeStrategies strategies = ExchangeStrategies.builder()
