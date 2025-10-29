@@ -608,72 +608,11 @@ footer .foot-container {
     cursor: pointer;
 }
 
-.bottom-fix-section {
-    position: sticky;
-    width: 100vw;
-    bottom: 0;
-    height: 8rem;
-    display: flex;
-    background-color: #ffffff;
-    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.1);
-    z-index: 3;
-}
-
-.bottom-fix-section .go-agoda-warpper {
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-.go-agoda {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 850px;
-}
 
 
 
-.shine-btn {
-    position: relative;
-    width: 30rem;
-    height: 5rem;
-    background: #2f2f2f;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    overflow: hidden;
-}
 
-.shine-btn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -40%;
-    width: 100%;
-    /* 폭 확 줄이기 */
-    height: 100%;
-    background: linear-gradient(120deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.2) 50%,
-            /* 조금 더 투명하게 */
-            transparent 100%);
-    transform: skewX(-20deg);
-    opacity: 0;
-    pointer-events: none;
-}
 
-/* hover 시 이동 */
-.shine-btn:hover {
-    background: #2f2f2f;
-}
-
-.shine-btn:hover::after {
-    animation: shine 0.7s ease forwards;
-}
 .header-banner {
     margin-top: 6.9rem;
     width: 100%;
@@ -687,36 +626,7 @@ footer .foot-container {
     max-width: 108rem;
 }
 
-@keyframes shine {
-    0% {
-        left: -40%;
-        opacity: 0;
-    }
 
-    20% {
-        opacity: 1;
-    }
-
-    80% {
-        opacity: 1;
-    }
-
-    100% {
-        left: 140%;
-        opacity: 0;
-    }
-}
-@media (max-width: 600px) {
-    .go-agoda p{
-        display: none;
-    }
-    .go-agoda a {
-        flex: 1;
-    }
-    .shine-btn {
-        width: 100%;
-    }
-}
 @media (max-width: 768px) {
     header {
         height: 9.5rem;

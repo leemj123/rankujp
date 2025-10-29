@@ -9,13 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import reactor.core.publisher.Mono;
 
-import java.util.List;
 
 @Configuration
 @Slf4j
@@ -45,6 +42,13 @@ public class WebClientConfig {
     public WebClient agodaWebClient() {
         return WebClient.builder()
                 .baseUrl("https://www.agoda.com/api")
+                .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .build();
+    }
+    @Bean(name = "agodaEngagementClient")
+    public WebClient agodaEngagementClient() {
+        return WebClient.builder()
+                .baseUrl("https://www.agoda.com/graphql/property")
                 .defaultHeaders(headers -> headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .build();
     }
