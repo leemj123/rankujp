@@ -1,6 +1,5 @@
 package com.lee.rankujp.big;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +17,6 @@ public class BigService {
     private final QAgodaKo qAgodaKo = QAgodaKo.agodaKo;
     private final QAgodaCity qAgodaCity = QAgodaCity.agodaCity;
 
-//    public List<JaNameDto> hello(List<Long> ids) {
-//        return jpaQueryFactory
-//                .select(Projections.constructor(
-//                        JaNameDto.class,
-//                        qAgodaKo.C1,   // long id
-//                        qAgodaKo.C8    // String name
-//                ))
-//                .from(qAgodaJa)
-//                .where(qAgodaJa.C1.in(ids))
-//                .fetch();
-//    }
 
     @Transactional
     public void citySeparate() {
@@ -46,5 +34,9 @@ public class BigService {
             e.setCount(count != null ? count : 0L);
 
         }
+    }
+
+    public void OnQueue() {
+
     }
 }
