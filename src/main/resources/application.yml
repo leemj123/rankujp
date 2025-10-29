@@ -13,7 +13,8 @@ spring:
     hikari:
       idle-timeout: 60000
       minimum-idle: 0
-
+  codec:
+    max-in-memory-size: 10MB
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
