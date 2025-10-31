@@ -77,21 +77,33 @@ public class WebClientConfig {
     }
     @Bean(name = "googleWebClient")
     public WebClient googleWebClient() {
-        ExchangeStrategies strategies = ExchangeStrategies.builder()
-                .codecs(cfg -> cfg.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) // 10MB
-                .build();
-
         return WebClient.builder()
-                .baseUrl("https://places.googleapis.com/v1/places:searchNearby")
-                .exchangeStrategies(strategies)
+                .baseUrl("https://places.googleapis.com/v1/places")
                 .defaultHeaders(headers -> {
                     headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
                     headers.set("X-Goog-Api-Key", GOOGLE_PLACE_KEY);
-                    headers.set("X-Goog-FieldMask",
-                            "places.id,places.internationalPhoneNumber,places.formattedAddress,places.location,places.rating,places.googleMapsUri,places.websiteUri,places.userRatingCount,places.displayName,places.primaryTypeDisplayName,places.primaryType,places.photos,places.priceRange,places.reviewSummary"
-                        );
+                    headers.set("X-Goog-FieldMask", "places.id");
                 })
                 .build();
     }
+
+//    @Bean(name = "googleWebClient")
+//    public WebClient googleWebClient() {
+//        ExchangeStrategies strategies = ExchangeStrategies.builder()
+//                .codecs(cfg -> cfg.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) // 10MB
+//                .build();
+//
+//        return WebClient.builder()
+//                .baseUrl("https://places.googleapis.com/v1/places:searchNearby")
+//                .exchangeStrategies(strategies)
+//                .defaultHeaders(headers -> {
+//                    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+//                    headers.set("X-Goog-Api-Key", GOOGLE_PLACE_KEY);
+//                    headers.set("X-Goog-FieldMask",
+//                            "places.id,places.internationalPhoneNumber,places.formattedAddress,places.location,places.rating,places.googleMapsUri,places.websiteUri,places.userRatingCount,places.displayName,places.primaryTypeDisplayName,places.primaryType,places.photos,places.priceRange,places.reviewSummary"
+//                        );
+//                })
+//                .build();
+//    }
 
 }
