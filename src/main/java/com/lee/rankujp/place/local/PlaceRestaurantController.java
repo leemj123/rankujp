@@ -1,9 +1,6 @@
 //package com.lee.rankujp.place.local;
 //
-//
-//import com.lee.rankujp.place.RestaurantService;
 //import lombok.RequiredArgsConstructor;
-//import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.PostMapping;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RestController;
@@ -13,16 +10,16 @@
 //@RestController
 //@RequiredArgsConstructor
 //@RequestMapping("/restaurant")
-//public class LegacyRestaurantController {
-//    private final RestaurantService restaurantService;
+//public class PlaceRestaurantController {
+//    private final PlaceRestaurantService placeRestaurantService;
 //
-//    @PostMapping("/{id}")
-//    public List<Long> strPlaceBot(@PathVariable Long id) {
-//       return restaurantService.addRestaurant(id);
+//    @PostMapping("/place/bot")
+//    public List<Long> strPlaceBot() {
+//       return placeRestaurantService.addRestaurant();
 //    }
 //
 //    @PostMapping("/image")
 //    public List<Long> googlePlaceImgGetter() {
-//        return restaurantService.fetchAndUpload();
+//        return placeRestaurantService.fetchAndUpload();
 //    }
 //}

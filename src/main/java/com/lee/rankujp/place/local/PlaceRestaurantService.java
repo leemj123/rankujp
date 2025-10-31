@@ -4,10 +4,6 @@
 //import com.amazonaws.services.s3.model.ObjectMetadata;
 //import com.amazonaws.services.s3.model.PutObjectRequest;
 //import com.lee.rankujp.hotel.infra.QHotel;
-//import com.lee.rankujp.place.local.GooglePlaceRequest;
-//import com.lee.rankujp.place.local.GoogleRestaurantResponse;
-//import com.lee.rankujp.place.local.GoogleRestaurantWrapper;
-//import com.lee.rankujp.place.local.HotelLocationPoint;
 //import com.lee.rankujp.place.infra.*;
 //import com.querydsl.core.types.Projections;
 //import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -35,8 +31,8 @@
 //@Service
 //@RequiredArgsConstructor
 //@Slf4j
-//public class LegacyRestaurantService {
-
+//public class PlaceRestaurantService {
+//
 //    private final WebClient googleWebClient;
 //    private final RestaurantRepo restaurantRepo;
 //    private final PlaceImgRepo placeImgRepo;
@@ -55,7 +51,7 @@
 //
 //
 //
-//    public List<Long> addRestaurant(long lastId) {
+//    public List<Long> addRestaurant() {
 //
 //        List<HotelLocationPoint> pointList = jpaQueryFactory
 //                .select(Projections.constructor(
@@ -65,20 +61,8 @@
 //                        qHotel.longitude
 //                ))
 //                .from(qHotel)
-//                .limit(500)
-//                .where(qHotel.id.gt(lastId))
 //                .fetch();
 //
-////        List<HotelLocationPoint> pointList = jpaQueryFactory
-////                .select(Projections.constructor(
-////                        HotelLocationPoint.class,
-////                        qHotel.id,
-////                        qHotel.latitude,
-////                        qHotel.longitude
-////                ))
-////                .from(qHotel)
-////                .where(qHotel.id.in())
-////                .fetch();
 //
 //        List<Long> failIdList = new ArrayList<>();
 //        for (HotelLocationPoint hlp : pointList) {
@@ -195,7 +179,6 @@
 //    public List<Long> fetchAndUpload() {
 //        List<Restaurant> restaurantList = jpaQueryFactory
 //                .selectFrom(qRestaurant)
-//                .where(qRestaurant.id.gt(14))
 //                .fetch();
 //        List<Long> failId = new ArrayList<>();
 //
@@ -203,6 +186,7 @@
 //            List<PlaceImg> placeImgList = jpaQueryFactory
 //                    .selectFrom(qPlaceImg)
 //                    .where(qPlaceImg.restaurant.id.eq(restaurant.getId()))
+//                    .limit(3)
 //                    .fetch();
 //
 //            if (placeImgList == null || placeImgList.isEmpty()) {continue;}
