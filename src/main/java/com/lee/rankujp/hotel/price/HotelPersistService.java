@@ -37,12 +37,12 @@ public class HotelPersistService {
                        id, best_stay_date, best_crossed_out_rate, best_daily_rate, best_sale_precent, update_date_time,
                        average_group_score, average_couple_score, latitude, longitude,
                        average_business_score, star_rating, average_solo_score, ranku_score,
-                       average_family_score, average_all_score, is_show, review_num
+                       average_family_score, average_all_score, is_show, review_num, prefecture_code
                      )
                      SELECT ?, ?, ?, ?, ?, ?,
                             average_group_score, average_couple_score, latitude, longitude,
                             average_business_score, star_rating, average_solo_score, ranku_score,
-                            average_family_score, average_all_score, is_show, review_num
+                            average_family_score, average_all_score, is_show, review_num, prefecture_code
                      FROM hotel WHERE id = ?
                      ON DUPLICATE KEY UPDATE
                        best_stay_date        = VALUES(best_stay_date),
