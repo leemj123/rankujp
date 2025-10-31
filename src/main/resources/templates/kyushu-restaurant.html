@@ -63,28 +63,53 @@
 <!-- End Google Tag Manager (noscript) -->
 <header>
     <div class="header-warpper">
-        <div class="logo-box"><a href="/"><img class="logo" src="/public/logo.svg" alt="랭쿠jp 로고"></a></div>
+        <div class="logo-box"><a href="/kyushu"><img class="logo" src="/public/logo.svg" alt="랭쿠jp 로고"></a></div>
         <nav class="header-nav">
             <ul role="list">
-                <li role="listitem"><a href="/">할인랭킹</a></li>
-                <li role="listitem"><a href="/score">종합랭킹</a></li>
-                <li role="listitem"><a class="active" href="/restaurant" >맛집랭킹</a></li>
+                <li role="listitem"><a href="/kyushu">할인랭킹</a></li>
+                <li role="listitem"><a href="/kyushu/score">종합랭킹</a></li>
+                <li role="listitem"><a class="active" href="/kyushu/restaurant" >맛집랭킹</a></li>
             </ul>
         </nav>
     </div>
 </header>
-<a href="https://stump-krill-dcc.notion.site/28f0644a06f980b4ac50c9782ad39c18" target="_blank" class="header-banner">
-    <div class="header-banner-wrapper">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100vw; max-width: 89rem; padding: 0 2rem;">
+<a class="header-banner" href="/">
+    <div class="header-banner-wrapper" style="cursor: pointer;">
+        <div style="display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100vw;
+                height: 100%;
+                max-width: 89rem;
+                padding: 0 2rem;
+                background:
+                linear-gradient(to right,
+                  rgba(0, 0, 0, 0.9) 0%,   /* 왼쪽 끝 */
+                  rgba(0, 0, 0, 0.0) 60%,   /* 중앙 전까지 서서히 사라짐 */
+                  rgba(0, 0, 0, 0.0) 70%,   /* 중앙 유지 */
+                  rgba(0, 0, 0, 0.25) 100%  /* 오른쪽 끝 */
+                ),
+                url('/public/banner/kyushu-main-top-banner.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-blend-mode: multiply;
+                ">
             <div style="display: flex; gap: 2rem;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <path d="M12.8212 32.634V22.3962C11.7443 22.1351 10.8767 21.6037 10.2186 20.8018C9.56051 19.9999 9.23145 19.0955 9.23145 18.0885V10.2563H11.6246V16.9696H12.8212V10.2563H15.2144V16.9696H16.4109V10.2563H18.8041V18.0885C18.8041 19.0955 18.475 19.9999 17.8169 20.8018C17.1588 21.6037 16.2913 22.1351 15.2144 22.3962V32.634H12.8212ZM25.8126 32.634V21.9766C24.7357 21.641 23.8682 20.937 23.2101 19.8647C22.552 18.7925 22.2229 17.5757 22.2229 16.2144C22.2229 14.5547 22.6916 13.1468 23.6289 11.9906C24.5662 10.8344 25.693 10.2563 27.0092 10.2563C28.3255 10.2563 29.4522 10.8391 30.3896 12.0046C31.3269 13.1701 31.7955 14.5827 31.7955 16.2424C31.7955 17.6037 31.4665 18.8158 30.8084 19.8787C30.1502 20.9417 29.2827 21.641 28.2058 21.9766V32.634H25.8126Z" fill="white"/>
-                    <path d="M13.8311 1.05957H35.7607C37.5167 1.0596 38.9404 2.48332 38.9404 4.23926V35.7607C38.9404 37.5167 37.5167 38.9404 35.7607 38.9404H4.23926C2.48332 38.9404 1.0596 37.5167 1.05957 35.7607V13.6045C1.05957 12.748 1.40571 11.9274 2.01855 11.3291L11.6104 1.96387C12.2041 1.38423 13.0013 1.05969 13.8311 1.05957Z" stroke="white" stroke-width="2.11966"/>
-                </svg>
-                <p class="f-15" style="color: #fff;">랑쿠재팬 선정! <span class="f-15 f-b" style="color: #fff;">오사카 찐 맛집 PDF</span></p>
+                <div style="
+                            width: 161px;
+                            height: 2.8rem;
+                            background-color: #fff;
+                            border-radius: 4px;
+                            color: #111111;
+                            padding: .3rem .8rem;
+                          " class="f-15 f-b">
+                    오사카·교토·고베·나라
+                </div>
+                <p class="f-16 f-b" style="color: #fff;">활기와 고요가 공존하는, 간사이 여행</p>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <path d="M15 20L8.75 13.75L10.5 11.9375L13.75 15.1875V5H16.25V15.1875L19.5 11.9375L21.25 13.75L15 20ZM7.5 25C6.8125 25 6.22396 24.7552 5.73438 24.2656C5.24479 23.776 5 23.1875 5 22.5V18.75H7.5V22.5H22.5V18.75H25V22.5C25 23.1875 24.7552 23.776 24.2656 24.2656C23.776 24.7552 23.1875 25 22.5 25H7.5Z" fill="white"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="18" viewBox="0 0 10 18" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.382006 0.395402C0.891382 -0.131801 1.71726 -0.131801 2.22664 0.395402L9.61797 8.04542C10.1273 8.57263 10.1273 9.42741 9.61797 9.95462L2.22664 17.6046C1.71726 18.1318 0.891381 18.1318 0.382005 17.6046C-0.127335 17.0774 -0.127335 16.2227 0.382005 15.6955L6.85102 9.00002L0.382006 2.3046C-0.127335 1.77739 -0.127335 0.922606 0.382006 0.395402Z" fill="white"/>
             </svg>
         </div>
     </div>
@@ -92,27 +117,28 @@
 <main id="main">
     <section class="main-l">
         <div style="display: flex; align-items: center; gap: 1rem">
-            <h1>Ranku 추천 맛집</h1>
+            <h1>Ranku 규슈 추천 맛집</h1>
             <div style="display: flex; align-items: center; gap: .6rem">
-                <p id="page-update-time" class="f-14" style="color: #585858" role="note">25.10.21</p>
+                <p id="page-update-time" class="f-14" style="color: #585858" role="note">25.11.02</p>
                 <div class="update-date-svg"></div>
             </div>
         </div>
 
         <section class="filter-warpper" id="filters">
-            <div class="full-container chip-row" aria-label="지역" data-group="area">
-                <button class="f-15 chip on" data-value="1">전체</button>
-                <button class="f-15 chip" data-value="2">난바</button>
-                <button class="f-15 chip" data-value="3">우메다</button>
-                <button class="f-15 chip" data-value="4">신사이바시</button>
-                <button class="f-15 chip" data-value="5">텐노지</button>
-                <button class="f-15 chip" data-value="6">유니버셜</button>
-                <button class="f-15 chip" data-value="7">오사카</button>
-                <button class="f-15 chip" data-value="8">교토</button>
-                <button class="f-15 chip" data-value="9">고베</button>
-                <button class="f-15 chip" data-value="10">나라</button>
+            <div class="full-container chip-row" aria-label="지역" data-group="city">
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataLayer)">전체</button>
+                <button class="f-15 chip" data-value="2" onclick="controlDetailChip('FUKUOKA')">후쿠오카</button>
+                <button class="f-15 chip" data-value="3" onclick="controlDetailChip('OITA')">유후/벳푸</button>
+                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation()">구마모토</button>
+                <button class="f-15 chip" data-value="5" onclick="controlDetailChip('NAGASAKI')">나가사키</button>
+                <button class="f-15 chip" data-value="6" onclick="setParamDetailLocation()">가고시마</button>
+                <button class="f-15 chip" data-value="7" onclick="setParamDetailLocation()">미야자키</button>
+                <button class="f-15 chip" data-value="8" onclick="controlDetailChip('SAGA')">사가</button>
             </div>
-            <div class="full-container chip-row" style="display: none" aria-label="타입" data-group="type">
+            <div id="detail-area-row" style="display: none;" class="full-container chip-row" aria-label="세부지역" data-group="area">
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
+            </div>
+            <div class="full-container chip-row" aria-label="타입" style="display: none" data-group="type">
                 <button class="f-15 chip on" data-value="1">전체</button>
                 <button class="f-15 chip" data-value="2">가족</button>
                 <button class="f-15 chip" data-value="3">비지니스</button>
@@ -252,5 +278,5 @@
 </footer>
 </body>
 <script src="/js/main-2.js"></script>
-<script src="/js/restaurant-2.js"></script>
+<script src="/js/kyushu-restaurant.js"></script>
 </html>

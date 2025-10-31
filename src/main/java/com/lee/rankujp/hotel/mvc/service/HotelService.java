@@ -10,6 +10,8 @@ import com.lee.rankujp.hotel.repo.HotelRepo;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class HotelService {
     public Page<HotelWithPrice> salePage(int location, int sort, int page, LocalDate searchDate, boolean price) {
         Pageable pageable = PageRequest.of(page-1, 20);
         //
-        BooleanExpression predicate;
+        BooleanExpression predicate = qHotel.prefectureCode.eq(1).and(qHotel.isShow.isTrue());
 
         //정렬 null들어가면 에러나서 커버
         List<OrderSpecifier<?>> orders = new ArrayList<>();
@@ -52,8 +54,8 @@ public class HotelService {
 
 
         if (searchDate == null) {
-            predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
-            predicate = this.filterQueryExpression(predicate, location);
+            predicate = predicate.and(qHotel.bestDailyRate.ne(0.0));
+            predicate = this.kansaiFilterQueryExpression(predicate, location);
 
             if (order != null) {
                 orders.add(order);
@@ -67,8 +69,8 @@ public class HotelService {
                 orders.add(qHotel.rankuScore.desc());
             }
         } else {
-            predicate = qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0));
-            predicate = this.filterQueryExpression(predicate, location);
+            predicate = predicate.and(qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0)));
+            predicate = this.kansaiFilterQueryExpression(predicate, location);
 
             if (price) {
                 orders.add(qHotelPrice.dailyRate.asc());
@@ -165,14 +167,14 @@ public class HotelService {
     public Page<HotelWithScore> scorePage(int location, int sort, int page, LocalDate searchDate) {
         Pageable pageable = PageRequest.of(page-1, 20);
         //
-        BooleanExpression predicate;
+        BooleanExpression predicate = qHotel.prefectureCode.eq(1).and(qHotel.isShow.isTrue());
 
         if (searchDate == null) {
-            predicate = qHotel.bestDailyRate.ne(0.0).and(qHotel.isShow.isTrue());
-            predicate = this.filterQueryExpression(predicate, location);
+            predicate = predicate.and(qHotel.bestDailyRate.ne(0.0));
+            predicate = this.kansaiFilterQueryExpression(predicate, location);
         } else {
-            predicate = qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0));
-            predicate = this.filterQueryExpression(predicate, location);
+            predicate = predicate.and(qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0)));
+            predicate = this.kansaiFilterQueryExpression(predicate, location);
         }
 
         //정렬 null들어가면 에러나서 커버
@@ -304,7 +306,7 @@ public class HotelService {
     }
 
 
-    private BooleanExpression filterQueryExpression(BooleanExpression predicate, int location) {
+    private BooleanExpression kansaiFilterQueryExpression(BooleanExpression predicate, int location) {
 
         if (location == 1) {
             return predicate;
@@ -365,6 +367,366 @@ public class HotelService {
         return (predicate != null) ? predicate.and(common) : common;
     }
 
+    //kyushu==================================
+    public Page<HotelWithPrice> kyushuSalePage(int location, int area, int sort, int page, LocalDate searchDate, boolean price) {
+        Pageable pageable = PageRequest.of(page-1, 20);
+        //
+        BooleanExpression predicate = qHotel.prefectureCode.eq(2).and(qHotel.isShow.isTrue());
+
+        //정렬 null들어가면 에러나서 커버
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+        OrderSpecifier<?> order = this.orderType(sort);
+
+
+        if (searchDate == null) {
+            predicate = predicate.and(qHotel.bestDailyRate.ne(0.0));
+            predicate = this.kyushuFilterQueryExpression(predicate, location, area);
+
+            if (order != null) {
+                orders.add(order);
+                predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
+            }
+            if (price) {
+                orders.add(qHotel.bestDailyRate.asc());
+                orders.add(qHotel.bestSalePrecent.desc());
+            } else {
+                orders.add(qHotel.bestSalePrecent.desc());
+                orders.add(qHotel.rankuScore.desc());
+            }
+        } else {
+            predicate = predicate.and(qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0)));
+            predicate = this.kyushuFilterQueryExpression(predicate, location, area);
+
+            if (price) {
+                orders.add(qHotelPrice.dailyRate.asc());
+                orders.add(qHotelPrice.salePercent.desc());
+                if (order != null) {
+                    orders.add(order);
+                    predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotelPrice.salePercent.ne(0.0)));
+                }
+
+            } else {
+                if (order != null) {
+                    orders.add(order);
+                    predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotelPrice.salePercent.ne(0.0)));
+                }
+                orders.add(qHotelPrice.salePercent.desc());
+                orders.add(qHotel.rankuScore.desc());
+            }
+        }
+
+
+        if (searchDate != null) {
+
+            List<HotelWithPrice> results = jpaQueryFactory
+                    .select(
+                            Projections.constructor(HotelWithPrice.class,
+                                    qHotel.id,
+                                    qHotel.thumbnailImg,
+                                    qHotel.koName,
+                                    qHotel.starRating,
+                                    qHotelPrice.crossedOutRate,
+                                    qHotelPrice.dailyRate,
+                                    qHotelPrice.salePercent,
+                                    qHotel.averageBusinessScore,
+                                    qHotel.averageCoupleScore,
+                                    qHotel.averageSoloScore,
+                                    qHotel.averageFamilyScore
+                            ))
+                    .from(qHotelPrice)
+                    .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
+
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotelPrice.id.count())
+                            .from(qHotelPrice)
+                            .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+        else {
+            List<HotelWithPrice> results = jpaQueryFactory
+                    .select(
+                            Projections.constructor(HotelWithPrice.class,
+                                    qHotel.id,
+                                    qHotel.thumbnailImg,
+                                    qHotel.koName,
+                                    qHotel.starRating,
+                                    qHotel.bestCrossedOutRate,
+                                    qHotel.bestDailyRate,
+                                    qHotel.bestSalePrecent,
+                                    qHotel.averageBusinessScore,
+                                    qHotel.averageCoupleScore,
+                                    qHotel.averageSoloScore,
+                                    qHotel.averageFamilyScore
+                            ))
+                    .from(qHotel)
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
+
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotel.id.count())
+                            .from(qHotel)
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+
+
+    }
+
+    public Page<HotelWithScore> kyushuScorePage(int location, int area, int sort, int page, LocalDate searchDate) {
+        Pageable pageable = PageRequest.of(page-1, 20);
+        //
+        BooleanExpression predicate = qHotel.prefectureCode.eq(2).and(qHotel.isShow.isTrue());
+
+        if (searchDate == null) {
+            predicate = predicate.and(qHotel.bestDailyRate.ne(0.0));
+            predicate = this.kyushuFilterQueryExpression(predicate, location, area);
+        } else {
+            predicate = predicate.and(qHotelPrice.id.stayDate.eq(searchDate).and(qHotelPrice.dailyRate.ne(0.0)));
+            predicate = this.kyushuFilterQueryExpression(predicate, location, area);
+        }
+
+        //정렬 null들어가면 에러나서 커버
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+        OrderSpecifier<?> order = this.orderType(sort);
+
+        if (order != null) {
+            orders.add(order);
+            predicate = predicate.and(qHotel.reviewNum.gt(300).and(qHotel.bestSalePrecent.ne(0.0)));
+        }
+        orders.add(qHotel.rankuScore.desc());
+        orders.add(qHotel.starRating.desc());
+
+        if (searchDate != null) {
+
+            List<HotelWithScore> results = jpaQueryFactory
+                    .select(
+                            Projections.constructor(HotelWithScore.class,
+                                    qHotel.id,
+                                    qHotel.thumbnailImg,
+                                    qHotel.koName,
+                                    qHotel.starRating,
+                                    qHotel.rankuScore,
+                                    qHotel.averageBusinessScore,
+                                    qHotel.averageCoupleScore,
+                                    qHotel.averageSoloScore,
+                                    qHotel.averageFamilyScore
+                            ))
+                    .from(qHotelPrice)
+                    .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                    .join(qHotel.hotelCity, qHotelCity)
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
+
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotelPrice.id.count())
+                            .from(qHotelPrice)
+                            .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
+                            .join(qHotel.hotelCity, qHotelCity)
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+        else {
+            List<HotelWithScore> results = jpaQueryFactory
+                    .select(
+                            Projections.constructor(HotelWithScore.class,
+                                    qHotel.id,
+                                    qHotel.thumbnailImg,
+                                    qHotel.koName,
+                                    qHotel.starRating,
+                                    qHotel.rankuScore,
+                                    qHotel.averageBusinessScore,
+                                    qHotel.averageCoupleScore,
+                                    qHotel.averageSoloScore,
+                                    qHotel.averageFamilyScore
+                            ))
+                    .from(qHotel)
+                    .where(predicate)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .orderBy(orders.toArray(new OrderSpecifier[0]))
+                    .fetch();
+
+            long total = Optional.ofNullable(
+                    jpaQueryFactory
+                            .select(qHotel.id.count())
+                            .from(qHotel)
+                            .where(predicate)
+                            .fetchOne()
+            ).orElse(0L);
+
+            return new PageImpl<>(results, pageable, total);
+        }
+
+    }
+
+    private BooleanExpression kyushuFilterQueryExpression(BooleanExpression predicate, int location, int area) {
+
+        if (location == 1) {
+            return predicate;
+        } else {
+
+            switch (location) {
+                case 2: { //후쿠오카현
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(16527L));
+                    switch (area) {
+                        case 1: {
+                            break;
+                        }
+                        case 2: {//하카타
+                            predicate = this.distanceCalculator(predicate, 2);
+                            break;
+                        }
+                        case 3: {//텐진
+                            predicate = this.distanceCalculator(predicate, 3);
+                            break;
+                        }
+                        case 4: {//나카스
+                            predicate = this.distanceCalculator(predicate, 4);
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 3: { //오이타현
+                    switch (area) {
+                        case 1: {
+                            predicate = predicate.and(qHotel.hotelCity.id.in(106058L,144L,107890L));
+                            break;
+                        }
+                        case 2: {//유후
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(106058L));
+                            break;
+                        }
+                        case 3: {//벳푸
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(144L));
+                            break;
+                        }
+                        case 4: {//오이타시
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(107890L));
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 4: { //구마모토 1568
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(1568L));
+                    break;
+                }
+                case 5: {//나가사키현
+                    switch (area) {
+                        case 1: {
+                            predicate = predicate.and(qHotel.hotelCity.id.in(193L,107729L,255582L));
+                            break;
+                        }
+                        case 2: {//나가사키시
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(193L));
+                            break;
+                        }
+                        case 3: {//사세보
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(107729L));
+                            break;
+                        }
+                        case 4: {//운젠시
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(255582L));
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 6: { //가고시마시 1568
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(1568L));
+                    break;
+                }
+                case 7: { //미야자키시 13561
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(13561L));
+                    break;
+                }
+                case 8: {//사가현
+                    switch (area) {
+                        case 1: {
+                            predicate = predicate.and(qHotel.hotelCity.id.in(8563L,108182L,108162L));
+                            break;
+                        }
+                        case 2: {//사가시
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(8563L));
+                            break;
+                        }
+                        case 3: {//우레시노시
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(108182L));
+                            break;
+                        }
+                        case 4: {//아리타시
+                            predicate = predicate.and(qHotel.hotelCity.id.eq(108162L));
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return predicate;
+    }
+
+    private BooleanExpression distanceCalculator (BooleanExpression predicate, int value) {
+
+        double lat = 0.0;
+        double lon = 0.0;
+        double radiusKm = 2.0;
+
+        switch (value) {
+            case 2: {
+                lat = 33.59271143123159; lon = 130.43220441665974; break;
+            }
+            case 3: {
+                lat = 33.58052744323853; lon = 130.3892114733367; break;
+            }
+            case 4: {
+                lat = 33.59264691695046; lon = 130.40702134119587; break;
+            }
+        }
+        if ( lat == 0.0 ) {return predicate;}
+
+
+        // 1차 범위 제한
+        double latRange = radiusKm / 111.0;
+        double lonRange = radiusKm / (111.0 * Math.cos(Math.toRadians(lat)));
+
+        predicate = predicate.and(qHotel.latitude.between(lat - latRange, lat + latRange));
+        predicate = predicate.and(qHotel.longitude.between(lon - lonRange, lon + lonRange));
+
+        // 2차 정밀 거리 제한
+        NumberExpression<Double> distanceExpr = Expressions.numberTemplate(Double.class,
+                "6371 * acos(cos(radians({0})) * cos(radians({1})) * cos(radians({2}) - radians({3})) + sin(radians({0})) * sin(radians({1})))",
+                lat, qHotel.latitude, qHotel.longitude, lon);
+        predicate = predicate.and(distanceExpr.loe(radiusKm));
+
+        return predicate;
+    }
 
     //detail================================
 
@@ -525,122 +887,4 @@ public class HotelService {
         return res.getResults().get(0);
     }
 
-//    @Transactional
-//    public void updater() {
-//
-//        List<Hotel> hotels = jpaQueryFactory
-//                .selectFrom(qHotel)
-//                .where(qHotel.title.isNull()
-//                        .and(qHotel.koName.isNotNull())
-//                )
-//                .fetch();
-//
-//        hotels.forEach( (hotel) -> {
-//            this.setSEO(hotel);
-//        });
-//
-//    }
-//    private static final int TITLE_MAX = 60;
-//    private static final int DESC_MAX  = 160;
-//
-//    private static final List<String> KEYWORD_POOL = List.of(
-//            "일본호텔 순위","호텔 가격 비교","호텔 할인","예약사이트","호텔 예약 꿀팁",
-//            "일본호텔추천","일본호텔순위","일본호텔랭킹","일본호텔정보","일본호텔예약","일본호텔비교"
-//    );
-//
-//    private void setSEO(Hotel h) {
-//        if (h.getDescription() == null || h.getDescription().isBlank()) {
-//            this.setDescription(h);
-//        }
-//        this.setTitle(h);
-//        this.setKeywords(h);
-//    }
-//    /** Title 생성 */
-//    private void setTitle(Hotel h) {
-//        // 1. 기본 프리픽스
-//        StringBuilder sb = new StringBuilder("호텔 추천 랭킹 | ");
-//
-//        // 2. 포인트(지역) 있으면 붙이기
-//        if (h.getPointLocation() != null) {
-//            sb.append((h.getPointLocation().getTitle())).append(" | ");
-//        }
-//
-//        // 3. 한글 호텔명 (없으면 title 또는 영문명 등 대체)
-//        String primaryName = notBlank(h.getKoName()) ? h.getKoName() :
-//                notBlank(h.getTitle())  ? h.getTitle()  : "일본 호텔";
-//        sb.append(primaryName);
-//
-//        // 4. 키워드 랜덤 1개
-//        String randomKeyword = randomOne(KEYWORD_POOL);
-//        sb.append(" | ").append(randomKeyword);
-//
-//        // 5. 브랜드(사이트명)
-//        sb.append(" | 랭쿠jp, RankuJp");
-//
-//        // 6. 길이 제어
-//        String finalTitle = trimToLength(sb.toString(), TITLE_MAX);
-//
-//        h.titleUpdater(finalTitle); // <- 호텔에 title 저장 또는 세팅하는 메서드
-//    }
-//
-//    /** Meta Description 생성 */
-//    private void setDescription(Hotel h) {
-//        // 호텔 설명을 베이스로 요약 (없으면 기본 카피)
-//        String base = "일본호텔 랭킹을 통해 가격 비교로 가성비 숙소 쉽게 찾는 법, 할인예약 일본호텔 오사카 숙소 비교부터 할인 예약까지｜후기 기반 호텔 순위, 가격 비교｜최신 일본호텔 정보";
-//
-//        // 포인트/핵심 속성들 추가
-//        List<String> parts = new ArrayList<>();
-//        if (h.getPointLocation() != null) {
-//            parts.add(h.getPointLocation().getTitle());
-//        }
-//
-//        String tail = parts.isEmpty() ? "" : " · " + String.join(" · ", parts);
-//
-//        String finalDesc = trimToLength(base.replaceAll("\\s+", " ") + tail, DESC_MAX);
-//
-//        h.descriptionUpdater(finalDesc); // <- meta description 저장/세팅
-//    }
-//
-//    /** Meta Keywords 생성 (선택사항: 요즘 검색엔진 가중치 거의 없음, 내부 분석용 정도) */
-//    private void setKeywords(Hotel h) {
-//        // 호텔명/지역 + 키워드 풀에서 상위 N개
-//        Set<String> set = new LinkedHashSet<>();
-//        if (notBlank(h.getKoName())) set.add(h.getKoName());
-//        if (h.getPointLocation() != null) set.add(h.getPointLocation().getTitle());
-//        set.addAll(pickNRandom(KEYWORD_POOL, 5));
-//
-//        // 중복 제거된 CSV
-//        String csv = set.stream()
-//                .map(String::trim)
-//                .filter(s -> !s.isBlank())
-//                .collect(Collectors.joining(", "));
-//
-//        h.keywordUpdater(csv);
-//    }
-//
-//    // ------------------ helpers ------------------
-//
-//    private static String randomOne(List<String> list) {
-//        return list.get(ThreadLocalRandom.current().nextInt(list.size()));
-//    }
-//
-//    private static List<String> pickNRandom(List<String> list, int n) {
-//        List<String> copy = new ArrayList<>(list);
-//        Collections.shuffle(copy);
-//        return copy.subList(0, Math.min(n, copy.size()));
-//    }
-//
-//    private static String trimToLength(String s, int max) {
-//        if (s == null) return "";
-//        if (s.length() <= max) return s;
-//        return s.substring(0, Math.max(0, max - 1)).trim() + "…";
-//    }
-//
-//    private static boolean notBlank(String s) {
-//        return s != null && !s.isBlank();
-//    }
-//    private void setPoint(Hotel h) {
-//        PointLocation.from(h.getLatitude(), h.getLongitude())
-//                .ifPresent(h::pointUpdater);
-//    }
 }

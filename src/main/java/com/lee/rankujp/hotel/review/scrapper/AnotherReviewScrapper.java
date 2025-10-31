@@ -18,12 +18,12 @@ public class AnotherReviewScrapper {
 //        tripService.startReviewScrap();
 //    }
 
-    @PostMapping("/odong/scrap/jalan")
-    public void jalanReview() {
-        jalanService.startReviewScrap();
-    }
-    @PostMapping("/odong/scrap/google")
-    public void googleReview() {
-        googlePlaceService.startReviewScrap();
-    }
+//    @PostMapping("/odong/scrap/jalan")
+//    public void jalanReview() {
+//        jalanService.startReviewScrap();
+//    }
+//    @PostMapping("/odong/scrap/google")
+//    public void googleReview() {
+//        googlePlaceService.startReviewScrap();
+//    }
 }

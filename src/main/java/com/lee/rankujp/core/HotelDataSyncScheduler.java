@@ -42,7 +42,7 @@
 //
 //    }
 //
-//    @Scheduled(cron = "0 0 0,6,12,18 * * *", zone = "Asia/Seoul")
+//    @Scheduled(cron = "0 1 0,6,12,18 * * *", zone = "Asia/Seoul")
 //    public void runAtFixedTimes() {
 //        if (!running.compareAndSet(false, true)) {
 //            log.warn("⏳ 이전 작업이 아직 진행 중이어서 이번 사이클은 스킵합니다.");

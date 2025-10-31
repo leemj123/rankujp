@@ -45,6 +45,7 @@ public class GooglePlaceService {
 
                 // 1) 네트워크(트랜잭션 밖)
                 String hotelGoogleId = googleIdFlux(h.getEnName()).block(java.time.Duration.ofSeconds(10));
+                if (hotelGoogleId == null) {log.warn("ID 못찾음: {}",h.getId()); continue;}
                 GooglePlaceReviewDto googlePlaceReviewDto = googlePlaceFlux(hotelGoogleId).block(java.time.Duration.ofSeconds(10));
                 if (googlePlaceReviewDto == null) {
                     log.warn("받아올 수 없음: {}", h.getId());
@@ -59,7 +60,7 @@ public class GooglePlaceService {
                 // 2) 단건 트랜잭션으로 즉시 저장
                 saver.insertOne(h, ReviewBrand.GOOGLE, score, googlePlaceReviewDto.getUserRatingCount());
 
-                Thread.sleep(1000);
+                Thread.sleep(100);
 
             } catch (Exception e) {
                 log.warn("Hotel {} failed: {}", h.getId(), e.toString());
@@ -74,7 +75,7 @@ public class GooglePlaceService {
 
         return googleWebClient.post()
                 .uri(":searchText") // baseUrl 뒤에 그대로 붙음 (Postman과 동일 동작)
-                .header("X-Goog-FieldMask", "places.id")
+//                .header("X-Goog-FieldMask", "places.id")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("User-Agent", "Mozilla/5.0 (compatible; RankuBot/1.0)")
                 .bodyValue(Map.of("textQuery", name))

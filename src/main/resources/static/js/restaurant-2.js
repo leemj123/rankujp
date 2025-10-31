@@ -2,7 +2,7 @@ const wrapper = document.getElementById('filters');
 const topSection = document.getElementById('top-item-section');
 const normalSection = document.getElementById('normal-item-section');
 
-let page = 2;
+let page = 1;
 let paramLocation = 1;
 let paramType = 1;
 
@@ -29,26 +29,11 @@ wrapper.addEventListener('click', (e) => {
 
     const [firstValue, secondValue] = Array.from(onButtons).map(b => b.dataset.value);
 
-    page =2;
-    const url = new URL('/restaurant/list', location.origin);
-    url.searchParams.set('location', firstValue);
-    url.searchParams.set('type', secondValue);
-
-    page = 2;
+    page = 1;
     paramLocation = firstValue;
     paramType = secondValue;
 
-
-    fetch(url, { headers: { 'Accept': 'application/json' } })
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-            renderRanking(data);
-
-        })
-        .catch(console.error);
+    initRender();
 
 });
 // ------------------------------------------------------------------
@@ -196,6 +181,25 @@ window.addEventListener('scroll', () => {
     });
 }, { passive: true });
 
+function initRender() {
+    page = 1;
+    const url = new URL('/restaurant/list', location.origin);
+    url.searchParams.set('page', page);
+    url.searchParams.set('location', paramLocation);
+    url.searchParams.set('type', paramType);
+
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            renderRanking(data);
+
+        })
+        .catch(console.error);
+
+}
 function renderInfinityPageNation() {
 
     const url = new URL('/restaurant/list', location.origin);

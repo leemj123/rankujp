@@ -218,4 +218,69 @@ public class RestaurantService {
     }
 
 
+    //kyushu--------------
+    @Transactional
+    public Page<RestaurantResponseDto> kyushuRestaurantPage(int location, int area, int sort, int page) {
+        Pageable pageable = PageRequest.of(page-1, 20);
+
+        BooleanExpression predicate = this.filterQueryExpression(location);
+
+        Double C = jpaQueryFactory
+                .select(qRestaurant.rating.avg())
+                .from(qRestaurant)
+                .fetchOne();
+        if (C == null) C = 0.0;
+
+        double m = 80.0;
+
+        NumberExpression<Double> R = qRestaurant.rating.coalesce(0.0);
+        NumberExpression<Double> v = qRestaurant.userRatingCount.coalesce(0L).doubleValue();
+
+        // 상수들도 NumberExpression으로 명시
+        NumberExpression<Double> mConst = Expressions.numberTemplate(Double.class, "{0}", m);
+        NumberExpression<Double> cConst = Expressions.numberTemplate(Double.class, "{0}", C);
+
+        // (v / (v + m)) * R + (m / (v + m)) * C
+        NumberExpression<Double> score =
+                v.divide(v.add(mConst)).multiply(R)
+                        .add(
+                                mConst.divide(v.add(mConst)).multiply(cConst)
+                        );
+
+        List<Restaurant> restaurantList = jpaQueryFactory
+                .selectFrom(qRestaurant)
+                .where(predicate)
+                .orderBy( score.desc(), v.desc() )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = Optional.ofNullable(
+                jpaQueryFactory
+                        .select(qRestaurant.id.count())
+                        .from(qRestaurant)
+                        .where(predicate)
+                        .fetchOne()
+        ).orElse(0L);
+
+        List<RestaurantResponseDto> rRDL = new ArrayList<>();
+        for (Restaurant restaurant : restaurantList) {
+            List<PlaceImg> imgList = restaurant.getPlaceImgList();
+            if (imgList == null || imgList.isEmpty()) {continue;}
+            PlaceImg place = imgList.get(0);
+
+            rRDL.add(
+                    RestaurantResponseDto.builder()
+                            .id(restaurant.getId())
+                            .thumbnailUri(place.getThumbnailUri())
+                            .title(restaurant.getTitle())
+                            .rating(restaurant.getRating())
+                            .userRatingCount(restaurant.getUserRatingCount())
+                            .googleMapsUri(restaurant.getGoogleMapsUri())
+                            .build()
+            );
+        }
+
+        return new PageImpl<>(rRDL, pageable, total);
+    }
 }
