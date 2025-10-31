@@ -20,7 +20,8 @@ public class RestFulController {
     private final HotelService hotelService;
 
     @GetMapping("/sale")
-    public Page<HotelWithPrice> sale(@RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type,
+    public Page<HotelWithPrice> sale(@RequestParam(defaultValue = "1") int location,
+                                     @RequestParam(defaultValue = "1") int type,
                                      @RequestParam(defaultValue = "1") int page, @RequestParam(required = false)LocalDate searchDate,
                                      @RequestParam(defaultValue = "false") boolean price){
         return hotelService.salePage(location, type, page, searchDate, price);
@@ -29,6 +30,19 @@ public class RestFulController {
     public Page<HotelWithScore> score(@RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type,
                                       @RequestParam(defaultValue = "1") int page, @RequestParam(required = false)LocalDate searchDate){
         return hotelService.scorePage(location, type, page, searchDate);
+    }
+
+    @GetMapping("/kyushu/sale")
+    public Page<HotelWithPrice> sale(@RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int area,
+                                     @RequestParam(defaultValue = "1") int type,
+                                     @RequestParam(defaultValue = "1") int page, @RequestParam(required = false)LocalDate searchDate,
+                                     @RequestParam(defaultValue = "false") boolean price){
+        return hotelService.kyushuSalePage(location, area, type, page, searchDate, price);
+    }
+    @GetMapping("/kyushu/score")
+    public Page<HotelWithScore> score(@RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int area, @RequestParam(defaultValue = "1") int type,
+                                      @RequestParam(defaultValue = "1") int page, @RequestParam(required = false)LocalDate searchDate){
+        return hotelService.kyushuScorePage(location, area, type, page, searchDate);
     }
     @GetMapping("/premium")
     public Page<PremiumResponse> premium(@RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
