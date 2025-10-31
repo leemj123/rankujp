@@ -315,6 +315,7 @@ function initRender() {
     const url = new URL('/rest/kyushu/sale', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
+    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
     url.searchParams.set('price',Boolean(price))
@@ -336,6 +337,7 @@ function renderInfinityPageNation() {
     const url = new URL('/rest/kyushu/sale', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
+    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
     url.searchParams.set('price',Boolean(price))

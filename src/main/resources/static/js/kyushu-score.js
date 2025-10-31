@@ -325,7 +325,9 @@ function initRender() {
     const url = new URL('/rest/kyushu/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
+    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
+
     url.searchParams.set('searchDate',toYMD(searchDate))
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
@@ -346,6 +348,7 @@ function renderInfinityPageNation() {
     const url = new URL('/rest/kyushu/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
+    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
 

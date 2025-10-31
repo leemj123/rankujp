@@ -69,6 +69,9 @@ public class Hotel {
 
     private boolean isShow;
 
+    @Column(nullable = false)
+    private int prefectureCode;
+
     public void averageScoreUpdate(long count ,double v, double v1, double v2, double v3, double v4, double v5) {
         this.reviewNum = count;
         this.averageAllScore = v;
