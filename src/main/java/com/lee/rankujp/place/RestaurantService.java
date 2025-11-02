@@ -37,11 +37,7 @@ public class RestaurantService {
                 "({0} * acos(cos(radians({1})) * cos(radians({2}.latitude)) * cos(radians({2}.longitude) - radians({3})) + sin(radians({1})) * sin(radians({2}.latitude))))",
                 earthRadius, lat, qRestaurant, lon);
 
-        Double C = jpaQueryFactory
-                .select(qRestaurant.rating.avg())
-                .from(qRestaurant)
-                .fetchOne();
-        if (C == null) C = 0.0;
+        Double C = 4.108587;
 
         double m = 80.0;
 
@@ -115,11 +111,7 @@ public class RestaurantService {
 
         BooleanExpression predicate = this.filterQueryExpression(location);
 
-        Double C = jpaQueryFactory
-                .select(qRestaurant.rating.avg())
-                .from(qRestaurant)
-                .fetchOne();
-        if (C == null) C = 0.0;
+        Double C = 4.17426;
 
         double m = 80.0;
 
@@ -175,41 +167,41 @@ public class RestaurantService {
     }
 
     private BooleanExpression filterQueryExpression(int location) {
-        BooleanExpression predicate = null;
+        BooleanExpression predicate = qRestaurant.prefectureCode.eq(1);
 
         if (location == 1) {return predicate;}
 
         if (location < 7) {
             switch (location) {
                 case 2: {
-                    predicate = qRestaurant.pointLocation.eq(PointLocation.NAMBA); break;
+                    predicate = predicate.and(qRestaurant.pointLocation.eq(PointLocation.NAMBA)); break;
                 }
                 case 3: {
-                    predicate = qRestaurant.pointLocation.eq(PointLocation.UMEDA); break;
+                    predicate = predicate.and(qRestaurant.pointLocation.eq(PointLocation.UMEDA)); break;
                 }
                 case 4: {
-                    predicate = qRestaurant.pointLocation.eq(PointLocation.SHINSAIBASHI); break;
+                    predicate = predicate.and(qRestaurant.pointLocation.eq(PointLocation.SHINSAIBASHI)); break;
                 }
                 case 5: {
-                    predicate = qRestaurant.pointLocation.eq(PointLocation.TENOJI); break;
+                    predicate = predicate.and(qRestaurant.pointLocation.eq(PointLocation.TENOJI)); break;
                 }
                 case 6: {
-                    predicate = qRestaurant.pointLocation.eq(PointLocation.USJ); break;
+                    predicate = predicate.and(qRestaurant.pointLocation.eq(PointLocation.USJ)); break;
                 }
             }
         } else {
             switch (location) {
                 case 7: {
-                    predicate = qRestaurant.hotelCity.id.eq(9590L); break;
+                    predicate = predicate.and(qRestaurant.hotelCity.id.eq(9590L)); break;
                 }
                 case 8: {
-                    predicate = qRestaurant.hotelCity.id.eq(1784L); break;
+                    predicate = predicate.and(qRestaurant.hotelCity.id.eq(1784L)); break;
                 }
                 case 9: {
-                    predicate = qRestaurant.hotelCity.id.eq(5235L); break;
+                    predicate = predicate.and(qRestaurant.hotelCity.id.eq(5235L)); break;
                 }
                 case 10: {
-                    predicate = qRestaurant.hotelCity.id.eq(13313L); break;
+                    predicate = predicate.and(qRestaurant.hotelCity.id.eq(13313L)); break;
                 }
             }
         }
@@ -223,13 +215,9 @@ public class RestaurantService {
     public Page<RestaurantResponseDto> kyushuRestaurantPage(int location, int area, int sort, int page) {
         Pageable pageable = PageRequest.of(page-1, 20);
 
-        BooleanExpression predicate = this.filterQueryExpression(location);
+        BooleanExpression predicate = this.KyushuFilterQueryExpression(location,area);
 
-        Double C = jpaQueryFactory
-                .select(qRestaurant.rating.avg())
-                .from(qRestaurant)
-                .fetchOne();
-        if (C == null) C = 0.0;
+        Double C = 4.034879;
 
         double m = 80.0;
 
@@ -282,5 +270,95 @@ public class RestaurantService {
         }
 
         return new PageImpl<>(rRDL, pageable, total);
+    }
+    private BooleanExpression KyushuFilterQueryExpression(int location, int area) {
+        BooleanExpression predicate = qRestaurant.prefectureCode.eq(2);
+
+        if (location == 1) {
+            return predicate;
+        } else {
+
+            switch (location) {
+
+                case 3: { //오이타현
+                    switch (area) {
+                        case 1: {
+                            predicate = predicate.and(qRestaurant.hotelCity.id.in(106058L,144L,107890L));
+                            break;
+                        }
+                        case 2: {//유후
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(106058L));
+                            break;
+                        }
+                        case 3: {//벳푸
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(144L));
+                            break;
+                        }
+                        case 4: {//오이타시
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(107890L));
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 4: { //구마모토 1568
+                    predicate = predicate.and(qRestaurant.hotelCity.id.eq(1568L));
+                    break;
+                }
+                case 5: {//나가사키현
+                    switch (area) {
+                        case 1: {
+                            predicate = predicate.and(qRestaurant.hotelCity.id.in(193L,107729L,255582L));
+                            break;
+                        }
+                        case 2: {//나가사키시
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(193L));
+                            break;
+                        }
+                        case 3: {//사세보
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(107729L));
+                            break;
+                        }
+                        case 4: {//운젠시
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(255582L));
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 6: { //가고시마시 1568
+                    predicate = predicate.and(qRestaurant.hotelCity.id.eq(1568L));
+                    break;
+                }
+                case 7: { //미야자키시 13561
+                    predicate = predicate.and(qRestaurant.hotelCity.id.eq(13561L));
+                    break;
+                }
+                case 8: {//사가현
+                    switch (area) {
+                        case 1: {
+                            predicate = predicate.and(qRestaurant.hotelCity.id.in(8563L,108182L,108162L));
+                            break;
+                        }
+                        case 2: {//사가시
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(8563L));
+                            break;
+                        }
+                        case 3: {//우레시노시
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(108182L));
+                            break;
+                        }
+                        case 4: {//아리타시
+                            predicate = predicate.and(qRestaurant.hotelCity.id.eq(108162L));
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return predicate;
+
     }
 }
