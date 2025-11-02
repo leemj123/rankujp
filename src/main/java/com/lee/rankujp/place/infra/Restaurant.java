@@ -59,6 +59,8 @@ public class Restaurant {
 
     private PointLocation pointLocation;
 
+    private int prefectureCode;
+
 //    public Restaurant(GoogleRestaurantResponse grr) {
 //        this.googlePlaceId = grr.getId();
 //        this.internationalPhoneNumber = grr.getInternationalPhoneNumber();
@@ -93,8 +95,8 @@ public class Restaurant {
 //
 //    }
 
-    public void addImage(PlaceImg img) {
-        placeImgList.add(img);
-        img.setRestaurant(this);
-    }
+//    public void addImage(PlaceImg img) {
+//        placeImgList.add(img);
+//        img.setRestaurant(this);
+//    }
 }

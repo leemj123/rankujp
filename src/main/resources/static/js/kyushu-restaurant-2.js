@@ -44,19 +44,10 @@ function controlDetailChip(value) {
     paramDetailLocation = 1;
 
     switch(value) {
-        case 'FUKUOKA' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">하카타</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">텐진</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">나카스</button>
-            `;
-            break;
-        }
         case 'OITA' : {
             detailChipColum.innerHTML = `
                 <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">유후</button>
+                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">유후인</button>
                 <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">벳푸</button>
                 <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">오이타시</button>
             `;
