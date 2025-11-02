@@ -2,18 +2,12 @@ package com.lee.rankujp.core.sitemap;
 
 import com.lee.rankujp.hotel.infra.QHotel;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -164,11 +158,75 @@ public String makeSiteMap() {
             <loc>https://rankujp.com/restaurant?page=5</loc>
             <lastmod>%s</lastmod>
         </url>
+        <url>
+            <loc>https://rankujp.com/kyushu</loc>
+            <lastmod>%s</lastmod>
+            <priority>1.0</priority>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/score</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/score?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/score?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/score?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/score?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/restaurant</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/restaurant?page=2</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/restaurant?page=3</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/restaurant?page=4</loc>
+            <lastmod>%s</lastmod>
+        </url>
+        <url>
+            <loc>https://rankujp.com/kyushu/restaurant?page=5</loc>
+            <lastmod>%s</lastmod>
+        </url>
     """,
             today, today, today, today, today,
             today, today, today, today, today,
             today, today, today, today, today,
-            today, today, today, today, today
+            "2025-10-21", "2025-10-21", "2025-10-21", "2025-10-21", "2025-10-21",
+            today, today, today, today, today,
+            today, today, today, today, today,
+            "2025-11-02", "2025-11-02", "2025-11-02", "2025-11-02", "2025-11-02"
     ));
 
     // ✅ 동적 hotel 리스트 부분 (DB 데이터 기준)
