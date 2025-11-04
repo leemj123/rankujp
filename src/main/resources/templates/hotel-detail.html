@@ -250,7 +250,7 @@
               </div>
           </div>
         </section>
-          <a th:href="${content.bestLink}" target="_blank" style="height: 7.6rem; display: flex; justify-content: flex-end; margin-bottom: 2rem;">
+          <a th:href="${content.bestLink}" target="_blank" style="height: 7.6rem; display: flex; justify-content: flex-end; margin-bottom: 2rem;" class="track-click" data-number="11">
               <div style="width: 24.4rem; height: 100%; display: flex; align-items: flex-end;">
                   <div class="update-timer shaking" id="update-timer">
                       <p class="f-15 f-b " style="color: #FFD700;">가격종료까지
@@ -295,7 +295,7 @@
                           <div class="price-line-seperator" style="height: 2px; border-top: 2px solid #111111;"></div>
                           <ol>
                               <li th:each="price, iterStat : ${content.weekdayPriceList}">
-                                  <a th:href="${price.link}" target="_blank">
+                                  <a th:href="${price.link}" target="_blank" class="track-click" data-number="21">
                                       <div class="price-day padding-30">
                                           <div class="price-left">
                                               <div class="ranku daily"
@@ -347,7 +347,7 @@
                           <div class="price-line-seperator" style="height: 2px; border-top: 2px solid #111111;"></div>
                           <ol>
                               <li th:each="price, iterStat : ${content.weekendPriceList}">
-                                  <a th:href="${price.link}" target="_blank">
+                                  <a th:href="${price.link}" target="_blank"  class="track-click" data-number="22">
                                       <div class="price-day padding-30">
                                           <div class="price-left">
                                               <div class="ranku daily"
@@ -399,7 +399,7 @@
                   <h3>사이트 평점 한눈에 확인해보세요!</h3>
                   <div class="review-flex">
                       <!-- AGODA -->
-                      <a th:href="${content.bestLink}" target="_blank">
+                      <a th:href="${content.bestLink}" target="_blank" class="track-click" data-number="31">
                           <div class="review-item" th:with="review=${content.brandReviewMap['AGODA']}">
                               <div class="site-logo agoda"></div>
                               <h4 class="f-14">전세계 숙박 최저가</h4>
@@ -422,7 +422,7 @@
                       </a>
 
                       <!-- TRIPDOTCOM -->
-                      <a target="_blank"
+                      <a target="_blank" class="track-click" data-number="32"
                          th:href="${'https://kr.trip.com/global-search/searchlist/search/?keyword=' + content.enName + '&from=home&Allianceid=7133519&SID=262883181&trip_sub1=rankujp.com&trip_sub3=D5618272'}">
                           <div class="review-item" th:with="review=${content.brandReviewMap['TRIPDOTCOM']}">
                               <div class="site-logo tripcom"></div>
@@ -446,7 +446,7 @@
                       </a>
 
                       <!-- JALAN -->
-                      <a target="_blank" th:href="${'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=' + content.jpName}">
+                      <a target="_blank"  class="track-click" data-number="33" th:href="${'https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=' + content.jpName}">
                           <div class="review-item" th:with="review=${content.brandReviewMap['JALAN']}">
                               <div class="site-logo jyaran"></div>
                               <h4 class="f-14">일본 현지 예약 1위</h4>
@@ -467,7 +467,7 @@
                       </a>
 
                       <!-- TripAdvisor -->
-                      <a target="_blank" th:href="${'https://www.tripadvisor.co.kr/Search?q=' + content.enName + '&geo=1'}">
+                      <a target="_blank"  class="track-click" data-number="34" th:href="${'https://www.tripadvisor.co.kr/Search?q=' + content.enName + '&geo=1'}">
                           <div class="review-item" th:with="review=${content.brandReviewMap['GOOGLE']}">
                               <div class="site-logo tripadvisor"></div>
                               <h4 class="f-14">영미권 사용자 리뷰</h4>
@@ -519,7 +519,7 @@
               <section class="description-section">
                   <h3>세부내용</h3>
                   <p class="hotel-description f-15" th:text="${content.description}"></p>
-                  <a target="_blank" th:href ="${content.bestLink}"><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
+                  <a  class="track-click" data-number="41" target="_blank" th:href ="${content.bestLink}"><button class="btn-st" style="width: 100%;">자세히 보러가기</button></a>
               </section>
 
               <section class="group-review">
@@ -598,7 +598,7 @@
                              th:data-authorlink="${p.authorGoogleMapsUri}"
                              onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
                       </div>
-                      <a class="place-description" th:href="${p.googleMapsUri}" target="_blank">
+                      <a class="place-description track-click" th:href="${p.googleMapsUri}" target="_blank" data-number="51">
                           <div class="place-title">
                               <div class="ranku daily"
                                    th:classappend="${stat.index == 0 ? ' gold' :
@@ -636,7 +636,7 @@
                                th:data-authorlink="${p.authorGoogleMapsUri}"
                                onclick="openPlaceModal(this.dataset.src,this.dataset.author,this.dataset.authorlink)">
                       </div>
-                      <a class="place-description" th:href="${p.googleMapsUri}" target="_blank">
+                      <a class="place-description track-click" data-number="52" th:href="${p.googleMapsUri}" target="_blank">
                           <div class="place-title">
                               <div class="ranku daily normal">
                                   <span class="ranku-value" th:text="${stat.index + 1}"></span>
@@ -658,7 +658,7 @@
 
                   </div>
                   </th:block>
-                  <a class="place normal-restaurant more btn-st" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
+                  <a class="place normal-restaurant more btn-st track-click" data-number="53" th:href="${'https://www.google.com/maps/search/%EB%A7%9B%EC%A7%91/@'+content.latitude+','+content.longitude+',17z'}" target="_blank">
                       <div class="more-place-svg"></div>
                   </a>
               </div>
@@ -714,7 +714,7 @@
                 </p>
             </div>
 
-            <a th:href="${content.bestLink}" target="_blank">
+            <a th:href="${content.bestLink}" target="_blank" class="track-click" data-value="12">
                 <button class="btn-st shine-btn shining" id="shine-btn">
                     <span class="shine-btn-front f-17 f-b">할인 자동 적용 페이지로</span>
                     <span class="shine-btn-back">
@@ -783,4 +783,5 @@
 <script src="/js/hotel-detail-2.js"></script>
 <script src="/js/place-2.js"></script>
 <script src="/js/detail-move-2.js"></script>
+<script src="/js/btnStorage.js"></script>
 </html>
