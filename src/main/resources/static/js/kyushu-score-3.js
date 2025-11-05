@@ -9,6 +9,7 @@ let searchDate;
 let price = false;
 let paramDetailLocation = 1;
 
+let pageNationStop = false;
 // --- 공통 유틸: YYYY-MM-DD 포맷터 (로컬 타임존 기준, 제로패딩) ---
 function toYMD(date) {
     if (date) {
@@ -273,28 +274,75 @@ const noneRankCard = (item, rank) => {
 };
 
 function renderRanking(data){
-    const top3 = data.content.slice(0, 3);
-    const rest = data.content.slice(3);
+    if (data.content.length === 0) {
+        pageNationStop = true;
+        topSection.innerHTML = `
+        <div class="end-content top">
+            <div class="end-point-svg"></div>
+            오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        </div>
+        `;
+        normalSection.innerHTML =``;
 
-    // TOP 3
-    topSection.innerHTML = '';
-    const topFrag = document.createDocumentFragment();
-    top3.forEach((item,i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = topCard(item, i+1);
-        topFrag.appendChild(wrap.firstElementChild);
-    });
-    topSection.appendChild(topFrag);
+    }  else if (data.content.length < 20) {
+        pageNationStop = true;
 
-    // NORMAL (4위~)
-    normalSection.innerHTML = '';
-    const normalFrag = document.createDocumentFragment();
-    rest.forEach((item,i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, i+4);
-        normalFrag.appendChild(wrap.firstElementChild);
-    });
-    normalSection.appendChild(normalFrag);
+        const top3 = data.content.slice(0, 3);
+        const rest = data.content.slice(3);
+
+        topSection.innerHTML = '';
+        const topFrag = document.createDocumentFragment();
+        top3.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = topCard(item, i+1);
+            topFrag.appendChild(wrap.firstElementChild);
+        });
+
+        topSection.appendChild(topFrag);
+
+        normalSection.innerHTML = '';
+        const normalFrag = document.createDocumentFragment();
+        rest.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, i+4);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+
+        normalSection.appendChild(normalFrag);
+
+        const nonContent = document.createElement('div');
+        nonContent.classList.add('end-content', 'normal');
+        nonContent.innerHTML = `
+                <div class="end-point-svg"></div>
+                오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        `;
+        normalSection.appendChild(nonContent);
+
+    } else {
+        pageNationStop = false;
+        const top3 = data.content.slice(0, 3);
+        const rest = data.content.slice(3);
+
+        // TOP 3
+        topSection.innerHTML = '';
+        const topFrag = document.createDocumentFragment();
+        top3.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = topCard(item, i+1);
+            topFrag.appendChild(wrap.firstElementChild);
+        });
+        topSection.appendChild(topFrag);
+
+        // NORMAL (4위~)
+        normalSection.innerHTML = '';
+        const normalFrag = document.createDocumentFragment();
+        rest.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, i+4);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+        normalSection.appendChild(normalFrag);
+    }
 }
 
 
@@ -321,6 +369,8 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 function initRender() {
+    pageNationStop = false;
+
     page = 1;
     const url = new URL('/rest/kyushu/score', location.origin);
     url.searchParams.set('page', page);
@@ -344,6 +394,8 @@ function initRender() {
 
 
 function renderInfinityPageNation() {
+    if (pageNationStop) { return; }
+
     page = page + 1;
     const url = new URL('/rest/kyushu/score', location.origin);
     url.searchParams.set('page', page);
@@ -382,8 +434,19 @@ function renderNormal(data) {
         });
     }
 
-
     normalSection.appendChild(normalFrag);
+
+    if (data.length < 20) {
+        pageNationStop = true;
+        const nonContent = document.createElement('li');
+        nonContent.classList.add('end-content', 'normal');
+        nonContent.innerHTML = `
+                <div class="end-point-svg"></div>
+                오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        `;
+        normalSection.appendChild(nonContent);
+
+    }
 }
 
 function resetSearchDate() {

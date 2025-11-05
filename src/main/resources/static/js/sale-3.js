@@ -7,7 +7,7 @@ let paramLocation = 1;
 let paramType = 1;
 let searchDate;
 let price = false;
-let paramDetailLocation = 1;
+let pageNationStop = false;
 
 // --- 공통 유틸: YYYY-MM-DD 포맷터 (로컬 타임존 기준, 제로패딩) ---
 function toYMD(date) {
@@ -41,78 +41,14 @@ wrapper.addEventListener('click', (e) => {
     const onButtons = wrapper.querySelectorAll('.chip-row .chip.on');
     if (onButtons.length < 2) return;
 
-    const [firstValue, secondValue, thirdValue] = Array.from(onButtons).map(b => b.dataset.value);
+    const [firstValue, secondValue] = Array.from(onButtons).map(b => b.dataset.value);
 
-
-
-    page = 1;
     paramLocation = firstValue;
-    paramDetailLocation = secondValue;
-    paramType = thirdValue;
+    paramType = secondValue;
 
     initRender();
 
 });
-const detailChipColum = document.getElementById('detail-area-row');
-
-function controlDetailChip(value) {
-    paramDetailLocation = 1;
-
-    switch(value) {
-        case 'FUKUOKA' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">하카타</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">텐진</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">나카스</button>
-            `;
-            break;
-        }
-        case 'OITA' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">유후인</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">벳푸</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">오이타시</button>
-            `;
-            break;
-        }
-        case 'NAGASAKI' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">나가사키시</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">사세보</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">운젠</button>
-            `;
-            break;
-        }
-        case 'SAGA' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">사가시</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">우레시노</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">아리타</button>
-            `;
-            break;
-        }
-    }
-    detailChipColum.style.display ='flex';
-}
-
-function setParamDetailLocation(value) {
-
-    if (!value) {
-        paramDetailLocation = 1;
-        detailChipColum.innerHTML = `
-            <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-        `
-        detailChipColum.style.display ='none';
-        return;
-    }
-
-    paramDetailLocation = value;
-}
-
 // ------------------------------------------------------------------
 const fmt = new Intl.NumberFormat('ko-KR');
 const esc = (s='') => String(s)
@@ -263,28 +199,75 @@ const noneRankCard = (item, rank) => {
 };
 // 렌더 함수: content 배열을 받아 두 섹션에 배치
 function renderRanking(data){
-    const top3 = data.content.slice(0, 3);
-    const rest = data.content.slice(3);
+    if (data.content.length === 0) {
+        pageNationStop = true;
+        topSection.innerHTML = `
+        <div class="end-content top">
+            <div class="end-point-svg"></div>
+            오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        </div>
+        `;
+        normalSection.innerHTML =``;
 
-    // TOP 3
-    topSection.innerHTML = '';
-    const topFrag = document.createDocumentFragment();
-    top3.forEach((item,i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = topCard(item, i+1);
-        topFrag.appendChild(wrap.firstElementChild);
-    });
-    topSection.appendChild(topFrag);
+    }  else if (data.content.length < 20) {
+        pageNationStop = true;
 
-    // NORMAL (4위~)
-    normalSection.innerHTML = '';
-    const normalFrag = document.createDocumentFragment();
-    rest.forEach((item,i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, i+4);
-        normalFrag.appendChild(wrap.firstElementChild);
-    });
-    normalSection.appendChild(normalFrag);
+        const top3 = data.content.slice(0, 3);
+        const rest = data.content.slice(3);
+
+        topSection.innerHTML = '';
+        const topFrag = document.createDocumentFragment();
+        top3.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = topCard(item, i+1);
+            topFrag.appendChild(wrap.firstElementChild);
+        });
+
+        topSection.appendChild(topFrag);
+
+        normalSection.innerHTML = '';
+        const normalFrag = document.createDocumentFragment();
+        rest.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, i+4);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+
+        normalSection.appendChild(normalFrag);
+
+        const nonContent = document.createElement('div');
+        nonContent.classList.add('end-content', 'normal');
+        nonContent.innerHTML = `
+                <div class="end-point-svg"></div>
+                오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        `;
+        normalSection.appendChild(nonContent);
+
+    } else {
+        pageNationStop = false;
+        const top3 = data.content.slice(0, 3);
+        const rest = data.content.slice(3);
+
+        // TOP 3
+        topSection.innerHTML = '';
+        const topFrag = document.createDocumentFragment();
+        top3.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = topCard(item, i+1);
+            topFrag.appendChild(wrap.firstElementChild);
+        });
+        topSection.appendChild(topFrag);
+
+        // NORMAL (4위~)
+        normalSection.innerHTML = '';
+        const normalFrag = document.createDocumentFragment();
+        rest.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, i+4);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+        normalSection.appendChild(normalFrag);
+    }
 }
 
 
@@ -311,11 +294,12 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 function initRender() {
+    pageNationStop = false;
+
     page = 1;
-    const url = new URL('/rest/kyushu/sale', location.origin);
+    const url = new URL('/rest/sale', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
-    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
     url.searchParams.set('price',Boolean(price))
@@ -333,11 +317,12 @@ function initRender() {
 }
 
 function renderInfinityPageNation() {
+    if (pageNationStop) { return; }
+
     page = page + 1;
-    const url = new URL('/rest/kyushu/sale', location.origin);
+    const url = new URL('/rest/sale', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
-    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
     url.searchParams.set('price',Boolean(price))
@@ -372,8 +357,19 @@ function renderNormal(data) {
         });
     }
 
-
     normalSection.appendChild(normalFrag);
+
+    if (data.length < 20) {
+        pageNationStop = true;
+        const nonContent = document.createElement('li');
+        nonContent.classList.add('end-content', 'normal');
+        nonContent.innerHTML = `
+                <div class="end-point-svg"></div>
+                오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        `;
+        normalSection.appendChild(nonContent);
+
+    }
 }
 
 function resetSearchDate() {

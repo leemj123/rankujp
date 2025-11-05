@@ -219,7 +219,7 @@ main {
     justify-content: space-between;
     align-items: flex-start;
     text-align: left;
-
+    max-height: 25.6rem;
 }
 .top-item::after {
     content: "";
@@ -333,14 +333,16 @@ main {
 @media (min-width: 768px) {
 
     .ranking-top-warpper {
-        height: 36.7rem;
+        height: 31rem;
         flex-direction: row;
         align-items: flex-end;
         gap: 20px;
     }
 
     .top-item {
-        height: 32.6rem;
+        height: 26.8rem;
+        max-width: 27rem;
+        max-height: unset;
     }
 
     .top-2 {
@@ -457,4 +459,29 @@ main {
     .price-right {
         justify-content: flex-end;
     }
+}
+
+.end-content{
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    content: unset;
+    flex-direction: column;
+    gap: 2rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #585858;
+}
+.end-content.top {
+    height: 100%;
+}
+.end-content.normal {
+    height: 16.8rem;
+}
+.end-point-svg {
+    content: url("/public/end-content.svg");
+    width: 4.6rem;
+    height: 4.8rem;
 }
