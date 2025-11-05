@@ -2,12 +2,12 @@ const wrapper = document.getElementById('filters');
 const topSection = document.getElementById('top-item-section');
 const normalSection = document.getElementById('normal-item-section');
 
-let page = 1;
+let page = 2;
 let paramLocation = 1;
 let paramType = 1;
 let searchDate;
-let price = false;
 
+let pageNationStop = false;
 // --- 공통 유틸: YYYY-MM-DD 포맷터 (로컬 타임존 기준, 제로패딩) ---
 function toYMD(date) {
     if (date) {
@@ -63,6 +63,7 @@ const prefLabel = (v) => {
         default: return '가족';
     }
 };
+
 const prefIconClass = (v) => {
     switch (Number(v)) {
         case 1: return 'business-svg';
@@ -78,8 +79,24 @@ const rankBadgeClass = (rank) => {
     if (rank === 3) return 'bronze';
     return '';
 };
+const rankuScoreSVGClass = (rank) => {
+    const v = Number(rank);
+    if (v >= 86) return 'best';
+    if (v >= 71) return 'verygood';
+    if (v >= 41) return 'good';
 
-// TOP 3 카드
+    return 'normal';
+};
+const rankuScoreClass = (rank) => {
+    const v = Number(rank);
+    if (v >= 86) return '매우 훌륭함';
+    if (v >= 71) return '훌륭함';
+    if (v >= 41) return '좋음';
+
+    return '보통';
+};
+
+
 const topCard = (item, rank) => {
     return `
       <a href="/hotel/${item.id}?top=${rank}" class="top-item top-${rank}">
@@ -89,21 +106,23 @@ const topCard = (item, rank) => {
           <span class="ranku-value">${rank}</span>
         </div>
         <div class="top-item-description up">
-          <div>
-            <h2 class="ml top-item-title">${esc(item.koName)}</h2>
-            <div style="display:flex; gap:.8rem;">
-              <p class="discount-percent top ml">${esc(item.bestSalePrecent)}</p>
-              <p class="daily-price ml JPY">${fmt.format(item.bestDailyRate)}</p>
+           <div>
+              <h2 class="ml top-item-title">${esc(item.koName)}</h2>
+              <div style="display: flex; align-items: center; gap: .6rem;">
+                <span class="xl" style="color: #fff;">${item.rankuScore}</span>
+                  <span class="f-15" style="color: #fff;">/100</span>
+                  <span class="f-15 f-b" style="color: #fff">${rankuScoreClass(item.rankuScore)}</span>
+              </div>
             </div>
-          </div>
         </div>
         <div class="top-item-description down">
-          <div style="display:flex;gap:.6rem;">
-            <div class="${prefIconClass(item.preferenceValue)}"></div>
-            <p class="f-17 f-b" style="color:#fff;">
-              <span class="highlight f-17 f-b" style="color:#fff;">${prefLabel(item.preferenceValue)}</span>에게 가장인기!
-            </p>
-          </div>
+          <div style="display: flex; gap: .6rem;">
+              <div class="${prefIconClass(item.preferenceValue)}"></div>
+                <p class="f-17 f-b" style="color: #fff;">
+                    <b class="f-17 f-b" style="color: #fff;">${prefLabel(item.preferenceValue)}</b>
+                    에게 가장인기!
+                </p>
+            </div>
           <div style="display:flex;gap:.6rem;">
             <div class="hotel-star-svg"></div>
             <p class="f-17 f-b" style="color:#fff;">${esc(item.starRating)}성</p>
@@ -112,8 +131,6 @@ const topCard = (item, rank) => {
       </a>
     `.trim();
 };
-
-// 일반 랭킹 카드 (4위~)
 const normalCard = (item, rank) => {
     return `
       <li>
@@ -141,22 +158,19 @@ const normalCard = (item, rank) => {
                     </div>
                   </section>
                 </div>
-                <div class="price-right">
-                  <div class="price-value">
-                    <div style="display:flex;gap:.2rem;">
-                      <p class="discount-percent f-20">${esc(item.bestSalePrecent)}</p>
-                      <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
-                    </div>
-                    <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
-                  </div>
-                </div>
+                <div class="score-warpper">
+                        <div class="ranku-total-score">
+                        <div class="score ${rankuScoreSVGClass(item.rankuScore)} "></div>
+                          <p class="score-value xl">${item.rankuScore}</p>
+                            <p class="f-15">${rankuScoreClass(item.rankuScore)}</p>
+                        </div>
+                      </div>
               </div>
             </article>
         </a>
       </li>
     `.trim();
 };
-
 const noneRankCard = (item, rank) => {
     return `
       <li>
@@ -181,45 +195,91 @@ const noneRankCard = (item, rank) => {
                     </div>
                   </section>
                 </div>
-                <div class="price-right">
-                  <div class="price-value">
-                    <div style="display:flex;gap:.2rem;">
-                      <p class="discount-percent f-20">${esc(item.bestSalePrecent)}</p>
-                      <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
-                    </div>
-                    <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
-                  </div>
-                </div>
+                <div class="score-warpper">
+                        <div class="ranku-total-score">
+                        <div class="score ${rankuScoreSVGClass(item.rankuScore)} "></div>
+                          <p class="score-value xl">${item.rankuScore}</p>
+                            <p class="f-15">${rankuScoreClass(item.rankuScore)}</p>
+                        </div>
+                      </div>
               </div>
             </article>
         </a>
       </li>
     `.trim();
 };
-// 렌더 함수: content 배열을 받아 두 섹션에 배치
+
 function renderRanking(data){
-    const top3 = data.content.slice(0, 3);
-    const rest = data.content.slice(3);
 
-    // TOP 3
-    topSection.innerHTML = '';
-    const topFrag = document.createDocumentFragment();
-    top3.forEach((item,i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = topCard(item, i+1);
-        topFrag.appendChild(wrap.firstElementChild);
-    });
-    topSection.appendChild(topFrag);
+    if (data.content.length === 0) {
+        pageNationStop = true;
+        topSection.innerHTML = `
+        <div class="end-content top">
+            <div class="end-point-svg"></div>
+            오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        </div>
+        `;
+        normalSection.innerHTML =``;
 
-    // NORMAL (4위~)
-    normalSection.innerHTML = '';
-    const normalFrag = document.createDocumentFragment();
-    rest.forEach((item,i) => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = normalCard(item, i+4);
-        normalFrag.appendChild(wrap.firstElementChild);
-    });
-    normalSection.appendChild(normalFrag);
+    }  else if (data.content.length < 20) {
+        pageNationStop = true;
+
+        const top3 = data.content.slice(0, 3);
+        const rest = data.content.slice(3);
+
+        topSection.innerHTML = '';
+        const topFrag = document.createDocumentFragment();
+        top3.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = topCard(item, i+1);
+            topFrag.appendChild(wrap.firstElementChild);
+        });
+
+        topSection.appendChild(topFrag);
+
+        normalSection.innerHTML = '';
+        const normalFrag = document.createDocumentFragment();
+        rest.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, i+4);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+
+        normalSection.appendChild(normalFrag);
+
+        const nonContent = document.createElement('div');
+        nonContent.classList.add('end-content', 'normal');
+        nonContent.innerHTML = `
+                <div class="end-point-svg"></div>
+                오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        `;
+        normalSection.appendChild(nonContent);
+
+    } else {
+        pageNationStop = false;
+        const top3 = data.content.slice(0, 3);
+        const rest = data.content.slice(3);
+
+        // TOP 3
+        topSection.innerHTML = '';
+        const topFrag = document.createDocumentFragment();
+        top3.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = topCard(item, i+1);
+            topFrag.appendChild(wrap.firstElementChild);
+        });
+        topSection.appendChild(topFrag);
+
+        // NORMAL (4위~)
+        normalSection.innerHTML = '';
+        const normalFrag = document.createDocumentFragment();
+        rest.forEach((item,i) => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = normalCard(item, i+4);
+            normalFrag.appendChild(wrap.firstElementChild);
+        });
+        normalSection.appendChild(normalFrag);
+    }
 }
 
 
@@ -246,13 +306,14 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 function initRender() {
+    pageNationStop = false;
+
     page = 1;
-    const url = new URL('/rest/sale', location.origin);
+    const url = new URL('/rest/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
-    url.searchParams.set('price',Boolean(price))
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
@@ -266,18 +327,20 @@ function initRender() {
 
 }
 
+
 function renderInfinityPageNation() {
+    if (pageNationStop) { return; }
+
     page = page + 1;
-    const url = new URL('/rest/sale', location.origin);
+    const url = new URL('/rest/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
-    url.searchParams.set('price',Boolean(price))
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            if (!res.ok) throw new Error(`HTTPS ${res.status}`);
             return res.json();
         })
         .then(data => {
@@ -305,8 +368,19 @@ function renderNormal(data) {
         });
     }
 
-
     normalSection.appendChild(normalFrag);
+
+    if (data.length < 20) {
+        pageNationStop = true;
+        const nonContent = document.createElement('li');
+        nonContent.classList.add('end-content', 'normal');
+        nonContent.innerHTML = `
+                <div class="end-point-svg"></div>
+                오늘의 추천을 더 이상 찾지 못했어요(;-;)
+        `;
+        normalSection.appendChild(nonContent);
+
+    }
 }
 
 function resetSearchDate() {
@@ -321,16 +395,4 @@ function resetSearchDate() {
     // 앱 상태도 초기화
     searchDate = '';
     if (typeof initRender === 'function') initRender();
-}
-const orderPriceBtn = document.getElementById('order-price');
-function orderPrice() {
-    if (price === false) {
-        price = true;
-        orderPriceBtn.classList.add('checked');
-        initRender();
-    } else {
-        price = false;
-        orderPriceBtn.classList.remove('checked');
-        initRender();
-    }
 }
