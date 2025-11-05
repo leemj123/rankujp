@@ -290,9 +290,9 @@
         </th:block>
 
         <nav id="pager" aria-label="pageNation">
-            <a th:if="${salePage.pageable.pageNumber !=0}" th:href="@{/(page=${salePage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
+            <a th:if="${salePage.pageable.pageNumber !=0}" th:href="@{/kyushu/(page=${salePage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
             <span class="page-info" th:text="${salePage.pageable.pageNumber+1 } + ' / ' + ${salePage.totalPages+1}"></span>
-            <a th:if="${salePage.pageable.pageNumber < salePage.totalPages}" th:href="@{/(page=${salePage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
+            <a th:if="${salePage.pageable.pageNumber < salePage.totalPages}" th:href="@{/kyushu/(page=${salePage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
         </nav>
     </section>
     <section class="main-r">
