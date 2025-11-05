@@ -122,6 +122,11 @@ div,
 .f-b {
     font-weight: bold;
 }
+.page-link,
+.page-info {
+    font-size: 8px;
+    color: #585858;
+}
 
 input:focus {
     outline: none;

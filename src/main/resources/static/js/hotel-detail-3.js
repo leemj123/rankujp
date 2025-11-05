@@ -1,5 +1,6 @@
 let imgList = [];
 let currentIndex = 0;
+let frontCurrentIndex = 0;
 let id = null;
 
 const hotelPriceSearchValue = document.getElementById('search-value');
@@ -10,15 +11,84 @@ const topNoPrice = document.getElementById('top-no-price');
 const topPriceWarpper = document.getElementById('top-price-warpper');
 const photoIndexSpan = document.getElementById('photo-index');
 
+const mediaQuery = window.matchMedia("(max-width: 768px)");
+const mobileSlider = document.getElementById("mobile-slider");
+
 document.addEventListener("DOMContentLoaded", async () => {
     // URL에서 roomId 추출
     const segs = window.location.pathname.replace(/\/+$/, "").split("/");
     id = segs[segs.length - 1];
 
-    // 1) 이미지 먼저 로드 & 인덱스 부여
+    // 이미지 먼저 로드 & 인덱스 부여
     await onDetailImgLoad();
 
-    // 2) 포토 카드 클릭 바인딩 - 클릭에만 반응
+    // 가격 부분 더보기/접기
+    document.querySelectorAll(".price-list .more-price").forEach((btn) => {
+        btn.addEventListener("click", function () {
+            const list = this.closest(".price-list");
+            const isActive = list.classList.toggle("active");
+            this.textContent = isActive ? "접기" : "더보기";
+            this.setAttribute("aria-expanded", String(isActive));
+        });
+    });
+
+    //설명 호버박스 컨트롤
+    const hoverInfoSvg = document.getElementById('des-svg');
+    const hoverInfoBox = document.getElementById('des-box');
+
+    hoverInfoBox.style.display = 'none';
+
+    hoverInfoSvg.addEventListener('mouseenter', () => {
+        hoverInfoBox.style.display = 'block';
+    });
+
+    hoverInfoSvg.addEventListener('mouseleave', () => {
+        hoverInfoBox.style.display = 'none';
+    });
+})
+
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const modalImage = document.getElementById('modalImage');
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    this.photoCardClickBinder();
+
+    // 4) 모달 관련 바인딩
+    const backdrop = document.querySelector(".modal-backdrop.hotel");
+    if (backdrop) backdrop.addEventListener("click", closeModal);
+
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            goPrev(modalImage);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            goNext(modalImage);
+        });
+    }
+
+    // 5) 스와이프 제스처 바인딩 (모달 큰 이미지 영역)
+    if (modalImage) {
+        modalImage.setAttribute('draggable', 'false');
+        modalImage.style.touchAction = 'pan-y';
+        bindSwipe(modalImage);
+    }
+    if (mediaQuery.matches && mobileSlider) {
+        mobileSlider.setAttribute('draggable', 'false');
+        mobileSlider.style.touchAction = 'pan-y';
+        bindSwipe(mobileSlider);
+    }
+});
+
+// 2) 포토 카드 클릭 바인딩 - 클릭에만 반응
+function photoCardClickBinder() {
     document.querySelectorAll(".photo-card").forEach((item, index) => {
         let isDragging = false;
         let startX = 0;
@@ -40,79 +110,32 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        // 클릭 해제 시
         item.addEventListener("pointerup", (e) => {
-            if (isDragging) return; // 드래그로 판정되면 클릭 무시
+            if (isDragging) {
 
-            const attr = item.getAttribute("data-index");
-            currentIndex = Number.isInteger(+attr) ? parseInt(attr, 10) : index;
-            openModal();
+            } else {
+                const attr = item.getAttribute("data-index");
+                currentIndex = Number.isInteger(+attr) ? parseInt(attr, 10) : index;
+                openModal();
+            }
         });
 
         // 선택 방지 (텍스트 블루 강조 방지)
         item.addEventListener("dragstart", (e) => e.preventDefault());
     });
-
-    // 3) 더보기/접기
-    document.querySelectorAll(".price-list .more-price").forEach((btn) => {
-        btn.addEventListener("click", function () {
-            const list = this.closest(".price-list");
-            const isActive = list.classList.toggle("active");
-            this.textContent = isActive ? "접기" : "더보기";
-            this.setAttribute("aria-expanded", String(isActive));
-        });
-    });
-
-    // 4) 모달 관련 바인딩
-    const backdrop = document.querySelector(".modal-backdrop.hotel");
-    if (backdrop) backdrop.addEventListener("click", closeModal);
-
-    const prevBtn = document.getElementById("prevBtn");
-    if (prevBtn) {
-        prevBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            goPrev();
-        });
-    }
-
-    const nextBtn = document.getElementById("nextBtn");
-    if (nextBtn) {
-        nextBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            goNext();
-        });
-    }
-
-    // 5) 스와이프 제스처 바인딩 (모달 큰 이미지 영역)
-    const modalImage = document.getElementById("modalImage");
-    if (modalImage) {
-        modalImage.setAttribute('draggable', 'false');
-        modalImage.style.touchAction = 'pan-y';
-        bindSwipe(modalImage);
-    }
-
-    const hoverInfoSvg = document.getElementById('des-svg');
-    const hoverInfoBox = document.getElementById('des-box');
-
-    hoverInfoBox.style.display = 'none';
-
-    // 마우스 올렸을 때
-    hoverInfoSvg.addEventListener('mouseenter', () => {
-        hoverInfoBox.style.display = 'block';
-    });
-
-    // 마우스 벗어났을 때
-    hoverInfoSvg.addEventListener('mouseleave', () => {
-        hoverInfoBox.style.display = 'none';
-    });
-});
-
-function photoIndexUpdate() {
-    if (photoIndexSpan) {
+}
+const frontPhotoIndex = document.getElementById('front-photo-index');
+function photoIndexUpdate(el) {
+    if (el === modalImage) {
         photoIndexSpan.textContent = currentIndex + 1;
+    } else if (el === mobileSlider) {
+        frontPhotoIndex.textContent = frontCurrentIndex +1;
     }
 }
 
+
+
+//사진 fetch
 async function onDetailImgLoad() {
     try {
         const res = await fetch(`/rest/file/hotel/${id}`);
@@ -154,7 +177,7 @@ async function openModal() {
     if (!modal || !modalImage) return;
 
     modalImage.src = imgList[currentIndex];
-    photoIndexUpdate();
+    photoIndexUpdate(modalImage);
     modal.classList.remove("hidden");
 }
 
@@ -163,31 +186,54 @@ function closeModal() {
     if (modal) modal.classList.add("hidden");
 }
 
-function updateModalImage() {
+function updateModalImage(el) {
     if (!imgList.length) return;
-    const modalImage = document.getElementById("modalImage");
-    modalImage.classList.add("on-load");
-    if (modalImage) modalImage.src = imgList[currentIndex];
-    modalImage.onload = () => {
-        modalImage.classList.remove("on-load");
+
+    if (el === modalImage) {
+        el.classList.add("on-load");
+        if (el) el.src = imgList[currentIndex];
+        el.onload = () => {
+            el.classList.remove("on-load");
+        }
+    } else {
+        el.classList.add("on-load");
+        if (el) el.src = imgList[frontCurrentIndex];
+        el.onload = () => {
+            el.classList.remove("on-load");
+        }
+    }
+
+}
+
+function goPrev(el) {
+    if (!imgList.length) return;
+    if (el === modalImage) {
+        currentIndex = (currentIndex - 1 + imgList.length) % imgList.length;
+        updateModalImage(el);
+        photoIndexUpdate(el);
+    } else {
+        frontCurrentIndex = (frontCurrentIndex -1 + imgList.length) % imgList.length;
+        updateModalImage(el);
+        photoIndexUpdate(el);
+    }
+
+
+}
+
+function goNext(el) {
+    if (!imgList.length) return;
+    if (el === modalImage) {
+        currentIndex = (currentIndex + 1 + imgList.length) % imgList.length;
+        updateModalImage(el);
+        photoIndexUpdate(el);
+    } else {
+        frontCurrentIndex = (frontCurrentIndex +1 + imgList.length) % imgList.length;
+        updateModalImage(el);
+        photoIndexUpdate(el);
     }
 }
 
-function goPrev() {
-    if (!imgList.length) return;
-    currentIndex = (currentIndex - 1 + imgList.length) % imgList.length;
-    updateModalImage();
-    photoIndexUpdate();
-}
-
-function goNext() {
-    if (!imgList.length) return;
-    currentIndex = (currentIndex + 1) % imgList.length;
-    updateModalImage();
-    photoIndexUpdate();
-}
-
-/** 모바일/데스크탑 겸용 스와이프 바인딩 */
+/** 모바일/데스크탑 스와이프 바인딩 */
 function bindSwipe(el) {
     let startX = 0, startY = 0, startT = 0, tracking = false;
 
@@ -230,8 +276,8 @@ function bindSwipe(el) {
         const vx = dx / dt; // px/ms
 
         if (Math.abs(dx) > Math.abs(dy) && (Math.abs(dx) >= SWIPE_PX || Math.abs(vx) >= SWIPE_VX)) {
-            if (dx < 0) goNext();
-            else goPrev();
+            if (dx < 0) goNext(el);
+            else goPrev(el);
         }
     };
 
@@ -248,8 +294,7 @@ function bindSwipe(el) {
     el.addEventListener('touchcancel', up, { passive: true });
 }
 
-const fmtNum = n => Number(n).toLocaleString('ja-JP');
-
+//=========================================
 function searchHotelPrice() {
     const searchUrl = '/rest/search/hotel/' + id + '/date?day=' + hotelPriceSearchValue.value;
     topPriceWarpper.classList.add('on-load');
@@ -289,6 +334,7 @@ function searchHotelPrice() {
             topPriceWarpper.classList.remove('on-load');
         });
 }
+
 async function shareHotel() {
     if (navigator.share) {
         try {
@@ -305,18 +351,4 @@ async function shareHotel() {
     }
 }
 
-const mediaQuery = window.matchMedia("(max-width: 768px)");
-handleMediaChange(mediaQuery);
-mediaQuery.addEventListener("change", handleMediaChange);
-
-function handleMediaChange(e) {
-    if (e.matches) {
-        console.log("모바일 전용 로직 실행");
-
-        const mobileSlider = document.getElementById("mobile-slider");
-        if (mobileSlider) {
-            mobileSlider.style.touchAction = 'pan-y';        // 세로 스크롤 유지, 가로만 우리가 처리
-            bindSwipe(mobileSlider);
-        }
-    }
-}
+const fmtNum = n => Number(n).toLocaleString('ja-JP');

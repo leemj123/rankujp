@@ -450,7 +450,6 @@ main {
 #search-label {
     display: flex;
     align-items: center;
-    width: 13rem;
     height: 100%;
 }
 #search-value {
