@@ -38,7 +38,7 @@
     <meta property="twitter:image" th:content="${content.thumbnailImg}">
     <meta name="twitter:creator" content="@rankujp_official">
 
-    <link rel="preload" href="/css/main-2.css" as="style">
+    <link rel="preload" href="/css/main-3.css" as="style">
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="canonical" th:href="'https://rankujp.com/hotel/'+${content.id}">
@@ -55,8 +55,8 @@
         gtag('config', 'G-9ECZDFLQJ5');
     </script>
     <link rel="icon" href="/public/favicon.png" type="image/png"/>
-    <link rel="stylesheet" href="/css/main-2.css">
-    <link rel="stylesheet" href="/css/hotel-detail-2.css">
+    <link rel="stylesheet" href="/css/main-3.css">
+    <link rel="stylesheet" href="/css/hotel-detail-3.css">
     <link rel="stylesheet" href="/css/place-2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,7 +99,7 @@
                 </svg>
             </div>
         </button>
-        <div class="photo-index"><span class="f-14 f-b" >1</span><span class="f-14 f-b">/5</span></div>
+        <div class="photo-index"><span class="f-14 f-b" id="photo-index" >1</span><span class="f-14 f-b">/5</span></div>
     </div>
 </div>
 <div id="placeModal" class="modal hidden">
@@ -141,7 +141,7 @@
             <img th:src="${content.photo3}" th:alt="${content.koName + '의 주변 풍경사진'}" decoding="async" data-nimg="fill" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
           </div>
         </div>
-        <div class="photo-more" onclick="openModal()"></div>
+          <div class="photo-more" onclick="openModal()"><span class="f-14 f-b" id="front-photo-index" >1</span><span class="f-14 f-b">/5</span></div>
       </section>
 
       <section>
@@ -780,7 +780,7 @@
   </footer>
 </body>
 <script src="/js/main-2.js"></script>
-<script src="/js/hotel-detail-2.js"></script>
+<script src="/js/hotel-detail-3.js"></script>
 <script src="/js/place-2.js"></script>
 <script src="/js/detail-move-2.js"></script>
 <script src="/js/btnStorage.js"></script>

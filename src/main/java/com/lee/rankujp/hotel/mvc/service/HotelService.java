@@ -20,7 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -745,7 +747,9 @@ public class HotelService {
                 .where(qHotelReview.hotel.id.eq(id))
                 .fetch();
 
-        if ( hotel == null ) {throw new RuntimeException("추가 에러처리 요청");}
+        if (hotel == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this hotel is deleted: " + id);
+        }
 
         double max = hotel.getAverageBusinessScore();
         int maxLabel = 1;
