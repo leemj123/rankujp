@@ -46,11 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function getNextUpdateTimeString() {
     const now = new Date();
     const currentHour = now.getHours();
-    const nextPoints = [0, 6, 12, 18];
+    const nextPoints = [0,3, 6,9,12,15,18,21];
 
     // 다음 타임포인트 찾기
     let nextHour = nextPoints.find(h => h > currentHour);
-    if (nextHour === undefined) nextHour = 24; // 18~23시는 다음날 00시로 설정
+    if (nextHour === undefined) nextHour = 24; // 21~23시는 다음날 00시로 설정
 
     // 다음 타임포인트의 실제 날짜/시간 객체
     const nextDate = new Date(now);
