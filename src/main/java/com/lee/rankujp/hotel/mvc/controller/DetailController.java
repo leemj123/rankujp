@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+
 @Controller
 @RequiredArgsConstructor
 public class DetailController {
@@ -23,11 +25,11 @@ public class DetailController {
 
     @GetMapping("/hotel/{id}")
     public String saleHotel(Model model, HttpServletRequest req, HttpServletResponse res
-            , @PathVariable Long id, @RequestParam(defaultValue = "0") int top){
+            , @PathVariable Long id, @RequestParam(defaultValue = "0") int top, @RequestParam(required = false) LocalDate date){
 
-        HotelDetailResponse h = hotelService.HotelDetail(id);
+        HotelDetailResponse h = hotelService.HotelDetail(id, date);
 
-        CookieControl.upsertCookie("https://rankujp.com/hotel/"+h.getId()+"?top="+top ,h , req, res);
+        CookieControl.upsertCookie("https://rankujp.com/hotel/"+h.getId()+"?top="+top+"&date="+date  ,h , req, res);
 
         model.addAttribute("top", top);
         model.addAttribute("content", h);
@@ -41,11 +43,11 @@ public class DetailController {
 
     @GetMapping("/score/hotel/{id}")
     public String scoreHotel(Model model, HttpServletRequest req, HttpServletResponse res
-            , @PathVariable Long id, @RequestParam(defaultValue = "0") int top){
+            , @PathVariable Long id, @RequestParam(defaultValue = "0") int top, @RequestParam(required = false) LocalDate date){
 
-        HotelDetailResponse h = hotelService.HotelDetail(id);
+        HotelDetailResponse h = hotelService.HotelDetail(id, date);
 
-        CookieControl.upsertCookie("https://rankujp.com/score/hotel/"+h.getId()+"?top="+top ,h , req, res);
+        CookieControl.upsertCookie("https://rankujp.com/score/hotel/"+h.getId()+"?top="+top+"&date="+date ,h , req, res);
 
         model.addAttribute("top", top);
         model.addAttribute("content", h);
@@ -60,7 +62,7 @@ public class DetailController {
     public String premiumHotel(Model model, HttpServletRequest req, HttpServletResponse res
             , @PathVariable Long id, @RequestParam(defaultValue = "0") int top){
 
-        HotelDetailResponse h = hotelService.HotelDetail(id);
+        HotelDetailResponse h = hotelService.HotelDetail(id, null);
 
         CookieControl.upsertCookie("https://rankujp.com/premium/hotel/"+h.getId()+"?top="+top ,h , req, res);
 

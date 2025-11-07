@@ -760,7 +760,7 @@ public class HotelService {
     //detail================================
 
 
-    public HotelDetailResponse HotelDetail(Long id) {
+    public HotelDetailResponse HotelDetail(Long id, LocalDate searchDate) {
 
         Hotel hotel = jpaQueryFactory
                 .selectFrom(qHotel)
@@ -804,8 +804,30 @@ public class HotelService {
             }
         }
 
-        LocalDate bestDate = hotel.getBestStayDate();
-        if ( bestDate == null ) {bestDate = LocalDate.now(); }
+        LocalDate targetDate; int targetCOR; int targetDR; int targetSP;
+
+        if (searchDate != null) {
+            HotelPrice hp = jpaQueryFactory
+                    .selectFrom(qHotelPrice)
+                    .where(qHotelPrice.id.hotelId.eq(id).and(qHotelPrice.id.stayDate.eq(searchDate)))
+                    .fetchOne();
+
+            if (hp == null) {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this hotel is deleted: " + id);}
+
+            targetDate = hp.getStayDate();
+            targetCOR = (int)hp.getCrossedOutRate();
+            targetDR = (int)hp.getDailyRate();
+            targetSP = (int)hp.getSalePercent();
+
+
+        } else {
+            targetDate = hotel.getBestStayDate() != null ? hotel.getBestStayDate() : LocalDate.now();
+            targetCOR = (int) hotel.getBestCrossedOutRate();
+            targetDR = (int) hotel.getBestDailyRate();
+            targetSP = (int) hotel.getBestSalePrecent();
+
+        }
+
 
         return HotelDetailResponse.builder()
                 .id(hotel.getId())
@@ -830,17 +852,17 @@ public class HotelService {
                 .photo3(hotel.getPhoto3())
                 .photo4(hotel.getPhoto4())
                 .photo5(hotel.getPhoto5())
-                .bestCrossedOutRate((int)hotel.getBestCrossedOutRate())
-                .bestStayDate(hotel.getBestStayDate())
-                .bestDailyRate((int)hotel.getBestDailyRate())
-                .bestSalePrecent((int)hotel.getBestSalePrecent())
+                .bestStayDate(targetDate)
+                .bestCrossedOutRate(targetCOR)
+                .bestDailyRate(targetDR)
+                .bestSalePrecent(targetSP)
                 .bestLink("https://www.agoda.com/partners/partnersearch.aspx" +
                         "?pcs=1" +
                         "&cid=1950715" +
                         "&hl=ko-kr" +
                         "&hid="+ hotel.getId()
-                        +"&checkin="+ bestDate
-                        +"&checkout="+ bestDate.plusDays(2)
+                        +"&checkin="+ targetDate
+                        +"&checkout="+ targetDate.plusDays(2)
                         +"&currency=KRW"
                         +"&NumberofAdults=2&NumberofChildren=0&Rooms=1&pcs=6")
                 .weekdayPriceList(buildTop5(false, hotel, hotel.getHotelCity()))
