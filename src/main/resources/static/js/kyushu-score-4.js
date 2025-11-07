@@ -200,7 +200,7 @@ const normalCard = (item, rank) => {
     const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
       <li>
-        <a href="$href}">
+        <a href="${href}">
             <article class="ranku-item">
               <div class="ranku-img-box">
                 <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
