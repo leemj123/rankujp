@@ -86,7 +86,7 @@ public class SitemapService {
             // ✅ today 변수를 삽입한 정적 URL 목록
             xml.append(String.format("""
             <url>
-                <loc>https://rankujp.com/</loc>
+                <loc>https://rankujp.com</loc>
                 <lastmod>%s</lastmod>
                 <priority>1.0</priority>
             </url>

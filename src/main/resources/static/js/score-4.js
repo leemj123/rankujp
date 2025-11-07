@@ -2,12 +2,10 @@ const wrapper = document.getElementById('filters');
 const topSection = document.getElementById('top-item-section');
 const normalSection = document.getElementById('normal-item-section');
 
-let page = 1;
+let page = 2;
 let paramLocation = 1;
 let paramType = 1;
 let searchDate;
-let price = false;
-let paramDetailLocation = 1;
 
 let pageNationStop = false;
 // --- 공통 유틸: YYYY-MM-DD 포맷터 (로컬 타임존 기준, 제로패딩) ---
@@ -42,78 +40,14 @@ wrapper.addEventListener('click', (e) => {
     const onButtons = wrapper.querySelectorAll('.chip-row .chip.on');
     if (onButtons.length < 2) return;
 
-    const [firstValue, secondValue, thirdValue] = Array.from(onButtons).map(b => b.dataset.value);
+    const [firstValue, secondValue] = Array.from(onButtons).map(b => b.dataset.value);
 
-
-
-    page = 1;
     paramLocation = firstValue;
-    paramDetailLocation = secondValue;
-    paramType = thirdValue;
+    paramType = secondValue;
 
     initRender();
 
 });
-const detailChipColum = document.getElementById('detail-area-row');
-
-function controlDetailChip(value) {
-    paramDetailLocation = 1;
-
-    switch(value) {
-        case 'FUKUOKA' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">하카타</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">텐진</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">나카스</button>
-            `;
-            break;
-        }
-        case 'OITA' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">유후인</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">벳푸</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">오이타시</button>
-            `;
-            break;
-        }
-        case 'NAGASAKI' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">나가사키시</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">사세보</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">운젠</button>
-            `;
-            break;
-        }
-        case 'SAGA' : {
-            detailChipColum.innerHTML = `
-                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">사가시</button>
-                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">우레시노</button>
-                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">아리타</button>
-            `;
-            break;
-        }
-    }
-    detailChipColum.style.display ='flex';
-}
-
-function setParamDetailLocation(value) {
-
-    if (!value) {
-        paramDetailLocation = 1;
-        detailChipColum.innerHTML = `
-            <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
-        `
-        detailChipColum.style.display ='none';
-        return;
-    }
-
-    paramDetailLocation = value;
-}
-
 // ------------------------------------------------------------------
 const fmt = new Intl.NumberFormat('ko-KR');
 const esc = (s='') => String(s)
@@ -129,6 +63,7 @@ const prefLabel = (v) => {
         default: return '가족';
     }
 };
+
 const prefIconClass = (v) => {
     switch (Number(v)) {
         case 1: return 'business-svg';
@@ -144,32 +79,51 @@ const rankBadgeClass = (rank) => {
     if (rank === 3) return 'bronze';
     return '';
 };
+const rankuScoreSVGClass = (rank) => {
+    const v = Number(rank);
+    if (v >= 86) return 'best';
+    if (v >= 71) return 'verygood';
+    if (v >= 41) return 'good';
 
-// TOP 3 카드
+    return 'normal';
+};
+const rankuScoreClass = (rank) => {
+    const v = Number(rank);
+    if (v >= 86) return '매우 훌륭함';
+    if (v >= 71) return '훌륭함';
+    if (v >= 41) return '좋음';
+
+    return '보통';
+};
+
+
 const topCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
-      <a href="/hotel/${item.id}?top=${rank}" class="top-item top-${rank}">
+      <a href="${href}" class="top-item top-${rank}">
         <div class="head-line"></div>
         <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표 이미지" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
         <div class="ranku list ${rankBadgeClass(rank)}">
           <span class="ranku-value">${rank}</span>
         </div>
         <div class="top-item-description up">
-          <div>
-            <h2 class="ml top-item-title">${esc(item.koName)}</h2>
-            <div style="display:flex; gap:.8rem;">
-              <p class="discount-percent top ml">${esc(item.bestSalePrecent)}</p>
-              <p class="daily-price ml JPY">${fmt.format(item.bestDailyRate)}</p>
+           <div>
+              <h2 class="ml top-item-title">${esc(item.koName)}</h2>
+              <div style="display: flex; align-items: center; gap: .6rem;">
+                <span class="xl" style="color: #fff;">${item.rankuScore}</span>
+                  <span class="f-15" style="color: #fff;">/100</span>
+                  <span class="f-15 f-b" style="color: #fff">${rankuScoreClass(item.rankuScore)}</span>
+              </div>
             </div>
-          </div>
         </div>
         <div class="top-item-description down">
-          <div style="display:flex;gap:.6rem;">
-            <div class="${prefIconClass(item.preferenceValue)}"></div>
-            <p class="f-17 f-b" style="color:#fff;">
-              <span class="highlight f-17 f-b" style="color:#fff;">${prefLabel(item.preferenceValue)}</span>에게 가장인기!
-            </p>
-          </div>
+          <div style="display: flex; gap: .6rem;">
+              <div class="${prefIconClass(item.preferenceValue)}"></div>
+                <p class="f-17 f-b" style="color: #fff;">
+                    <b class="f-17 f-b" style="color: #fff;">${prefLabel(item.preferenceValue)}</b>
+                    에게 가장인기!
+                </p>
+            </div>
           <div style="display:flex;gap:.6rem;">
             <div class="hotel-star-svg"></div>
             <p class="f-17 f-b" style="color:#fff;">${esc(item.starRating)}성</p>
@@ -178,12 +132,11 @@ const topCard = (item, rank) => {
       </a>
     `.trim();
 };
-
-// 일반 랭킹 카드 (4위~)
 const normalCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
       <li>
-        <a href="/hotel/${item.id}?top=${rank}">
+        <a href="${href}">
             <article class="ranku-item">
               <div class="ranku-img-box">
                 <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -207,26 +160,24 @@ const normalCard = (item, rank) => {
                     </div>
                   </section>
                 </div>
-                <div class="price-right">
-                  <div class="price-value">
-                    <div style="display:flex;gap:.2rem;">
-                      <p class="discount-percent f-20">${esc(item.bestSalePrecent)}</p>
-                      <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
-                    </div>
-                    <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
-                  </div>
-                </div>
+                <div class="score-warpper">
+                        <div class="ranku-total-score">
+                        <div class="score ${rankuScoreSVGClass(item.rankuScore)} "></div>
+                          <p class="score-value xl">${item.rankuScore}</p>
+                            <p class="f-15">${rankuScoreClass(item.rankuScore)}</p>
+                        </div>
+                      </div>
               </div>
             </article>
         </a>
       </li>
     `.trim();
 };
-
 const noneRankCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
       <li>
-        <a href="/hotel/${item.id}?top=${rank}">
+        <a href="${href}">
             <article class="ranku-item">
               <div class="ranku-img-box">
                 <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -247,22 +198,20 @@ const noneRankCard = (item, rank) => {
                     </div>
                   </section>
                 </div>
-                <div class="price-right">
-                  <div class="price-value">
-                    <div style="display:flex;gap:.2rem;">
-                      <p class="discount-percent f-20">${esc(item.bestSalePrecent)}</p>
-                      <p class="crossed-out-rate f-20 JPY" style="text-decoration:line-through;opacity:.6;">${fmt.format(item.bestCrossedOutRate)}</p>
-                    </div>
-                    <p class="daily-price xl JPY">${fmt.format(item.bestDailyRate)}</p>
-                  </div>
-                </div>
+                <div class="score-warpper">
+                        <div class="ranku-total-score">
+                        <div class="score ${rankuScoreSVGClass(item.rankuScore)} "></div>
+                          <p class="score-value xl">${item.rankuScore}</p>
+                            <p class="f-15">${rankuScoreClass(item.rankuScore)}</p>
+                        </div>
+                      </div>
               </div>
             </article>
         </a>
       </li>
     `.trim();
 };
-// 렌더 함수: content 배열을 받아 두 섹션에 배치
+
 function renderRanking(data){
 
     if (data.content.length === 0) {
@@ -336,8 +285,10 @@ function renderRanking(data){
     }
 }
 
+
 let ticking = false;
 let LOCK = false;
+
 
 function nearBottom() {
     const gap = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
@@ -361,13 +312,11 @@ function initRender() {
     pageNationStop = false;
 
     page = 1;
-    const url = new URL('/rest/kyushu/sale', location.origin);
+    const url = new URL('/rest/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
-    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
-    url.searchParams.set('price',Boolean(price))
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
@@ -381,21 +330,20 @@ function initRender() {
 
 }
 
+
 function renderInfinityPageNation() {
     if (pageNationStop) { return; }
 
     page = page + 1;
-    const url = new URL('/rest/kyushu/sale', location.origin);
+    const url = new URL('/rest/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
-    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
-    url.searchParams.set('price',Boolean(price))
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            if (!res.ok) throw new Error(`HTTPS ${res.status}`);
             return res.json();
         })
         .then(data => {
@@ -450,16 +398,4 @@ function resetSearchDate() {
     // 앱 상태도 초기화
     searchDate = '';
     if (typeof initRender === 'function') initRender();
-}
-const orderPriceBtn = document.getElementById('order-price');
-function orderPrice() {
-    if (price === false) {
-        price = true;
-        orderPriceBtn.classList.add('checked');
-        initRender();
-    } else {
-        price = false;
-        orderPriceBtn.classList.remove('checked');
-        initRender();
-    }
 }

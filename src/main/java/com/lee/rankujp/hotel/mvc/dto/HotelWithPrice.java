@@ -1,6 +1,5 @@
 package com.lee.rankujp.hotel.mvc.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
@@ -13,8 +12,9 @@ public class HotelWithPrice {
     private final int bestCrossedOutRate;
     private final int bestDailyRate;
     private final int bestSalePrecent;
+    private final boolean isOnsen;
 
-    public HotelWithPrice(long id, String thumbnailImg, String koName, double starRating, double crossedOutRate, double dailyRate, double salePercent, double abs, double acs, double ass, double afs) {
+    public HotelWithPrice(long id, String thumbnailImg, String koName, double starRating, double crossedOutRate, double dailyRate, double salePercent, double abs, double acs, double ass, double afs, boolean isOnsen) {
         this.id = id;
         this.thumbnailImg = thumbnailImg;
         this.koName = koName;
@@ -23,6 +23,7 @@ public class HotelWithPrice {
         this.bestDailyRate = (int)dailyRate;
         this.bestSalePrecent = (int)salePercent;
         this.preferenceValue = this.preferenceValueCalculator(abs,acs,ass,afs);
+        this.isOnsen = isOnsen;
     }
 
     private int preferenceValueCalculator(double abs, double acs, double ass, double afs) {

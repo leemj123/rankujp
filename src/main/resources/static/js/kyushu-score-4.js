@@ -2,10 +2,12 @@ const wrapper = document.getElementById('filters');
 const topSection = document.getElementById('top-item-section');
 const normalSection = document.getElementById('normal-item-section');
 
-let page = 2;
+let page = 1;
 let paramLocation = 1;
 let paramType = 1;
 let searchDate;
+let price = false;
+let paramDetailLocation = 1;
 
 let pageNationStop = false;
 // --- 공통 유틸: YYYY-MM-DD 포맷터 (로컬 타임존 기준, 제로패딩) ---
@@ -40,14 +42,76 @@ wrapper.addEventListener('click', (e) => {
     const onButtons = wrapper.querySelectorAll('.chip-row .chip.on');
     if (onButtons.length < 2) return;
 
-    const [firstValue, secondValue] = Array.from(onButtons).map(b => b.dataset.value);
+    const [firstValue, secondValue, thirdValue] = Array.from(onButtons).map(b => b.dataset.value);
 
+    page = 1;
     paramLocation = firstValue;
-    paramType = secondValue;
+    paramDetailLocation = secondValue;
+    paramType = thirdValue;
 
     initRender();
 
 });
+const detailChipColum = document.getElementById('detail-area-row');
+
+function controlDetailChip(value) {
+    paramDetailLocation = 1;
+
+    switch(value) {
+        case 'FUKUOKA' : {
+            detailChipColum.innerHTML = `
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
+                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">하카타</button>
+                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">텐진</button>
+                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">나카스</button>
+            `;
+            break;
+        }
+        case 'OITA' : {
+            detailChipColum.innerHTML = `
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
+                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">유후인</button>
+                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">벳푸</button>
+                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">오이타시</button>
+            `;
+            break;
+        }
+        case 'NAGASAKI' : {
+            detailChipColum.innerHTML = `
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
+                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">나가사키시</button>
+                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">사세보</button>
+                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">운젠</button>
+            `;
+            break;
+        }
+        case 'SAGA' : {
+            detailChipColum.innerHTML = `
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
+                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation(this.dataset.value)">사가시</button>
+                <button class="f-15 chip" data-value="3" onclick="setParamDetailLocation(this.dataset.value)">우레시노</button>
+                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation(this.dataset.value)">아리타</button>
+            `;
+            break;
+        }
+    }
+    detailChipColum.style.display ='flex';
+}
+
+function setParamDetailLocation(value) {
+
+    if (!value) {
+        paramDetailLocation = 1;
+        detailChipColum.innerHTML = `
+            <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
+        `
+        detailChipColum.style.display ='none';
+        return;
+    }
+
+    paramDetailLocation = value;
+}
+
 // ------------------------------------------------------------------
 const fmt = new Intl.NumberFormat('ko-KR');
 const esc = (s='') => String(s)
@@ -98,8 +162,9 @@ const rankuScoreClass = (rank) => {
 
 
 const topCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
-      <a href="/hotel/${item.id}?top=${rank}" class="top-item top-${rank}">
+      <a href="${href}" class="top-item top-${rank}">
         <div class="head-line"></div>
         <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표 이미지" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
         <div class="ranku list ${rankBadgeClass(rank)}">
@@ -132,9 +197,10 @@ const topCard = (item, rank) => {
     `.trim();
 };
 const normalCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
       <li>
-        <a href="/hotel/${item.id}?top=${rank}">
+        <a href="$href}">
             <article class="ranku-item">
               <div class="ranku-img-box">
                 <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -172,9 +238,10 @@ const normalCard = (item, rank) => {
     `.trim();
 };
 const noneRankCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
       <li>
-        <a href="/hotel/${item.id}?top=${rank}">
+        <a href="${href}">
             <article class="ranku-item">
               <div class="ranku-img-box">
                 <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -210,7 +277,6 @@ const noneRankCard = (item, rank) => {
 };
 
 function renderRanking(data){
-
     if (data.content.length === 0) {
         pageNationStop = true;
         topSection.innerHTML = `
@@ -309,10 +375,12 @@ function initRender() {
     pageNationStop = false;
 
     page = 1;
-    const url = new URL('/rest/score', location.origin);
+    const url = new URL('/rest/kyushu/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
+    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
+
     url.searchParams.set('searchDate',toYMD(searchDate))
 
     fetch(url, { headers: { 'Accept': 'application/json' } })
@@ -332,9 +400,10 @@ function renderInfinityPageNation() {
     if (pageNationStop) { return; }
 
     page = page + 1;
-    const url = new URL('/rest/score', location.origin);
+    const url = new URL('/rest/kyushu/score', location.origin);
     url.searchParams.set('page', page);
     url.searchParams.set('location', paramLocation);
+    url.searchParams.set('area',paramDetailLocation);
     url.searchParams.set('type', paramType);
     url.searchParams.set('searchDate',toYMD(searchDate))
 
