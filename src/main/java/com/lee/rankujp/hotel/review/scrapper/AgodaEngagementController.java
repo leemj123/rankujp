@@ -20,21 +20,19 @@ public class AgodaEngagementController {
                 .callEngagement(stayDate, finDate, hotelId)
                 .block();
 
-        if (response == null
-                || response.getData() == null
-                || response.getData().getPropertyDetailsSearch() == null
-                || response.getData().getPropertyDetailsSearch().getPropertyDetails() == null
-                || response.getData().getPropertyDetailsSearch().getPropertyDetails().isEmpty()) {
-            return null; // 예외 상황 시 기본값
-        }
+        try {
 
-        return response.getData()
-                .getPropertyDetailsSearch()
-                .getPropertyDetails()
-                .get(0)
-                .getContentDetail()
-                .getContentEngagement()
-                .getTodayBooking()
-                .replaceAll("[^0-9]", ""); // "오늘 4회 예약됨" → "4"
+            return response.getData()
+                    .getPropertyDetailsSearch()
+                    .getPropertyDetails()
+                    .get(0)
+                    .getContentDetail()
+                    .getContentEngagement()
+                    .getTodayBooking()
+                    .replaceAll("[^0-9]", "");
+
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 }
