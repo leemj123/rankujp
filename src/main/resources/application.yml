@@ -36,3 +36,17 @@ aws:
     accessKey: ENC(3tm0nuy9RiaHWiyV/kdIU8UP9HazqAf9t01TaPvM4oE=)
     secretKey: ENC(e4NCzdo/LamGPgghXjQIwEXCkXMQ89LVj7/YuMJSklqNMBER/FwCH1G3wot6iEacaIPA82ZK2j0=)
     bucket-name: ENC(mgxgi2YUup1ZP3v7XkoqbQ/nv7SZF7rB)
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,metrics,prometheus,threaddump,metrics
+#  endpoint:
+#    health.show-details: always
+## (선택) 별도 포트로 열고 싶으면:
+#  server:
+#    port: 40080
+#  management:
+#    server:
+#      port: 40081

@@ -1,16 +1,17 @@
-package com.lee.rankujp.core;
-
-import com.lee.rankujp.hotel.price.HotelPriceService;
-import com.lee.rankujp.hotel.review.HotelReviewService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
+//package com.lee.rankujp.core;
+//
+//import com.lee.rankujp.hotel.price.HotelPriceService;
+//import com.lee.rankujp.hotel.review.HotelReviewService;
+//import lombok.RequiredArgsConstructor;
+//import lombok.extern.slf4j.Slf4j;
+//import org.springframework.jdbc.core.JdbcTemplate;
+//import org.springframework.scheduling.annotation.Scheduled;
+//import org.springframework.stereotype.Component;
+//import reactor.core.publisher.Mono;
+//
+//import java.time.LocalDateTime;
+//import java.util.concurrent.atomic.AtomicBoolean;
+//
 //@Slf4j
 //@Component
 //@RequiredArgsConstructor
@@ -22,18 +23,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //
 //    private final JdbcTemplate jdbcTemplate;
 //
-//    @Scheduled(cron = "0 0,20,40 * * * *", zone = "Asia/Seoul")
-//    public void onsenInfo() {
-//        Mono<Void> run = hotelReviewService.syncAllReviews()
-//                .doOnSubscribe(s -> log.info("[/agoda] sync started"))
-//                .doOnError(e -> log.error("[/agoda] sync failed", e))
-//                .doOnSuccess(v -> log.info("[/agoda] sync completed"))
-//                .doFinally(sig -> log.info("[/agoda] finally: {}", sig));
+////    @Scheduled(cron = "0 0,20,40 * * * *", zone = "Asia/Seoul")
+////    public void onsenInfo() {
+////        Mono<Void> run = hotelReviewService.syncAllReviews()
+////                .doOnSubscribe(s -> log.info("[/agoda] sync started"))
+////                .doOnError(e -> log.error("[/agoda] sync failed", e))
+////                .doOnSuccess(v -> log.info("[/agoda] sync completed"))
+////                .doFinally(sig -> log.info("[/agoda] finally: {}", sig));
+////
+////        run.subscribe();
+////    }
 //
-//        run.subscribe();
-//    }
-//}
-
 //    @Scheduled(cron = "0 57 23 * * *", zone = "Asia/Seoul")
 //    public void partitionScheduler() {
 //        if (!running.compareAndSet(false, true)) {
@@ -99,3 +99,5 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //        }
 //    }
 //}
+//
+//
