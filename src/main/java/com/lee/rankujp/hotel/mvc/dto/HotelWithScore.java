@@ -10,14 +10,16 @@ public class HotelWithScore {
     private final int preferenceValue;
     private final double starRating;
     private final int rankuScore;
+    private final boolean isOnsen;
 
-    public HotelWithScore(long id, String thumbnailImg, String koName, double starRating, int rankuScore, double abs, double acs, double ass, double afs) {
+    public HotelWithScore(long id, String thumbnailImg, String koName, double starRating, int rankuScore, double abs, double acs, double ass, double afs, boolean isOnsen) {
         this.id = id;
         this.thumbnailImg = thumbnailImg;
         this.koName = koName;
         this.preferenceValue = this.preferenceValueCalculator(abs,acs,ass,afs);
         this.starRating = starRating;
         this.rankuScore = rankuScore;
+        this.isOnsen = isOnsen;
     }
     private int preferenceValueCalculator(double abs, double acs, double ass, double afs) {
         double max = abs;

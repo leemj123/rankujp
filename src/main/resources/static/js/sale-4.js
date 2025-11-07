@@ -82,8 +82,9 @@ const rankBadgeClass = (rank) => {
 
 // TOP 3 카드
 const topCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
-      <a href="/hotel/${item.id}?top=${rank}" class="top-item top-${rank}">
+      <a href="${href}" class="top-item top-${rank}">
         <div class="head-line"></div>
         <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표 이미지" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
         <div class="ranku list ${rankBadgeClass(rank)}">
@@ -116,9 +117,10 @@ const topCard = (item, rank) => {
 
 // 일반 랭킹 카드 (4위~)
 const normalCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
       <li>
-        <a href="/hotel/${item.id}?top=${rank}">
+        <a href="${href}">
             <article class="ranku-item">
               <div class="ranku-img-box">
                 <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
@@ -159,9 +161,10 @@ const normalCard = (item, rank) => {
 };
 
 const noneRankCard = (item, rank) => {
+    const href = `/hotel/${item.id}?top=${rank}${searchDate ? `&date=${toYMD(searchDate)}` : ''}`;
     return `
       <li>
-        <a href="/hotel/${item.id}?top=${rank}">
+        <a href="${href}">
             <article class="ranku-item">
               <div class="ranku-img-box">
                 <img src="${esc(item.thumbnailImg)}" alt="${esc(item.koName)}의 대표사진" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
