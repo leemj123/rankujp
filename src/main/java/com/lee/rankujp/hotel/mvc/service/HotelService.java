@@ -935,7 +935,7 @@ public class HotelService {
     public AgodaPriceResponse.HotelApiInfo getHotelDateSearcher(long id, LocalDate day) {
         AgodaPriceResponse res = hotelPriceService.callApiForDay(day, day.plusDays(2), Collections.singletonList(id)).block();
 
-        if (res == null || res.getResults().isEmpty()) return null;
+        if (res == null || res.getResults() == null || res.getResults().isEmpty()) return null;
 
         return res.getResults().get(0);
     }

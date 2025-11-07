@@ -39,20 +39,27 @@ public class HotelPriceService {
 
     private final WebClient agodaApiClient;
     private final HotelPersistService persistService;
-
-    private static final int BATCH_CONCURRENCY = 8;
-    private static final int BATCH = 100;
     private static final Duration BASE = Duration.ofMillis(10);
     private static final long JITTER_MS = 10;
-
 
     private static Duration jittered() {
         long j = ThreadLocalRandom.current().nextLong(-JITTER_MS, JITTER_MS + 1);
         return BASE.plusMillis(j);
     }
 
+    // 배치/DB 전용 boundedElastic: 코어 16, 최대 32, 큐 2,000 (예시)
     static final Scheduler DB_ELASTIC =
-            Schedulers.newBoundedElastic(10, Integer.MAX_VALUE, "db-elastic");
+            Schedulers.newBoundedElastic(
+                    16,            // 최대 동시 스레드 수
+                    2000,          // 큐 용량 제한
+                    "db-elastic",
+                    60,            // idle 60초 유지 후 스레드 제거
+                    true            // daemon
+            );
+
+    // 파이프라인 동시성은 커넥션풀/쿼리특성 고려해 보수적으로
+    private static final int BATCH_CONCURRENCY = 8; // (예시) Hikari batch 풀 20이라면 8~12 권장
+    private static final int BATCH = 100;
 
     public Flux<List<Long>> idBatches() {
         return Flux.<List<Long>, Integer>generate(
@@ -68,7 +75,7 @@ public class HotelPriceService {
 
                     return page + 1;
                 }
-        ).subscribeOn(Schedulers.boundedElastic()); // 블로킹을 별도 스케줄러로
+        ).publishOn(DB_ELASTIC, 1);
     }
 
     public List<Long> fetchIdsDSL (int page) {
@@ -91,7 +98,7 @@ public class HotelPriceService {
                                                     persistService.reloadHotelPrices(topMap)
                                                             .subscribeOn(DB_ELASTIC)
                                                             .retryWhen(
-                                                                    reactor.util.retry.Retry.backoff(3, Duration.ofMillis(200))
+                                                                    reactor.util.retry.Retry.backoff(3, Duration.ofMillis(2))
                                                             )
                                             )
                             , BATCH_CONCURRENCY, 1)
