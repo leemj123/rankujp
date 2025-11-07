@@ -54,6 +54,10 @@ public class HotelService {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
         OrderSpecifier<?> order = this.orderType(sort);
 
+        //온천판단
+        if (sort == 6) {
+            predicate = predicate.and(qHotel.isOnsen.isTrue());
+        }
 
         if (searchDate == null) {
             predicate = predicate.and(qHotel.bestDailyRate.ne(0.0));
@@ -108,7 +112,8 @@ public class HotelService {
                                 qHotel.averageBusinessScore,
                                 qHotel.averageCoupleScore,
                                 qHotel.averageSoloScore,
-                                qHotel.averageFamilyScore
+                                qHotel.averageFamilyScore,
+                                qHotel.isOnsen
                     ))
                     .from(qHotelPrice)
                     .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
@@ -143,7 +148,8 @@ public class HotelService {
                                     qHotel.averageBusinessScore,
                                     qHotel.averageCoupleScore,
                                     qHotel.averageSoloScore,
-                                    qHotel.averageFamilyScore
+                                    qHotel.averageFamilyScore,
+                                    qHotel.isOnsen
                             ))
                     .from(qHotel)
                     .where(predicate)
@@ -170,6 +176,11 @@ public class HotelService {
         Pageable pageable = PageRequest.of(page-1, 20);
         //
         BooleanExpression predicate = qHotel.prefectureCode.eq(1).and(qHotel.isShow.isTrue());
+
+        //온천판단
+        if (sort == 6) {
+            predicate = predicate.and(qHotel.isOnsen.isTrue());
+        }
 
         if (searchDate == null) {
             predicate = predicate.and(qHotel.bestDailyRate.ne(0.0));
@@ -203,7 +214,8 @@ public class HotelService {
                                     qHotel.averageBusinessScore,
                                     qHotel.averageCoupleScore,
                                     qHotel.averageSoloScore,
-                                    qHotel.averageFamilyScore
+                                    qHotel.averageFamilyScore,
+                                    qHotel.isOnsen
                             ))
                     .from(qHotelPrice)
                     .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
@@ -238,7 +250,8 @@ public class HotelService {
                                     qHotel.averageBusinessScore,
                                     qHotel.averageCoupleScore,
                                     qHotel.averageSoloScore,
-                                    qHotel.averageFamilyScore
+                                    qHotel.averageFamilyScore,
+                                    qHotel.isOnsen
                             ))
                     .from(qHotel)
                     .where(predicate)
@@ -375,6 +388,11 @@ public class HotelService {
         //
         BooleanExpression predicate = qHotel.prefectureCode.eq(2).and(qHotel.isShow.isTrue());
 
+        //온천판단
+        if (sort == 6) {
+            predicate = predicate.and(qHotel.isOnsen.isTrue());
+        }
+
         //정렬 null들어가면 에러나서 커버
         List<OrderSpecifier<?>> orders = new ArrayList<>();
         OrderSpecifier<?> order = this.orderType(sort);
@@ -433,7 +451,8 @@ public class HotelService {
                                     qHotel.averageBusinessScore,
                                     qHotel.averageCoupleScore,
                                     qHotel.averageSoloScore,
-                                    qHotel.averageFamilyScore
+                                    qHotel.averageFamilyScore,
+                                    qHotel.isOnsen
                             ))
                     .from(qHotelPrice)
                     .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
@@ -468,7 +487,8 @@ public class HotelService {
                                     qHotel.averageBusinessScore,
                                     qHotel.averageCoupleScore,
                                     qHotel.averageSoloScore,
-                                    qHotel.averageFamilyScore
+                                    qHotel.averageFamilyScore,
+                                    qHotel.isOnsen
                             ))
                     .from(qHotel)
                     .where(predicate)
@@ -495,6 +515,11 @@ public class HotelService {
         Pageable pageable = PageRequest.of(page-1, 20);
         //
         BooleanExpression predicate = qHotel.prefectureCode.eq(2).and(qHotel.isShow.isTrue());
+
+        //온천판단
+        if (sort == 6) {
+            predicate = predicate.and(qHotel.isOnsen.isTrue());
+        }
 
         if (searchDate == null) {
             predicate = predicate.and(qHotel.bestDailyRate.ne(0.0));
@@ -528,7 +553,8 @@ public class HotelService {
                                     qHotel.averageBusinessScore,
                                     qHotel.averageCoupleScore,
                                     qHotel.averageSoloScore,
-                                    qHotel.averageFamilyScore
+                                    qHotel.averageFamilyScore,
+                                    qHotel.isOnsen
                             ))
                     .from(qHotelPrice)
                     .join(qHotel).on(qHotel.id.eq(qHotelPrice.id.hotelId))
@@ -563,7 +589,8 @@ public class HotelService {
                                     qHotel.averageBusinessScore,
                                     qHotel.averageCoupleScore,
                                     qHotel.averageSoloScore,
-                                    qHotel.averageFamilyScore
+                                    qHotel.averageFamilyScore,
+                                    qHotel.isOnsen
                             ))
                     .from(qHotel)
                     .where(predicate)
@@ -659,8 +686,8 @@ public class HotelService {
                     }
                     break;
                 }
-                case 6: { //가고시마시 1568
-                    predicate = predicate.and(qHotel.hotelCity.id.eq(1568L));
+                case 6: { //가고시마시 6263
+                    predicate = predicate.and(qHotel.hotelCity.id.eq(6263L));
                     break;
                 }
                 case 7: { //미야자키시 13561

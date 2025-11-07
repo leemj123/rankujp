@@ -703,3 +703,9 @@ footer .foot-container {
         height: 4.6rem;
     }
 }
+
+.onsen-icon-svg {
+    content: url("/public/onsen.svg");
+    width: 2.2rem;
+    height: 2.2rem;
+}
