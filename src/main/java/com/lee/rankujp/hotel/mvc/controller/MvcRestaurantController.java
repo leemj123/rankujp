@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -16,10 +15,10 @@ public class MvcRestaurantController {
     
     @GetMapping("/restaurant")
     public String restaurantPage(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
-        model.addAttribute("title", "일본 호텔 할인 랭킹｜호텔 가격・평점 비교로 저렴하게 호텔 찾는 법과 일본 호텔 예약 사이트 추천");
+        model.addAttribute("title", "랑쿠재팬 - 일본맛집랭킹 | 오사카, 고배, 교토, 나라의 맛집을 전부 모아 리뷰와 평점으로 한눈에");
         model.addAttribute("thumbnail", "/public/logo");
-        model.addAttribute("description", "일본 저렴한 호텔 추천 & 가격 비교｜예약 사이트 랭킹과 할인 정보 총정리 | 일본 호텔을 가장 합리적으로 예약하려면 언제가 가장 저렴할까? 인기 예약 사이트의 가격・평점・할인 정보까지 한눈에 비교하고, 최저가 예약 꿀팁까지 확인해보세요");
-        model.addAttribute("keywords","일본호텔 순위, 호텔 가격 비교, 호텔 할인, 예약사이트, 호텔 예약 꿀팁, 일본호텔추천, 일본호텔순위, 일본호텔랭킹, 일본호텔정보, 일본호텔예약,일본호텔비교");
+        model.addAttribute("description", "구글 리뷰와 평점을 바탕으로 맛집 데이터 총 집합! 랑쿠재팬에서 지역별로 모아 일본맛집랭킹을 한눈에");
+        model.addAttribute("keywords","일본맛집 순위, 오사카 맛집, 고배맛집, 교토맛집, 나라맛집");
         model.addAttribute("restaurantPage", restaurantService.restaurantPage(location, type, page));
 
         if (page == 1)
@@ -31,10 +30,10 @@ public class MvcRestaurantController {
     }
     @GetMapping("/kyushu/restaurant")
     public String kyushuRestaurantPage(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int area, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
-        model.addAttribute("title", "일본 호텔 할인 랭킹｜호텔 가격・평점 비교로 저렴하게 호텔 찾는 법과 일본 호텔 예약 사이트 추천");
+        model.addAttribute("title", "랑쿠재팬 - 규슈맛집랭킹 | 후쿠오카,유후인,벳푸,사가등 맛집을 전부 모아 리뷰와 평점으로 한눈에");
         model.addAttribute("thumbnail", "/public/logo");
-        model.addAttribute("description", "일본 저렴한 호텔 추천 & 가격 비교｜예약 사이트 랭킹과 할인 정보 총정리 | 일본 호텔을 가장 합리적으로 예약하려면 언제가 가장 저렴할까? 인기 예약 사이트의 가격・평점・할인 정보까지 한눈에 비교하고, 최저가 예약 꿀팁까지 확인해보세요");
-        model.addAttribute("keywords","일본호텔 순위, 호텔 가격 비교, 호텔 할인, 예약사이트, 호텔 예약 꿀팁, 일본호텔추천, 일본호텔순위, 일본호텔랭킹, 일본호텔정보, 일본호텔예약,일본호텔비교");
+        model.addAttribute("description", "규슈지역 전체 맛집을 모아 구글 리뷰와 평점을 바탕으로 데이터 랭킹! 랑쿠재팬에서 규슈의 지역별로 모아 규슈맛집 랭킹을 한눈에");
+        model.addAttribute("keywords","규슈맛집 순위, 후쿠오카 맛집, 유후인 맛집, 벳푸 맛집, 사가 맛집, 아리타 맛집");
         model.addAttribute("restaurantPage", restaurantService.kyushuRestaurantPage(location, area, type, page));
 
         if (page == 1)
