@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NGJPWQQV');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}"></title>
+    <meta name="description" th:content="${description}">
+    <meta name="keywords" th:content="${keywords}">
+    <meta name="robots" content="index,follow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="thumbnail" content="https://rankujp.com/public/ranku_sns.png">
+
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta property="og:site_name" content="rankujp.com">
+    <meta property="og:type" content="website">
+    <meta property="og:title" th:content="${title}">
+    <meta property="og:url" content="https://rankujp.com/restaturant">
+    <meta property="og:description" th:content="${description}">
+    <meta property="og:image" content="https://rankujp.com/public/ranku_sns.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" th:content="${title}">
+    <meta property="twitter:description" th:content="${description}">
+    <meta property="twitter:image" content="https://rankujp.com/public/ranku_sns.png">
+    <meta name="twitter:creator" content="@rankujp_official">
+
+    <link rel="preload" href="/css/main-4.css" as="style">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="canonical" th:href="${canonical}">
+
+    <meta name="agd-partner-manual-verification" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ECZDFLQJ5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-9ECZDFLQJ5');
+    </script>
+
+    <link rel="icon" href="/public/favicon.png" type="image/png"/>
+    <link rel="stylesheet" href="/css/main-4.css">
+    <link rel="stylesheet" href="/css/restaurantList-2.css">
+    <link rel="stylesheet" href="/css/place-2.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NGJPWQQV"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<header>
+    <div class="header-warpper">
+        <div class="logo-box"><a href="/kyushu"><img class="logo" src="/public/logo.svg" alt="랑쿠jp 로고"></a></div>
+        <nav class="header-nav">
+            <ul role="list">
+                <li role="listitem"><a href="/kyushu">할인랭킹</a></li>
+                <li role="listitem"><a href="/kyushu/score">종합랭킹</a></li>
+                <li role="listitem"><a class="active" href="/kyushu/restaurant" >맛집랭킹</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<a class="header-banner" href="/">
+    <div class="header-banner-wrapper" style="cursor: pointer;">
+        <div style="display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100vw;
+                height: 100%;
+                max-width: 89rem;
+                padding: 0 2rem;
+                background:
+                linear-gradient(to right,
+                  rgba(0, 0, 0, 0.9) 0%,   /* 왼쪽 끝 */
+                  rgba(0, 0, 0, 0.0) 60%,   /* 중앙 전까지 서서히 사라짐 */
+                  rgba(0, 0, 0, 0.0) 70%,   /* 중앙 유지 */
+                  rgba(0, 0, 0, 0.25) 100%  /* 오른쪽 끝 */
+                ),
+                url('/public/banner/kyushu-main-top-banner.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-blend-mode: multiply;
+                ">
+            <div style="display: flex; gap: 1rem;">
+                <div style="
+                            width: 161px;
+                            height: 2.8rem;
+                            background-color: #fff;
+                            border-radius: 4px;
+                            color: #111111;
+                            padding: .3rem .8rem;
+                          " class="f-15 f-b">
+                    오사카·교토·고베·나라
+                </div>
+                <p class="f-16 f-b" style="color: #fff;">활기와 고요의 도시</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="18" viewBox="0 0 10 18" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.382006 0.395402C0.891382 -0.131801 1.71726 -0.131801 2.22664 0.395402L9.61797 8.04542C10.1273 8.57263 10.1273 9.42741 9.61797 9.95462L2.22664 17.6046C1.71726 18.1318 0.891381 18.1318 0.382005 17.6046C-0.127335 17.0774 -0.127335 16.2227 0.382005 15.6955L6.85102 9.00002L0.382006 2.3046C-0.127335 1.77739 -0.127335 0.922606 0.382006 0.395402Z" fill="white"/>
+            </svg>
+        </div>
+    </div>
+</a>
+<main id="main">
+    <section class="main-l">
+        <div style="display: flex; align-items: center; gap: 1rem">
+            <h1>Ranku 규슈 추천 맛집</h1>
+            <div style="display: flex; align-items: center; gap: .6rem">
+                <p id="page-update-time" class="f-14" style="color: #585858" role="note">25.11.02</p>
+                <div class="update-date-svg"></div>
+            </div>
+        </div>
+
+        <section class="filter-warpper" id="filters">
+            <div class="full-container chip-row" aria-label="지역" data-group="city">
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataLayer)">전체</button>
+                <button class="f-15 chip" data-value="2" onclick="setParamDetailLocation()">후쿠오카</button>
+                <button class="f-15 chip" data-value="3" onclick="controlDetailChip('OITA')">유후인/벳푸</button>
+                <button class="f-15 chip" data-value="4" onclick="setParamDetailLocation()">구마모토</button>
+                <button class="f-15 chip" data-value="5" onclick="controlDetailChip('NAGASAKI')">나가사키</button>
+                <button class="f-15 chip" data-value="6" onclick="setParamDetailLocation()">가고시마</button>
+                <button class="f-15 chip" data-value="7" onclick="setParamDetailLocation()">미야자키</button>
+                <button class="f-15 chip" data-value="8" onclick="controlDetailChip('SAGA')">사가</button>
+            </div>
+            <div id="detail-area-row" style="display: none;" class="full-container chip-row" aria-label="세부지역" data-group="area">
+                <button class="f-15 chip on" data-value="1" onclick="setParamDetailLocation(this.dataset.value)">전체</button>
+            </div>
+            <div class="full-container chip-row" aria-label="타입" style="display: none" data-group="type">
+                <button class="f-15 chip on" data-value="1">전체</button>
+                <button class="f-15 chip" data-value="2">가족</button>
+                <button class="f-15 chip" data-value="3">비지니스</button>
+                <button class="f-15 chip" data-value="4">커플</button>
+                <button class="f-15 chip" data-value="5">혼자</button>
+            </div>
+        </section>
+
+        <th:block th:if="${restaurantPage != null}"
+                  th:with="list=${restaurantPage.content}">
+            <!-- Top 3 -->
+            <section class="ranking-top-warpper" id="top-item-section" th:if="${list != null and !#lists.isEmpty(list)}">
+                <th:block th:each="p, stat : ${list}" th:if="${stat.index < 3}">
+                    <a th:href="${p.googleMapsUri}" class="top-item" th:classappend="' top-' + ${stat.index + 1}" target="_blank">
+                        <div class="head-line"></div>
+                        <img th:src="${p.thumbnailUri}" th:alt="${p.title + '의 대표 이미지'}" loading="lazy" onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';"/>
+                        <div class="ranku list"
+                             th:classappend="${stat.index == 0 ? ' gold' :
+                                                 (stat.index == 1 ? ' sliver' :
+                                                 (stat.index == 2 ? ' bronze' : '') )}">
+                            <span class="ranku-value" th:text="${stat.index + 1}"></span>
+                        </div>
+                        <div class="top-item-description up">
+                            <h2 class="ml top-item-title" th:text="${p.title}"></h2>
+                            <div class="restaurant-info-div">
+                                <p class="f-17 f-b" style="color: #fff" th:text="${p.rating +'점'}"></p>
+                                <div class="restaurant-info-line"></div>
+                                <p class="f-17 f-b" style="color: #fff">리뷰 <span class="f-17 f-b JPY" style="color: #fff" th:text="${p.userRatingCount}"></span></p>
+                            </div>
+                        </div>
+                    </a>
+                </th:block>
+            </section>
+            <section class="ranking-noraml-warpper" id="ranking-normal-warpper" th:if="${list != null and #lists.size(list) > 3}">
+                <ol id="normal-item-section">
+                    <li th:each="p, stat : ${list}" th:if="${stat.index >= 3}">
+                        <a th:href="${p.googleMapsUri}" target="_blank">
+                            <article class="ranku-item">
+                                <div class="ranku-img-box">
+                                    <img th:src="${p.thumbnailUri}" th:alt="${p.title + '의 대표사진'}" loading="lazy"  onerror="this.onerror=null; this.src='/public/default.svg'; this.style.objectFit='none';">
+                                    <div class="ranku list normal">
+                                        <span class="ranku-value" th:text="${stat.index + 1}">4</span>
+                                    </div>
+                                </div>
+                                <div class="description-warpper">
+                                    <h2 class="skip-2" th:text="${p.title}"></h2>
+                                    <div class="restaurant-info-div normal">
+                                        <div class="restaurant-info-item">
+                                            <div class="restaurant-star-svg"></div>
+                                            <p class="ml" th:text="${p.rating}"></p>
+                                        </div>
+                                        <div class="restaurant-info-line normal-line"></div>
+                                        <div class="restaurant-info-item">
+                                            <div class="restaurant-comment-svg"></div>
+                                            <p class="ml JPY" th:text="${p.userRatingCount}"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    </li>
+                </ol>
+                <div id="infinite-sentinel" aria-hidden="true"></div>
+            </section>
+        </th:block>
+
+        <nav id="pager" aria-label="pageNation">
+            <a th:if="${restaurantPage.pageable.pageNumber !=0}" th:href="@{/kyushu/restaurant(page=${restaurantPage.pageable.pageNumber})}" class="page-link" data-page-rel="prev">이전</a>
+            <span class="page-info" th:text="${restaurantPage.pageable.pageNumber+1 } + ' / ' + ${restaurantPage.totalPages+1}"></span>
+            <a th:if="${restaurantPage.pageable.pageNumber < restaurantPage.totalPages}" th:href="@{/kyushu/restaurant(page=${restaurantPage.pageable.pageNumber+2})}" class="page-link" id="next-link" data-page-rel="next">다음</a>
+        </nav>
+    </section>
+    <section class="main-r">
+        <div class="tool-box-right">
+            <div id="upup"></div>
+            <div id="history"></div>
+            <div id="history-box">
+                <div class="history-header">
+                    <p class="f-b f-17">최근 본 호텔</p>
+                    <div class="history-cancel" onclick="hideHistory()"></div>
+                </div>
+                <ul id="history-items"></ul>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="foot-container">
+        <div class="f-meta">
+            <div class="f-meta-row">
+                <p class="f-14 f-b" style="color: #585858;">Rankujp</p>
+                <div style="width: 1px; height: 11px; border-left: 1px solid #585858;"></div>
+                <p class="f-12" style="color: #585858; font-family:'Noto Sans JP', sans-serif;">일본의 모든 랭킹 - Rankujp</p>
+            </div>
+            <div class="f-meta">
+                <p class="f-12" style="color: #585858; letter-spacing: -.3px;">RANKUJP는
+                    호텔 할인 정보 제공 서비스로 실제 예약·결제는 각 예약사이트에서 직접 이루어지며, 당사는 정보 제공만을 담당합니다.
+                </p>
+            </div>
+        </div>
+        <div class="f-meta right">
+            <div class="f-meta-row">
+                <a href="/ranku-terms-of-service"
+                   class="f-12 f-b"
+                   style="cursor: pointer; color: #585858; text-decoration: solid; text-decoration-line: underline; text-underline-offset: 2px;">이용약관
+                    및 고객지원</a>
+                <div style="width: 1px; height: 11px; border-left: 1px solid #585858;"></div>
+                <div class="foot-svg-list">
+                    <a href="https://www.instagram.com/rankujp/" target="_blank" aria-label="Rankujp 인스타그램 바로가기">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                             fill="none">
+                            <path
+                                    d="M9.99683 3.44156C12.1333 3.44156 12.3841 3.45108 13.2286 3.48918C14.0095 3.52411 14.4317 3.6543 14.7143 3.76543C15.0889 3.91149 15.3556 4.08295 15.6349 4.36237C15.9143 4.64179 16.0889 4.90851 16.2317 5.28319C16.3397 5.56579 16.473 5.98809 16.5079 6.7692C16.546 7.61381 16.5556 7.86466 16.5556 10.0016C16.5556 12.1385 16.546 12.3894 16.5079 13.234C16.473 14.0151 16.3429 14.4374 16.2317 14.72C16.0857 15.0947 15.9143 15.3614 15.6349 15.6408C15.3556 15.9202 15.0889 16.0949 14.7143 16.2377C14.4317 16.3457 14.0095 16.4791 13.2286 16.514C12.3841 16.5521 12.1333 16.5616 9.99683 16.5616C7.86032 16.5616 7.60952 16.5521 6.76508 16.514C5.98413 16.4791 5.56191 16.3489 5.27937 16.2377C4.90476 16.0917 4.6381 15.9202 4.35873 15.6408C4.07937 15.3614 3.90476 15.0947 3.7619 14.72C3.65397 14.4374 3.52064 14.0151 3.48571 13.234C3.44762 12.3894 3.4381 12.1385 3.4381 10.0016C3.4381 7.86466 3.44762 7.61381 3.48571 6.7692C3.52064 5.98809 3.65079 5.56579 3.7619 5.28319C3.90794 4.90851 4.07937 4.64179 4.35873 4.36237C4.6381 4.08295 4.90476 3.90832 5.27937 3.76543C5.56191 3.65747 5.98413 3.52411 6.76508 3.48918C7.60952 3.44791 7.86349 3.44156 9.99683 3.44156ZM9.99683 2C7.8254 2 7.55238 2.00953 6.69841 2.04763C5.84762 2.08573 5.26667 2.22227 4.75873 2.41913C4.23175 2.62235 3.7873 2.89859 3.34286 3.34312C2.89841 3.78766 2.6254 4.23536 2.41905 4.75928C2.22222 5.26732 2.08571 5.84838 2.04762 6.70252C2.00952 7.55348 2 7.82655 2 9.99841C2 12.1703 2.00952 12.4433 2.04762 13.2975C2.08571 14.1484 2.22222 14.7295 2.41905 15.2407C2.62222 15.7678 2.89841 16.2123 3.34286 16.6569C3.7873 17.1014 4.23492 17.3745 4.75873 17.5809C5.26667 17.7777 5.84762 17.9143 6.70159 17.9524C7.55556 17.9905 7.8254 18 10 18C12.1746 18 12.4444 17.9905 13.2984 17.9524C14.1492 17.9143 14.7302 17.7777 15.2413 17.5809C15.7683 17.3777 16.2127 17.1014 16.6571 16.6569C17.1016 16.2123 17.3746 15.7646 17.581 15.2407C17.7778 14.7327 17.9143 14.1516 17.9524 13.2975C17.9905 12.4433 18 12.1734 18 9.99841C18 7.82338 17.9905 7.55348 17.9524 6.69935C17.9143 5.84838 17.7778 5.26732 17.581 4.7561C17.3778 4.22901 17.1016 3.78448 16.6571 3.33995C16.2127 2.89542 15.7651 2.62235 15.2413 2.41596C14.7333 2.21909 14.1524 2.08256 13.2984 2.04445C12.4413 2.00953 12.1683 2 9.99683 2Z"
+                                    fill="#585858" />
+                            <path
+                                    d="M9.99964 5.89453C7.73208 5.89453 5.89008 7.73336 5.89008 10.0041C5.89008 12.2748 7.7289 14.1137 9.99964 14.1137C12.2704 14.1137 14.1092 12.2748 14.1092 10.0041C14.1092 7.73336 12.2704 5.89453 9.99964 5.89453ZM9.99964 12.6686C8.52604 12.6686 7.33192 11.4745 7.33192 10.0009C7.33192 8.52732 8.52604 7.3332 9.99964 7.3332C11.4732 7.3332 12.6674 8.52732 12.6674 10.0009C12.6674 11.4745 11.4732 12.6686 9.99964 12.6686Z"
+                                    fill="#585858" />
+                            <path
+                                    d="M14.2711 6.68775C14.8008 6.68775 15.2302 6.25834 15.2302 5.72864C15.2302 5.19894 14.8008 4.76953 14.2711 4.76953C13.7414 4.76953 13.312 5.19894 13.312 5.72864C13.312 6.25834 13.7414 6.68775 14.2711 6.68775Z"
+                                    fill="#585858" />
+                        </svg>
+                    </a>
+                    <a href="https://www.youtube.com/@rankujp" target="_blank" aria-label="Rankujp 유튜브 바로가기">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                             fill="none">
+                            <path
+                                    d="M17.7033 5.56379C17.5396 4.9465 17.0588 4.46296 16.4552 4.29835C15.3504 4 10 4 10 4C10 4 4.63939 4 3.54476 4.29835C2.94118 4.46296 2.46036 4.9465 2.29668 5.56379C2 6.6749 2 10 2 10C2 10 2 13.3251 2.29668 14.4362C2.46036 15.0535 2.94118 15.537 3.54476 15.7016C4.64962 16 10 16 10 16C10 16 15.3606 16 16.4552 15.7016C17.0588 15.537 17.5396 15.0535 17.7033 14.4362C18 13.3251 18 10 18 10C18 10 18 6.6749 17.7033 5.56379ZM9.32221 11.6724C8.98143 11.867 8.55754 11.6209 8.55754 11.2285V8.77152C8.55754 8.37909 8.98143 8.13302 9.32221 8.32763L11.4734 9.55611C11.8169 9.75232 11.8169 10.2477 11.4734 10.4439L9.32221 11.6724Z"
+                                    fill="#585858" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="f-12" style="color: #585858">ⓒ 2025 rankujp INC.</div>
+        </div>
+    </div>
+</footer>
+</body>
+<script src="/js/main-2.js"></script>
+<script src="/js/kyushu-restaurant-2.js"></script>
+</html>
