@@ -54,6 +54,23 @@
     <link rel="stylesheet" href="/css/list-4.css">
     <link rel="stylesheet" href="/css/searchDate-2.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json"
+            th:inline="javascript"
+            th:if="${scorePage != null and !#lists.isEmpty(scorePage.content)}">
+        {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "랑쿠재팬 - 규슈 호텔 종합 랭킹",
+            "itemListOrder": "Ascending",
+            "itemListElement": [<th:block th:each="p, stat : ${scorePage.content}">
+                {
+                    "@type": "ListItem",
+                    "position": [[${scorePage.number * scorePage.size + stat.index + 1}]],
+                    "url": "https://rankujp.com/hotel/[[${p.id}]]"
+                }<th:block th:if="${!stat.last}">,</th:block></th:block>
+            ]
+        }
+    </script>
 </head>
 
 <body>

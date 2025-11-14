@@ -13,7 +13,7 @@ public class SaleRankuController {
 
     private final HotelService hotelService;
 
-    @GetMapping
+    @GetMapping("/")
     public String sale(Model model, @RequestParam(defaultValue = "1") int location, @RequestParam(defaultValue = "1") int type, @RequestParam(defaultValue = "1") int page){
         model.addAttribute("title", "랑쿠재팬 - 일본 호텔 할인 랭킹 | 오사카,교토,고배,나라 호텔 가격・평점 비교로 저렴하게 호텔 찾는 법");
         model.addAttribute("thumbnail", "/public/logo");
@@ -22,9 +22,9 @@ public class SaleRankuController {
         model.addAttribute("salePage", hotelService.salePage(location, type, page, null, false));
 
         if (page == 1)
-            model.addAttribute("canonical", "https://rankujp.com");
+            model.addAttribute("canonical", "https://rankujp.com/");
         else
-            model.addAttribute("canonical", "https://rankujp.com/?page"+page);
+            model.addAttribute("canonical", "https://rankujp.com/?page="+page);
 
         return "ranku-sale";
     }
@@ -39,7 +39,7 @@ public class SaleRankuController {
         if (page == 1)
             model.addAttribute("canonical", "https://rankujp.com/kyushu");
         else
-            model.addAttribute("canonical", "https://rankujp.com/kyushu?page"+page);
+            model.addAttribute("canonical", "https://rankujp.com/kyushu?page="+page);
 
         return "kyushu-sale";
     }

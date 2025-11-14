@@ -61,6 +61,45 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json" th:inline="javascript"
+            th:if="${content != null}">
+        {
+            "@context": "https://schema.org",
+            "@type": "Hotel",
+            "name": [[${content.title}]],
+            "url": [[${'https://rankujp.com/hotel/' + content.id}]],
+            "description": [[${content.description}]],
+            "image": [
+                [[${content.thumbnailImg}]],
+                [[${content.photo2}]],
+                [[${content.photo3}]],
+                [[${content.photo4}]],
+                [[${content.photo5}]]
+            ],
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "JP",
+                "streetAddress": [[${content.address}]],
+                "postalCode": [[${content.zipcode}]]
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": [[${content.latitude}]],
+                "longitude": [[${content.longitude}]]
+            },
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": [[${content.averageAllScore}]],
+                "reviewCount": [[${content.reviewSum}]]
+            },
+            "offers": {
+                "@type": "AggregateOffer",
+                "lowPrice": [[${content.bestDailyRate}]],
+                "priceCurrency": "KRW",
+                "availability": "https://schema.org/InStock"
+            }
+        }
+    </script>
 </head>
 <div id="imageModal" class="modal hidden">
     <div class="modal-backdrop hotel"></div>

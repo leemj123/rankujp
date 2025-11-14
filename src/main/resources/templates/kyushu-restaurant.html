@@ -54,6 +54,23 @@
     <link rel="stylesheet" href="/css/restaurantList-2.css">
     <link rel="stylesheet" href="/css/place-2.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json"
+            th:if="${restaurantPage != null and !#lists.isEmpty(restaurantPage.content)}">
+        {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "랑쿠재팬 - 규슈맛집랭킹",
+            "itemListOrder": "Ascending",
+            "itemListElement": [<th:block th:each="p, stat : ${restaurantPage.content}">
+                {
+                    "@type": "ListItem",
+                    "position": [[${restaurantPage.number * restaurantPage.size + stat.index + 1}]],
+                    "url": "[[${p.googleMapsUri}]]"
+                }<th:block th:if="${!stat.last}">,</th:block></th:block>
+            ]
+        }
+    </script>
 </head>
 
 <body>
